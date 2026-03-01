@@ -18,12 +18,25 @@ enum AuthProvider {
   GOOGLE
 }
 
+model University {
+  id         String   @id @default(cuid())
+  name       String
+  shortName  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  users      User[]
+  events     Event[]
+}
+
 model User {
   id            String        @id @default(cuid())
   name          String?
   email         String        @unique
   password      String?       // Only for MANUAL authProvider
   role          Role          @default(USER)
+  uniId         String?
+  university    University?   @relation(fields: [uniId], references: [id], onDelete: Cascade)
   authProvider  AuthProvider  @default(MANUAL)
   isActive      Boolean       @default(true)
   emailVerified DateTime?
@@ -31,26 +44,50 @@ model User {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
-  posts         Post[]
+  events        Event[]
+  likes         EventLike[]
   accounts      Account[]
   sessions      Session[]
 
   @@index([email])
 }
 
-model Post {
+model Event {
   id         String   @id @default(cuid())
   title      String
   content    String   @db.Text
+  imagePath  String
+  location   String
+  startDate  DateTime
+  endDate    DateTime
+  otherInfo  String?
+  uniId      String
+  university University @relation(fields: [uniId], references: [id], onDelete: Cascade)
   isApproved Boolean  @default(false)
   authorId   String
   author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  likes      EventLike[]
   @@index([authorId])
+  @@index([uniId])
   @@index([isApproved])
 }
+
+model EventLike {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])  // One like per user per event
+  @@index([eventId])
+  @@index([userId])
+}
+
 
 // Auth.js required models
 model Account {
