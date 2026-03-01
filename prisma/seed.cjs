@@ -5,6 +5,7 @@
  * Uses raw SQL via 'pg' — no Prisma client needed.
  * Idempotent — safe to run multiple times.
  */
+require('dotenv').config();
 const { Pool } = require("pg");
 const { hash } = require("bcryptjs");
 const { randomBytes } = require("crypto");

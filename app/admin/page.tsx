@@ -15,7 +15,7 @@ export default async function AdminPage() {
     redirect('/dashboard')
   }
 
-  const userId = session.user.id 
+  const userId = session.user.id
 
   // Fetch all users
   const users = await prisma.user.findMany({
@@ -23,7 +23,7 @@ export default async function AdminPage() {
     include: {
       _count: {
         select: {
-          posts: true,
+          events: true,
         },
       },
     },

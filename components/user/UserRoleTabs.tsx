@@ -15,7 +15,7 @@ interface UserRecord {
   isActive: boolean
   createdAt: Date | string
   _count: {
-    posts: number
+    events: number
   }
 }
 
@@ -95,7 +95,7 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Role</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Provider</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Status</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Posts</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Events</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Joined</th>
                   <th className="text-right py-3 px-4 text-sm font-semibold text-[#4B3621]">Actions</th>
                 </tr>
@@ -120,8 +120,8 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                           user.role === 'SUPER_ADMIN'
                             ? 'danger'
                             : user.role === 'ADMIN'
-                            ? 'info'
-                            : 'default'
+                              ? 'info'
+                              : 'default'
                         }
                       >
                         {user.role.replace('_', ' ')}
@@ -137,7 +137,7 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                         {user.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">{user._count.posts}</td>
+                    <td className="py-4 px-4 text-sm text-gray-600">{user._count.events}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>

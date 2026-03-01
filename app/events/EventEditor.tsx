@@ -1,0 +1,212 @@
+'use client'
+
+import { useState } from 'react'
+import { Modal } from '@/components/ui/Modal'
+import { Button } from '@/components/ui/Button'
+import { Input, Textarea } from '@/components/ui/Input'
+import { useToast } from '@/components/ui/Toast'
+import { useRouter } from 'next/navigation'
+
+export function EventEditor() {
+    const router = useRouter()
+    const toast = useToast()
+    const [isOpen, setIsOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
+    const [imagePath, setImagePath] = useState('')
+    const [location, setLocation] = useState('')
+    const [startDate, setStartDate] = useState('')
+    const [endDate, setEndDate] = useState('')
+    const [uniId, setUniId] = useState('')
+    const [otherInfo, setOtherInfo] = useState('')
+
+    const resetForm = () => {
+        setTitle('')
+        setContent('')
+        setImagePath('')
+        setLocation('')
+        setStartDate('')
+        setEndDate('')
+        setUniId('')
+        setOtherInfo('')
+        setError('')
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setError('')
+
+        if (!title.trim() || !content.trim() || !location.trim() || !startDate || !endDate || !uniId || !imagePath) {
+            setError('Please fill in all required fields')
+            return
+        }
+
+        setIsLoading(true)
+        try {
+            const response = await fetch('/api/events/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    content,
+                    imagePath,
+                    location,
+                    startDate,
+                    endDate,
+                    uniId,
+                    otherInfo: otherInfo || undefined,
+                }),
+            })
+
+            if (response.ok) {
+                resetForm()
+                setIsOpen(false)
+                router.refresh()
+                toast.info('Event submitted for review! An admin will approve it soon.')
+            } else {
+                const data = await response.json()
+                toast.error(data.error || 'Failed to create event')
+            }
+        } catch (err) {
+            setError(`An unexpected error occurred: ${err}`)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    return (
+        <>
+            <Button variant="primary" onClick={() => setIsOpen(true)}>
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Create Event
+            </Button>
+
+            <Modal
+                isOpen={isOpen}
+                onClose={() => {
+                    setIsOpen(false)
+                    setError('')
+                }}
+                title="Create New Event"
+                size="lg"
+            >
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && (
+                        <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                            <p className="text-sm text-red-800">{error}</p>
+                        </div>
+                    )}
+
+                    <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
+                        <p className="text-sm text-blue-800">
+                            Your event will be reviewed by moderators before appearing publicly.
+                        </p>
+                    </div>
+
+                    <Input
+                        label="Event Title"
+                        placeholder="Enter event title..."
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        disabled={isLoading}
+                        maxLength={200}
+                    />
+
+                    <Textarea
+                        label="Description"
+                        placeholder="Describe the event..."
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        required
+                        disabled={isLoading}
+                        rows={4}
+                        maxLength={5000}
+                    />
+
+                    <Input
+                        label="Image URL"
+                        placeholder="https://example.com/event-image.jpg"
+                        value={imagePath}
+                        onChange={(e) => setImagePath(e.target.value)}
+                        required
+                        disabled={isLoading}
+                    />
+
+                    <Input
+                        label="Location"
+                        placeholder="Event venue or address..."
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        required
+                        disabled={isLoading}
+                        maxLength={300}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Start Date & Time"
+                            type="datetime-local"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            required
+                            disabled={isLoading}
+                        />
+
+                        <Input
+                            label="End Date & Time"
+                            type="datetime-local"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            required
+                            disabled={isLoading}
+                        />
+                    </div>
+
+                    <Input
+                        label="University ID"
+                        placeholder="University ID"
+                        value={uniId}
+                        onChange={(e) => setUniId(e.target.value)}
+                        required
+                        disabled={isLoading}
+                    />
+
+                    <Textarea
+                        label="Additional Info (optional)"
+                        placeholder="Any other details..."
+                        value={otherInfo}
+                        onChange={(e) => setOtherInfo(e.target.value)}
+                        disabled={isLoading}
+                        rows={3}
+                        maxLength={2000}
+                    />
+
+                    <div className="flex items-center space-x-3 pt-4">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={isLoading}
+                            className="flex-1"
+                        >
+                            {isLoading ? 'Submitting...' : 'Submit for Review'}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => setIsOpen(false)}
+                            disabled={isLoading}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
+        </>
+    )
+}

@@ -14,25 +14,33 @@ export default async function DashboardPage() {
   }
 
   // Fetch user stats
-  const userPosts = await prisma.post.findMany({
+  const userEvents = await prisma.event.findMany({
     where: { authorId: session.user.id },
+    include: {
+      university: {
+        select: {
+          name: true,
+          shortName: true,
+        },
+      },
+    },
     orderBy: { createdAt: 'desc' },
     take: 5,
   })
 
-  const totalPosts = await prisma.post.count({
+  const totalEvents = await prisma.event.count({
     where: { authorId: session.user.id },
   })
 
-  const approvedPosts = await prisma.post.count({
-    where: { 
+  const approvedEvents = await prisma.event.count({
+    where: {
       authorId: session.user.id,
       isApproved: true,
     },
   })
 
-  const pendingPosts = await prisma.post.count({
-    where: { 
+  const pendingEvents = await prisma.event.count({
+    where: {
       authorId: session.user.id,
       isApproved: false,
     },
@@ -64,8 +72,8 @@ export default async function DashboardPage() {
               session.user.role === 'SUPER_ADMIN'
                 ? 'danger'
                 : session.user.role === 'ADMIN'
-                ? 'info'
-                : 'default'
+                  ? 'info'
+                  : 'default'
             }
           >
             {session.user.role.replace('_', ' ')}
@@ -76,18 +84,18 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader>
-              <CardDescription>Total Posts</CardDescription>
-              <CardTitle className="text-4xl text-[#CC5500]">{totalPosts}</CardTitle>
+              <CardDescription>Total Events</CardDescription>
+              <CardTitle className="text-4xl text-[#CC5500]">{totalEvents}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">All your published content</p>
+              <p className="text-sm text-gray-600">All your submitted events</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardDescription>Approved</CardDescription>
-              <CardTitle className="text-4xl text-[#2D5A27]">{approvedPosts}</CardTitle>
+              <CardTitle className="text-4xl text-[#2D5A27]">{approvedEvents}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">Visible to the public</p>
@@ -97,7 +105,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader>
               <CardDescription>Pending Approval</CardDescription>
-              <CardTitle className="text-4xl text-yellow-600">{pendingPosts}</CardTitle>
+              <CardTitle className="text-4xl text-yellow-600">{pendingEvents}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">Awaiting moderation</p>
@@ -105,43 +113,47 @@ export default async function DashboardPage() {
           </Card>
         </div>
 
-        {/* Recent Posts */}
+        {/* Recent Events */}
         <Card>
           <CardHeader>
-            <CardTitle>Your Recent Posts</CardTitle>
+            <CardTitle>Your Recent Events</CardTitle>
             <CardDescription>Your latest submissions and their status</CardDescription>
           </CardHeader>
           <CardContent>
-            {userPosts.length === 0 ? (
+            {userEvents.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">You haven&apos;t created any posts yet.</p>
+                <p className="text-gray-500 mb-4">You haven&apos;t created any events yet.</p>
                 <a
-                  href="/posts"
+                  href="/events"
                   className="inline-flex items-center px-4 py-2 rounded-xl bg-[#CC5500] text-white hover:bg-[#B34C00] transition-colors"
                 >
-                  Create Your First Post
+                  Create Your First Event
                 </a>
               </div>
             ) : (
               <div className="space-y-4">
-                {userPosts.map((post) => (
+                {userEvents.map((event) => (
                   <div
-                    key={post.id}
+                    key={event.id}
                     className="flex items-start justify-between p-4 rounded-xl bg-[#F5F5F4] hover:bg-[#ECECEB] transition-colors"
                   >
                     <div className="flex-1">
-                      <h4 className="font-semibold text-[#4B3621] mb-1">{post.title}</h4>
-                      <p className="text-sm text-gray-600 line-clamp-2">{post.content}</p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        {new Date(post.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </p>
+                      <h4 className="font-semibold text-[#4B3621] mb-1">{event.title}</h4>
+                      <p className="text-sm text-gray-600 line-clamp-2">{event.content}</p>
+                      <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
+                        <span>📍 {event.location}</span>
+                        <span>•</span>
+                        <span>
+                          {new Date(event.startDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <Badge variant={post.isApproved ? 'success' : 'warning'}>
-                      {post.isApproved ? 'Approved' : 'Pending'}
+                    <Badge variant={event.isApproved ? 'success' : 'warning'}>
+                      {event.isApproved ? 'Approved' : 'Pending'}
                     </Badge>
                   </div>
                 ))}
@@ -153,7 +165,7 @@ export default async function DashboardPage() {
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card hover className="cursor-pointer">
-            <a href="/posts" className="block">
+            <a href="/events" className="block">
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 rounded-xl bg-[#CC5500] flex items-center justify-center text-white">
@@ -162,8 +174,8 @@ export default async function DashboardPage() {
                     </svg>
                   </div>
                   <div>
-                    <CardTitle className="text-lg">Create New Post</CardTitle>
-                    <CardDescription>Share your thoughts with the community</CardDescription>
+                    <CardTitle className="text-lg">Create New Event</CardTitle>
+                    <CardDescription>Share an event with the community</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -172,7 +184,7 @@ export default async function DashboardPage() {
 
           {(session.user.role === 'ADMIN' || session.user.role === 'SUPER_ADMIN') && (
             <Card hover className="cursor-pointer">
-              <a href="/admin/posts" className="block">
+              <a href="/admin/events" className="block">
                 <CardHeader>
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 rounded-xl bg-[#2D5A27] flex items-center justify-center text-white">
@@ -181,7 +193,7 @@ export default async function DashboardPage() {
                       </svg>
                     </div>
                     <div>
-                      <CardTitle className="text-lg">Moderate Posts</CardTitle>
+                      <CardTitle className="text-lg">Moderate Events</CardTitle>
                       <CardDescription>Review and approve pending submissions</CardDescription>
                     </div>
                   </div>
