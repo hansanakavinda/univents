@@ -1,4 +1,4 @@
-name: Deploy Secure Auth
+name: Deploy Univents
 on:
   push:
     branches: [ main ]
@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd ~/secure-auth
+            cd ~/univents
             git pull origin main
             docker compose up -d --build 2>&1
             docker system prune -f

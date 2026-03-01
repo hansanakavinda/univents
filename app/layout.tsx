@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Secure Auth V2 ",
-  description: "Next.js authentication system with role-based access control",
+  title: "Univents ",
+  description: "Univents is a platform for event management",
 };
 
 export default function RootLayout({

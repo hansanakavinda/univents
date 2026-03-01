@@ -1,5 +1,3 @@
-// Type definitions for Secure Auth V2
-
 import { DefaultSession } from "next-auth"
 
 // Extend Next-Auth types

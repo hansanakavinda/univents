@@ -86,7 +86,7 @@ export function LoginForm() {
                             <span className="text-white font-bold text-3xl">S</span>
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-[#4B3621] mb-2">Secure Auth V2</h1>
+                    <h1 className="text-3xl font-bold text-[#4B3621] mb-2">Univents</h1>
                     <p className="text-gray-600">Sign in to access your dashboard</p>
                 </div>
 

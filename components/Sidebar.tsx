@@ -72,8 +72,8 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
             <span className="text-white font-bold text-xl">S</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-[#4B3621]">Secure Auth V2</h1>
-            <p className="text-xs text-gray-500">Earthy Dashboard</p>
+            <h1 className="text-lg font-bold text-[#4B3621]">Univents</h1>
+            <p className="text-xs text-gray-500">Event Management Platform</p>
           </div>
         </Link>
       </div>

@@ -1,5 +1,3 @@
-// Utility functions for Secure Auth V2
-
 /**
  * Merge CSS class names
  */
