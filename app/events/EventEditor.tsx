@@ -1,13 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 import { useToast } from '@/components/ui/Toast'
 import { useRouter } from 'next/navigation'
 
-export function EventEditor() {
+interface University {
+    id: string
+    name: string
+    shortName: string
+}
+
+interface EventEditorProps {
+    universities: University[]
+}
+
+export function EventEditor({ universities }: EventEditorProps) {
     const router = useRouter()
     const toast = useToast()
     const [isOpen, setIsOpen] = useState(false)
@@ -17,21 +28,22 @@ export function EventEditor() {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [imagePath, setImagePath] = useState('')
-    const [location, setLocation] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [uniId, setUniId] = useState('')
-    const [otherInfo, setOtherInfo] = useState('')
+
+    const universityOptions = universities.map((uni) => ({
+        value: uni.id,
+        label: `${uni.name} (${uni.shortName})`,
+    }))
 
     const resetForm = () => {
         setTitle('')
         setContent('')
         setImagePath('')
-        setLocation('')
         setStartDate('')
         setEndDate('')
         setUniId('')
-        setOtherInfo('')
         setError('')
     }
 
@@ -39,7 +51,7 @@ export function EventEditor() {
         e.preventDefault()
         setError('')
 
-        if (!title.trim() || !content.trim() || !location.trim() || !startDate || !endDate || !uniId || !imagePath) {
+        if (!title.trim() || !content.trim() || !startDate || !endDate || !uniId) {
             setError('Please fill in all required fields')
             return
         }
@@ -53,11 +65,9 @@ export function EventEditor() {
                     title,
                     content,
                     imagePath,
-                    location,
                     startDate,
                     endDate,
                     uniId,
-                    otherInfo: otherInfo || undefined,
                 }),
             })
 
@@ -134,18 +144,7 @@ export function EventEditor() {
                         placeholder="https://example.com/event-image.jpg"
                         value={imagePath}
                         onChange={(e) => setImagePath(e.target.value)}
-                        required
                         disabled={isLoading}
-                    />
-
-                    <Input
-                        label="Location"
-                        placeholder="Event venue or address..."
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        required
-                        disabled={isLoading}
-                        maxLength={300}
                     />
 
                     <div className="grid grid-cols-2 gap-4">
@@ -168,23 +167,14 @@ export function EventEditor() {
                         />
                     </div>
 
-                    <Input
-                        label="University ID"
-                        placeholder="University ID"
+                    <Select
+                        label="University"
+                        placeholder="Select university"
+                        options={universityOptions}
                         value={uniId}
                         onChange={(e) => setUniId(e.target.value)}
                         required
                         disabled={isLoading}
-                    />
-
-                    <Textarea
-                        label="Additional Info (optional)"
-                        placeholder="Any other details..."
-                        value={otherInfo}
-                        onChange={(e) => setOtherInfo(e.target.value)}
-                        disabled={isLoading}
-                        rows={3}
-                        maxLength={2000}
                     />
 
                     <div className="flex items-center space-x-3 pt-4">

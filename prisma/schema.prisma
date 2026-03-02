@@ -56,11 +56,9 @@ model Event {
   id         String   @id @default(cuid())
   title      String
   content    String   @db.Text
-  imagePath  String
-  location   String
+  imagePath  String?
   startDate  DateTime
   endDate    DateTime
-  otherInfo  String?
   uniId      String
   university University @relation(fields: [uniId], references: [id], onDelete: Cascade)
   isApproved Boolean  @default(false)

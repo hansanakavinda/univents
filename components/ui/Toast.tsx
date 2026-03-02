@@ -37,7 +37,7 @@ interface ToastContextValue {
   }
 }
 
-const TOAST_DURATION = 10_000 // 10 seconds auto-dismiss
+const TOAST_DURATION = 3_000 // 3 seconds auto-dismiss
 
 /* ------------------------------------------------------------------ */
 /*  Context                                                            */

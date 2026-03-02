@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { Sidebar } from '@/components/Sidebar'
 import { getApprovedEventsPaginated } from '@/data-access/events'
+import { getAllUniversities } from '@/data-access/universities'
 import { EventEditor } from './EventEditor'
 import { EventsList } from './EventsList'
 
@@ -9,6 +10,7 @@ export default async function EventsPage() {
 
     // Fetch initial 4 events
     const initialEvents = await getApprovedEventsPaginated({ take: 4, skip: 0 })
+    const universities = await getAllUniversities()
 
     return (
         <div className="flex min-h-screen bg-[#FCFAF7]">
@@ -21,7 +23,7 @@ export default async function EventsPage() {
                             <p className="text-gray-600">Discover and share events happening across campuses</p>
                         </div>
                         {session && <div className='flex gap-4 items-center'>
-                            <EventEditor />
+                            <EventEditor universities={universities} />
                             <div className=" p-4 rounded-xl bg-blue-50 border border-blue-200 ">
                                 <p className="text-sm text-blue-800">
                                     <a href="/dashboard" className="font-semibold underline">Dashboard</a>

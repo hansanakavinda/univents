@@ -141,10 +141,12 @@ export default async function DashboardPage() {
                       <h4 className="font-semibold text-[#4B3621] mb-1">{event.title}</h4>
                       <p className="text-sm text-gray-600 line-clamp-2">{event.content}</p>
                       <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
-                        <span>📍 {event.location}</span>
-                        <span>•</span>
                         <span>
-                          {new Date(event.startDate).toLocaleDateString('en-US', {
+                          📅 {new Date(event.startDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })} — {new Date(event.endDate).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',

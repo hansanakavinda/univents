@@ -29,21 +29,17 @@ export const createEvent = async ({
     title,
     content,
     imagePath,
-    location,
     startDate,
     endDate,
     uniId,
-    otherInfo,
     authorId,
 }: {
     title: string
     content: string
-    imagePath: string
-    location: string
+    imagePath?: string
     startDate: Date
     endDate: Date
     uniId: string
-    otherInfo?: string
     authorId: string
 }) => {
     const event = await prisma.event.create({
@@ -51,11 +47,9 @@ export const createEvent = async ({
             title: title.trim(),
             content: content.trim(),
             imagePath,
-            location: location.trim(),
             startDate,
             endDate,
             uniId,
-            otherInfo: otherInfo?.trim(),
             authorId,
             isApproved: false,
         },
@@ -106,7 +100,7 @@ export const getApprovedEvents = async () => {
                 },
             },
         },
-        orderBy: { startDate: 'asc' },
+        orderBy: { endDate: 'asc' },
     })
 
     return events
