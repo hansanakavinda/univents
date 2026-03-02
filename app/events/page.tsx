@@ -19,7 +19,7 @@ export default async function EventsPage() {
                 <div className="max-w-4xl mx-auto mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-4xl font-bold text-[#4B3621] mb-2">University Events</h1>
+                            <h1 className="text-4xl font-bold text-[#4B3621] mb-2">Univents</h1>
                             <p className="text-gray-600">Discover and share events happening across campuses</p>
                         </div>
                         {session && <div className='flex gap-4 items-center'>
