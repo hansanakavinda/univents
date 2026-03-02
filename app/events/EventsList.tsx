@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import Image from 'next/image'
 
 type Event = {
     id: string
@@ -114,17 +115,6 @@ export function EventsList({ initialEvents }: EventsListProps) {
                 {events.map((event) => (
                     <Card key={event.id} hover>
                         <CardContent className="p-6">
-                            {/* Event Image */}
-                            {event.imagePath && (
-                                <div className="mb-4 rounded-xl overflow-hidden h-48">
-                                    <img
-                                        src={event.imagePath}
-                                        alt={event.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            )}
-
                             {/* Author Info */}
                             <div className="flex items-center space-x-3 mb-4">
                                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg">
@@ -156,6 +146,20 @@ export function EventsList({ initialEvents }: EventsListProps) {
                                     <span>{formatDate(event.startDate)} — {formatDate(event.endDate)}</span>
                                 </div>
                             </div>
+
+                            {/* Event Image */}
+                            {event.imagePath && (
+                                <div className="mb-4 rounded-xl overflow-hidden">
+                                    <Image
+                                        src={event.imagePath}
+                                        alt={event.title}
+                                        className="w-full h-full object-cover"
+                                        width={500}
+                                        height={500}
+                                    />
+                                </div>
+                            )}
+
 
                             {/* Footer */}
                             <div className="mt-4 pt-4 border-t border-[#F5F5F4] flex items-center justify-between">

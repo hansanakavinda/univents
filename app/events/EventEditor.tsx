@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
+import { ImageUpload } from '@/components/ui/ImageUpload'
 import { useToast } from '@/components/ui/Toast'
 import { useRouter } from 'next/navigation'
 
@@ -31,6 +32,7 @@ export function EventEditor({ universities }: EventEditorProps) {
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [uniId, setUniId] = useState('')
+    const discardedImageIds = useRef<string[]>([])
 
     const universityOptions = universities.map((uni) => ({
         value: uni.id,
@@ -45,6 +47,7 @@ export function EventEditor({ universities }: EventEditorProps) {
         setEndDate('')
         setUniId('')
         setError('')
+        discardedImageIds.current = []
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -68,6 +71,7 @@ export function EventEditor({ universities }: EventEditorProps) {
                     startDate,
                     endDate,
                     uniId,
+                    discardedImageIds: discardedImageIds.current,
                 }),
             })
 
@@ -139,11 +143,10 @@ export function EventEditor({ universities }: EventEditorProps) {
                         maxLength={5000}
                     />
 
-                    <Input
-                        label="Image URL"
-                        placeholder="https://example.com/event-image.jpg"
+                    <ImageUpload
                         value={imagePath}
-                        onChange={(e) => setImagePath(e.target.value)}
+                        onChange={(url) => setImagePath(url)}
+                        onDiscard={(id) => discardedImageIds.current.push(id)}
                         disabled={isLoading}
                     />
 

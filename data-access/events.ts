@@ -1,10 +1,20 @@
 import { ApiError } from "@/lib/api/api-utils"
 import { prisma } from "@/lib/prisma"
+import { deleteImage } from "@/lib/cloudinary"
+
+/**
+ * Extract the Cloudinary public ID from a Cloudinary URL.
+ * e.g. https://res.cloudinary.com/xxx/image/upload/v123/univents/events/abc.jpg -> univents/events/abc
+ */
+function extractPublicId(url: string): string | null {
+    const match = url.match(/\/upload\/(?:v\d+\/)?(.*?)(?:\.\w+)?$/)
+    return match?.[1] ?? null
+}
 
 export const moderateEvent = async ({ eventId, action }: { eventId: string, action: 'approve' | 'reject' }) => {
     const event = await prisma.event.findUnique({
         where: { id: eventId },
-        select: { id: true },
+        select: { id: true, imagePath: true },
     })
 
     if (!event) {
@@ -17,6 +27,13 @@ export const moderateEvent = async ({ eventId, action }: { eventId: string, acti
             data: { isApproved: true },
         })
     } else {
+        // Delete the event's image from Cloudinary if it exists
+        if (event.imagePath) {
+            const publicId = extractPublicId(event.imagePath)
+            if (publicId) {
+                deleteImage(publicId).catch(() => { })
+            }
+        }
         await prisma.event.delete({
             where: { id: eventId },
         })
