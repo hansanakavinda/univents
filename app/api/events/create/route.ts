@@ -3,6 +3,7 @@ import { asyncCatcher, validateRequest } from '@/lib/api/api-utils'
 import { createEventSchema } from '@/lib/validators/events'
 import { createEvent } from '@/data-access/events'
 import { deleteImage } from '@/lib/cloudinary'
+import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -25,9 +26,19 @@ export const POST = asyncCatcher(async (request: Request) => {
         authorId: session.user.id,
     })
 
-    // Clean up discarded images from Cloudinary (fire-and-forget)
+    // Clean up discarded images from Cloudinary (fire-and-forget, with safety checks)
     if (discardedImageIds?.length) {
         for (const publicId of discardedImageIds) {
+            // Only allow deletion within our app's upload folder
+            if (!publicId.startsWith('univents/')) continue
+
+            // Ensure the image isn't actively used by any event
+            const inUse = await prisma.event.findFirst({
+                where: { imagePath: { contains: publicId } },
+                select: { id: true },
+            })
+            if (inUse) continue
+
             deleteImage(publicId).catch(() => { })
         }
     }
