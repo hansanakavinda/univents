@@ -54,7 +54,7 @@ export default async function DashboardPage() {
         userEmail={session.user.email || ''}
       />
 
-      <main className="flex-1 ml-64 p-8">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#4B3621] mb-2">

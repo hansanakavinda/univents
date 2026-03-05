@@ -145,19 +145,19 @@ export function EventsList({ initialEvents, currentUserId }: EventsListProps) {
 
     return (
         <>
-            <div className="space-y-6 flex flex-col items-center">
+            <div className="space-y-6 flex flex-col items-center w-full px-2 md:px-0">
                 {events.map((event) => (
-                    <Card key={event.id} hover className='lg:max-w-[40vw] w-full'>
-                        <CardContent className="p-0 lg:p-6 ">
+                    <Card key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
+                        <CardContent className="p-0 lg:p-6">
                             {/* Author Info */}
                             <div className="flex items-center space-x-3 mb-4">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
                                     {event.author.name?.charAt(0).toUpperCase() || 'U'}
                                 </div>
-                                <div className="flex-1">
-                                    <div className="flex items-center space-x-2">
-                                        <p className="font-semibold text-[#4B3621]">{event.author.name || 'Anonymous'}</p>
-                                        <Badge variant="default" className="text-xs">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                                        <p className="font-semibold text-[#4B3621] truncate">{event.author.name || 'Anonymous'}</p>
+                                        <Badge variant="default" className="text-xs whitespace-nowrap">
                                             {event.university.shortName}
                                         </Badge>
                                     </div>
@@ -168,18 +168,16 @@ export function EventsList({ initialEvents, currentUserId }: EventsListProps) {
                             </div>
 
                             {/* Event Content */}
-                            <h2 className="text-2xl font-bold text-[#4B3621] mb-3">{event.title}</h2>
-                            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed mb-4">{event.content}</p>
-
-
+                            <h2 className="text-xl md:text-2xl font-bold text-[#4B3621] mb-3 break-words">{event.title}</h2>
+                            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed mb-4 text-sm md:text-base">{event.content}</p>
 
                             {/* Event Image */}
                             {event.imagePath && (
-                                <div className="mb-4 overflow-hidden flex items-center justify-center">
+                                <div className="mb-4 overflow-hidden flex items-center justify-center rounded-lg">
                                     <Image
                                         src={event.imagePath}
                                         alt={event.title}
-                                        className="lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
+                                        className="w-full h-auto max-h-[50vh] lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
                                         width={1080}
                                         height={1920}
                                     />

@@ -23,7 +23,7 @@ export default async function AdminUniversitiesPage() {
                 userEmail={session.user.email || ''}
             />
 
-            <main className="flex-1 ml-64 p-8">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
                 {/* Header */}
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>

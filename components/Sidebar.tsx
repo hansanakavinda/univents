@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
@@ -69,66 +70,101 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
     },
   ]
 
-  const visibleMenuItems = menuItems.filter(item =>
+  const [isOpen, setIsOpen] = useState(false)
+
+  const visibleMenuItems = menuItems.filter((item) =>
     !userRole || item.roles.includes(userRole)
   )
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 glass-sidebar z-40 flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-[#E5E5E4]/50">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center">
-            <span className="text-white font-bold text-xl">S</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-[#4B3621]">Univents</h1>
-            <p className="text-xs text-gray-500">Event Management Platform</p>
-          </div>
-        </Link>
-      </div>
+    <>
+      {/* Mobile Toggle Button (Visible only on mobile when sidebar is closed) */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-30 p-2 rounded-xl bg-white shadow-md text-[#4B3621]"
+        aria-label="Open sidebar"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {visibleMenuItems.map((item) => (
-          <Link
-            key={item.path}
-            href={item.path}
-            className={`
-              flex items-center space-x-3 px-4 py-3 rounded-xl
-              transition-all duration-200
-              ${isActive(item.path)
-                ? 'bg-[#CC5500] text-white shadow-md'
-                : 'text-[#4B3621] hover:bg-[#F5F5F4]'
-              }
-            `}
-          >
-            {item.icon}
-            <span className="font-medium">{item.name}</span>
+      {/* Backdrop for Mobile */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed left-0 top-0 h-screen w-full bg-white z-50 flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0`}
+      >
+        {/* Logo and Close Button */}
+        <div className="p-6 border-b border-[#E5E5E4]/50 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <div>
+              <h1 className="text-lg font-bold text-[#4B3621]">Univents</h1>
+              <p className="text-xs text-gray-500 hidden sm:block">Event Management</p>
+            </div>
           </Link>
-        ))}
-      </nav>
 
-      {/* User Info */}
-      {userName && (
-        <div className="p-4 border-t border-[#E5E5E4]/50">
-          <div className="flex items-center space-x-3 p-3 rounded-xl bg-[#F5F5F4]">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2D5A27] to-[#CC5500] flex items-center justify-center text-white font-semibold">
-              {userName.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-[#4B3621] truncate">{userName}</p>
-              <p className="text-xs text-gray-500 truncate">{userEmail}</p>
-            </div>
-          </div>
           <button
-            onClick={() => signOut({ redirectTo: '/login' })}
-            className="w-full px-4 py-2 rounded-xl text-sm font-medium text-[#CC5500] hover:bg-[#F5F5F4] transition-colors duration-200 mt-2"
+            onClick={() => setIsOpen(false)}
+            className="md:hidden p-2 text-gray-500 hover:text-gray-700"
+            aria-label="Close sidebar"
           >
-            Sign Out
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
-      )}
-    </aside>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {visibleMenuItems.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              onClick={() => setIsOpen(false)}
+              className={`
+                flex items-center space-x-3 px-4 py-3 rounded-xl
+                transition-all duration-200
+                ${isActive(item.path)
+                  ? 'bg-[#CC5500] text-white shadow-md'
+                  : 'text-[#4B3621] hover:bg-[#F5F5F4]'
+                }
+              `}
+            >
+              {item.icon}
+              <span className="font-medium">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* User Info */}
+        {userName && (
+          <div className="p-4 border-t border-[#E5E5E4]/50">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-[#F5F5F4]">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2D5A27] to-[#CC5500] flex items-center justify-center text-white font-semibold flex-shrink-0">
+                {userName.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[#4B3621] truncate">{userName}</p>
+                <p className="text-xs text-gray-500 truncate">{userEmail}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => signOut({ redirectTo: '/login' })}
+              className="w-full px-4 py-2 rounded-xl text-sm font-medium text-[#CC5500] hover:bg-[#F5F5F4] transition-colors duration-200 mt-2"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
+      </aside>
+    </>
   )
 }

@@ -68,7 +68,7 @@ export default async function AdminEventsPage() {
                 userEmail={session.user.email || ''}
             />
 
-            <main className="flex-1 ml-64 p-8">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-[#4B3621] mb-2">Event Moderation</h1>
@@ -120,14 +120,14 @@ export default async function AdminEventsPage() {
                                                 <h3 className="text-xl font-semibold text-[#4B3621] mb-2">
                                                     {event.title}
                                                 </h3>
-                                                <div className="flex items-center space-x-3 text-sm text-gray-600 mb-3">
-                                                    <span>By {event.author.name || 'Unknown'}</span>
-                                                    <span>•</span>
-                                                    <span>{event.author.email}</span>
-                                                    <span>•</span>
-                                                    <Badge variant="default">{event.university.shortName}</Badge>
-                                                    <span>•</span>
-                                                    <span>
+                                                <div className="flex items-center flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                                                    <span className="whitespace-nowrap">By {event.author.name || 'Unknown'}</span>
+                                                    <span className="hidden sm:inline">•</span>
+                                                    <span className="whitespace-nowrap">{event.author.email}</span>
+                                                    <span className="hidden sm:inline">•</span>
+                                                    <Badge variant="default" className="whitespace-nowrap">{event.university.shortName}</Badge>
+                                                    <span className="hidden sm:inline">•</span>
+                                                    <span className="whitespace-nowrap">
                                                         {new Date(event.createdAt).toLocaleString('en-US', {
                                                             dateStyle: 'medium',
                                                             timeStyle: 'short',
@@ -159,19 +159,21 @@ export default async function AdminEventsPage() {
                                     key={event.id}
                                     className="p-4 rounded-xl bg-[#F5F5F4] border-l-4 border-[#2D5A27]"
                                 >
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <h4 className="font-semibold text-[#4B3621] mb-1">{event.title}</h4>
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="font-semibold text-[#4B3621] mb-1 break-words">{event.title}</h4>
                                             <p className="text-sm text-gray-600 line-clamp-2 mb-2">{event.content}</p>
-                                            <div className="flex items-center space-x-2 text-xs text-gray-500">
-                                                <span>{event.author.name}</span>
-                                                <span>•</span>
-                                                <span>{event.university.shortName}</span>
-                                                <span>•</span>
-                                                <span>{new Date(event.updatedAt).toLocaleDateString()}</span>
+                                            <div className="flex items-center flex-wrap gap-2 text-xs text-gray-500">
+                                                <span className="whitespace-nowrap">{event.author.name}</span>
+                                                <span className="hidden sm:inline">•</span>
+                                                <span className="whitespace-nowrap">{event.university.shortName}</span>
+                                                <span className="hidden sm:inline">•</span>
+                                                <span className="whitespace-nowrap">{new Date(event.updatedAt).toLocaleDateString()}</span>
                                             </div>
                                         </div>
-                                        <Badge variant="success">Approved</Badge>
+                                        <div className="self-start sm:self-auto shrink-0 mt-2 sm:mt-0">
+                                            <Badge variant="success">Approved</Badge>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

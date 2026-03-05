@@ -15,15 +15,15 @@ export default async function EventsPage() {
 
     return (
         <div className="flex min-h-screen bg-[#FCFAF7]">
-            <main className={`flex-1 p-8`}>
+            <main className="flex-1 w-full max-w-full overflow-hidden p-4 md:p-8">
                 {/* Header */}
                 <div className="max-w-4xl mx-auto mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-4">
-                        <div>
+                    <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
+                        <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-4xl font-bold text-[#4B3621] mb-2">Univents</h1>
-                            <p className="text-gray-600">Discover and share events happening across campuses</p>
+                            <p className="text-gray-600 text-center md:text-left">Discover and share events happening across campuses</p>
                         </div>
-                        {session && <div className='flex flex-wrap gap-4 items-center'>
+                        {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
                             <EventEditor universities={universities} />
                             <div className="p-3 md:p-4 rounded-xl bg-blue-50 border border-blue-200">
                                 <p className="text-sm text-blue-800">

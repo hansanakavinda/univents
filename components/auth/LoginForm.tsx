@@ -81,11 +81,6 @@ export function LoginForm() {
             <div className="w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center space-x-2 mb-4">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center shadow-lg">
-                            <span className="text-white font-bold text-3xl">S</span>
-                        </div>
-                    </div>
                     <h1 className="text-3xl font-bold text-[#4B3621] mb-2">Univents</h1>
                     <p className="text-gray-600">Sign in to access your dashboard</p>
                 </div>
