@@ -142,11 +142,7 @@ export default async function DashboardPage() {
                       <p className="text-sm text-gray-600 line-clamp-2">{event.content}</p>
                       <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
                         <span>
-                          📅 {new Date(event.startDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })} — {new Date(event.endDate).toLocaleDateString('en-US', {
+                          📅 {new Date(event.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',

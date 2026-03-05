@@ -13,14 +13,13 @@ export const POST = asyncCatcher(async (request: Request) => {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const { title, content, imagePath, startDate, endDate, uniId, discardedImageIds } =
+    const { title, content, imagePath, endDate, uniId, discardedImageIds } =
         await validateRequest(request, createEventSchema)
 
     const result = await createEvent({
         title,
         content,
         imagePath: imagePath || undefined,
-        startDate,
         endDate,
         uniId,
         authorId: session.user.id,

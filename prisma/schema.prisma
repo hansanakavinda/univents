@@ -57,7 +57,6 @@ model Event {
   title      String
   content    String   @db.Text
   imagePath  String?
-  startDate  DateTime
   endDate    DateTime
   uniId      String
   university University @relation(fields: [uniId], references: [id], onDelete: Cascade)

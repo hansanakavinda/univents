@@ -5,10 +5,17 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ')
 }
 
+export const formatDate = (date: Date | string) => {
+  return new Date(date).toLocaleString('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
+}
+
 /**
  * Format date to readable string
  */
-export function formatDate(date: Date | string): string {
+export function formatDateToLong(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date
   return d.toLocaleDateString('en-US', {
     year: 'numeric',

@@ -46,7 +46,6 @@ export const createEvent = async ({
     title,
     content,
     imagePath,
-    startDate,
     endDate,
     uniId,
     authorId,
@@ -54,7 +53,6 @@ export const createEvent = async ({
     title: string
     content: string
     imagePath?: string
-    startDate: Date
     endDate: Date
     uniId: string
     authorId: string
@@ -64,7 +62,6 @@ export const createEvent = async ({
             title: title.trim(),
             content: content.trim(),
             imagePath,
-            startDate,
             endDate,
             uniId,
             authorId,
@@ -142,7 +139,7 @@ export const getUserEvents = async (userId: string, options?: { take?: number; s
     return events
 }
 
-export const getApprovedEventsPaginated = async (options?: { take?: number; skip?: number }) => {
+export const getApprovedEventsPaginated = async (options?: { take?: number; skip?: number; userId?: string }) => {
     const events = await prisma.event.findMany({
         where: { isApproved: true },
         include: {
@@ -159,13 +156,27 @@ export const getApprovedEventsPaginated = async (options?: { take?: number; skip
                     shortName: true,
                 },
             },
+            _count: {
+                select: { likes: true },
+            },
+            ...(options?.userId && {
+                likes: {
+                    where: { userId: options.userId },
+                    select: { id: true },
+                    take: 1,
+                },
+            }),
         },
-        orderBy: { startDate: 'asc' },
+        orderBy: { createdAt: 'desc' },
         take: options?.take ?? 4,
         skip: options?.skip ?? 0,
     })
 
-    return events
+    return events.map(event => ({
+        ...event,
+        likeCount: event._count.likes,
+        isLikedByUser: 'likes' in event ? (event.likes as unknown[]).length > 0 : false,
+    }))
 }
 
 export const getUserEventStats = async (userId: string) => {
@@ -192,4 +203,28 @@ export const getUserEventStats = async (userId: string) => {
         approvedEvents,
         pendingEvents,
     }
+}
+
+export const toggleEventLike = async (eventId: string, userId: string) => {
+    const existing = await prisma.eventLike.findUnique({
+        where: {
+            eventId_userId: { eventId, userId },
+        },
+    })
+
+    if (existing) {
+        await prisma.eventLike.delete({
+            where: { id: existing.id },
+        })
+    } else {
+        await prisma.eventLike.create({
+            data: { eventId, userId },
+        })
+    }
+
+    const likeCount = await prisma.eventLike.count({
+        where: { eventId },
+    })
+
+    return { liked: !existing, likeCount }
 }

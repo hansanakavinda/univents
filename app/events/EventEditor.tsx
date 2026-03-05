@@ -29,7 +29,6 @@ export function EventEditor({ universities }: EventEditorProps) {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [imagePath, setImagePath] = useState('')
-    const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [uniId, setUniId] = useState('')
     const discardedImageIds = useRef<string[]>([])
@@ -43,7 +42,6 @@ export function EventEditor({ universities }: EventEditorProps) {
         setTitle('')
         setContent('')
         setImagePath('')
-        setStartDate('')
         setEndDate('')
         setUniId('')
         setError('')
@@ -54,7 +52,7 @@ export function EventEditor({ universities }: EventEditorProps) {
         e.preventDefault()
         setError('')
 
-        if (!title.trim() || !content.trim() || !startDate || !endDate || !uniId) {
+        if (!title.trim() || !content.trim() || !endDate || !uniId) {
             setError('Please fill in all required fields')
             return
         }
@@ -68,7 +66,6 @@ export function EventEditor({ universities }: EventEditorProps) {
                     title,
                     content,
                     imagePath,
-                    startDate,
                     endDate,
                     uniId,
                     discardedImageIds: discardedImageIds.current,
@@ -150,25 +147,14 @@ export function EventEditor({ universities }: EventEditorProps) {
                         disabled={isLoading}
                     />
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            label="Start Date & Time"
-                            type="datetime-local"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            required
-                            disabled={isLoading}
-                        />
-
-                        <Input
-                            label="End Date & Time"
-                            type="datetime-local"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            required
-                            disabled={isLoading}
-                        />
-                    </div>
+                    <Input
+                        label="Event End Date"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        required
+                        disabled={isLoading}
+                    />
 
                     <Select
                         label="University"

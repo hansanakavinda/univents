@@ -134,9 +134,7 @@ export default async function AdminEventsPage() {
                                                         })}
                                                     </span>
                                                 </div>
-                                                <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                                                    <span>📅 {new Date(event.startDate).toLocaleDateString()} — {new Date(event.endDate).toLocaleDateString()}</span>
-                                                </div>
+
                                                 <p className="text-gray-700 whitespace-pre-wrap">{event.content}</p>
                                             </div>
                                         </div>

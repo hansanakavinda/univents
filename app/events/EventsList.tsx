@@ -4,32 +4,17 @@ import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import Image from 'next/image'
-
-type Event = {
-    id: string
-    title: string
-    content: string
-    imagePath: string | null
-    startDate: Date | string
-    endDate: Date | string
-    isApproved: boolean
-    createdAt: Date | string
-    author: {
-        name: string | null
-        email: string
-        role: string
-    }
-    university: {
-        name: string
-        shortName: string
-    }
-}
+import type { Event } from '@/types/event'
+import { formatDate } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 interface EventsListProps {
     initialEvents: Event[]
+    currentUserId?: string
 }
 
-export function EventsList({ initialEvents }: EventsListProps) {
+export function EventsList({ initialEvents, currentUserId }: EventsListProps) {
+    const router = useRouter()
     const [events, setEvents] = useState<Event[]>(initialEvents)
     const [isLoading, setIsLoading] = useState(false)
     const [hasMore, setHasMore] = useState(initialEvents.length >= 4)
@@ -86,11 +71,60 @@ export function EventsList({ initialEvents }: EventsListProps) {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [lastScrollY, hasMore])
 
-    const formatDate = (date: Date | string) => {
-        return new Date(date).toLocaleString('en-US', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-        })
+    const handleLike = async (eventId: string) => {
+        if (!currentUserId) {
+            router.push('/login')
+            return
+        }
+
+        // Optimistic update
+        setEvents(prev =>
+            prev.map(event => {
+                if (event.id !== eventId) return event
+                const wasLiked = event.isLikedByUser
+                return {
+                    ...event,
+                    isLikedByUser: !wasLiked,
+                    likeCount: wasLiked ? event.likeCount - 1 : event.likeCount + 1,
+                }
+            })
+        )
+
+        try {
+            const response = await fetch('/api/events/like', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ eventId }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to toggle like')
+            }
+
+            const data = await response.json()
+
+            // Sync with server state
+            setEvents(prev =>
+                prev.map(event =>
+                    event.id === eventId
+                        ? { ...event, isLikedByUser: data.liked, likeCount: data.likeCount }
+                        : event
+                )
+            )
+        } catch {
+            // Rollback on failure
+            setEvents(prev =>
+                prev.map(event => {
+                    if (event.id !== eventId) return event
+                    const wasLiked = event.isLikedByUser
+                    return {
+                        ...event,
+                        isLikedByUser: !wasLiked,
+                        likeCount: wasLiked ? event.likeCount - 1 : event.likeCount + 1,
+                    }
+                })
+            )
+        }
     }
 
     if (events.length === 0) {
@@ -111,10 +145,10 @@ export function EventsList({ initialEvents }: EventsListProps) {
 
     return (
         <>
-            <div className="space-y-6">
+            <div className="space-y-6 flex flex-col items-center">
                 {events.map((event) => (
-                    <Card key={event.id} hover>
-                        <CardContent className="p-6">
+                    <Card key={event.id} hover className='lg:max-w-[40vw] w-full'>
+                        <CardContent className="p-0 lg:p-6 ">
                             {/* Author Info */}
                             <div className="flex items-center space-x-3 mb-4">
                                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg">
@@ -137,42 +171,46 @@ export function EventsList({ initialEvents }: EventsListProps) {
                             <h2 className="text-2xl font-bold text-[#4B3621] mb-3">{event.title}</h2>
                             <p className="text-gray-700 whitespace-pre-wrap leading-relaxed mb-4">{event.content}</p>
 
-                            {/* Event Details */}
-                            <div className="mb-4 p-4 rounded-xl bg-[#F5F5F4]">
-                                <div className="flex items-center space-x-2 text-sm text-gray-700">
-                                    <svg className="w-4 h-4 text-[#2D5A27]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span>{formatDate(event.startDate)} — {formatDate(event.endDate)}</span>
-                                </div>
-                            </div>
+
 
                             {/* Event Image */}
                             {event.imagePath && (
-                                <div className="mb-4 rounded-xl overflow-hidden">
+                                <div className="mb-4 overflow-hidden flex items-center justify-center">
                                     <Image
                                         src={event.imagePath}
                                         alt={event.title}
-                                        className="w-full h-full object-cover"
-                                        width={500}
-                                        height={500}
+                                        className="lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
+                                        width={1080}
+                                        height={1920}
                                     />
                                 </div>
                             )}
 
-
                             {/* Footer */}
-                            <div className="mt-4 pt-4 border-t border-[#F5F5F4] flex items-center justify-between">
-                                <Badge variant="success">✓ Approved</Badge>
-                                <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                    <span className="flex items-center space-x-1">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        <span>Public</span>
+                            <div className="mt-4 pt-4 border-t border-[#F5F5F4] flex items-center">
+                                <button
+                                    onClick={() => handleLike(event.id)}
+                                    className="flex items-center space-x-2 group transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
+                                    title={currentUserId ? (event.isLikedByUser ? 'Unlike' : 'Like') : 'Sign in to like'}
+                                >
+                                    <svg
+                                        className={`w-6 h-6 transition-colors duration-200 ${event.isLikedByUser
+                                            ? 'text-red-500 fill-red-500'
+                                            : 'text-gray-400 fill-none group-hover:text-red-400'
+                                            }`}
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
+                                    <span className={`text-sm font-medium ${event.isLikedByUser ? 'text-red-500' : 'text-gray-500'
+                                        }`}>
+                                        {event.likeCount > 0 ? event.likeCount : ''}
                                     </span>
-                                </div>
+                                </button>
                             </div>
                         </CardContent>
                     </Card>

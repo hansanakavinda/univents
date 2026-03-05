@@ -34,6 +34,9 @@ services:
       target: builder
     env_file: .env
     profiles: [ "tools" ]
+    volumes:
+      - ./prisma:/app/prisma
+      - ./prisma.config.ts:/app/prisma.config.ts
     depends_on:
       db:
         condition: service_healthy
