@@ -1,8 +1,8 @@
 import type { Session } from 'next-auth'
 import type { Role } from '@/types/auth'
-import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ApiError } from '@/lib/api/api-utils'
+import getSession from '../getSession'
 
 /**
  * SECURITY: Freshness Check for High-Risk Operations
@@ -43,7 +43,7 @@ export async function requireFreshAuth(
   options: RequireFreshAuthOptions = {}
 ): Promise<FreshAuthResult> {
   const { roles } = options
-  const session = await auth()
+  const session = await getSession()
 
   if (!session?.user?.id) {
     throw new ApiError('Unauthorized', 401)
@@ -70,7 +70,7 @@ export async function requireFreshAuth(
   }
 
   if (roles?.length && !roles.includes(dbUser.role)) {
-    throw new ApiError(`unauthorized`,403)
+    throw new ApiError(`unauthorized`, 403)
   }
 
   return {

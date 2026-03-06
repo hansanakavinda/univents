@@ -1,12 +1,12 @@
-import { auth } from '@/lib/auth'
 import { Sidebar } from '@/components/Sidebar'
 import { getApprovedEventsPaginated } from '@/data-access/events'
 import { getAllUniversities } from '@/data-access/universities'
 import { EventEditor } from './EventEditor'
 import { EventsList } from './EventsList'
+import getSession from '@/lib/getSession'
 
 export default async function EventsPage() {
-    const session = await auth()
+    const session = await getSession()
 
     const isAuthenticated = !!session
     const userId = session?.user?.id

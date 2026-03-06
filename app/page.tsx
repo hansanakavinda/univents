@@ -1,12 +1,8 @@
-import { auth } from '@/lib/auth'
+import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
 
 export default async function Home() {
-  const session = await auth()
-
-  // if (session) {
-  //   redirect('/dashboard')
-  // }
+  // const session = await getSession()
 
   redirect('/events')
 }

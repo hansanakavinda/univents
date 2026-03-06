@@ -1,10 +1,10 @@
 import { asyncCatcher } from '@/lib/api/api-utils'
 import { getApprovedEventsPaginated } from '@/data-access/events'
-import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
+import getSession from '@/lib/getSession'
 
 export const GET = asyncCatcher(async (request: Request) => {
-    const session = await auth()
+    const session = await getSession()
 
     if (!session?.user?.id) {
         return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
