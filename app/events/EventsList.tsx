@@ -35,6 +35,19 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
     const [selectedUniId, setSelectedUniId] = useState<string>('')
     const [sortBy, setSortBy] = useState<SortBy>('recent')
     const [isFiltering, setIsFiltering] = useState(false)
+    const [expandedEvents, setExpandedEvents] = useState<Set<string>>(new Set())
+
+    const toggleExpand = (eventId: string) => {
+        setExpandedEvents(prev => {
+            const next = new Set(prev)
+            if (next.has(eventId)) {
+                next.delete(eventId)
+            } else {
+                next.add(eventId)
+            }
+            return next
+        })
+    }
 
     const buildFetchUrl = useCallback((skip: number) => {
         const params = new URLSearchParams({
@@ -275,7 +288,15 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
                                 {/* Event Content */}
                                 <h2 className="text-xl md:text-2xl font-bold text-[#4B3621] mb-3 break-words">{event.title}</h2>
-                                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed mb-4 text-sm md:text-base">{event.content}</p>
+                                <p className={`text-gray-700 whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>{event.content}</p>
+                                {event.content.split('\n').length > 3 || event.content.length > 200 ? (
+                                    <button
+                                        onClick={() => toggleExpand(event.id)}
+                                        className="text-[#CC5500] text-sm font-medium hover:underline mb-4 cursor-pointer"
+                                    >
+                                        {expandedEvents.has(event.id) ? 'See less' : 'See more'}
+                                    </button>
+                                ) : <div className="mb-3" />}
 
                                 {/* Event Image */}
                                 {event.imagePath && (
