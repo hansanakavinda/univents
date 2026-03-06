@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/Badge'
 import { prisma } from '@/lib/prisma'
 import { EventModerationActions } from './EventModerationActions'
+import { getPendingEvents, getRecentApprovedEvents, getEventStats } from '@/data-access/events'
 
 export default async function AdminEventsPage() {
     const session = await getSession()
@@ -13,52 +14,19 @@ export default async function AdminEventsPage() {
         redirect('/dashboard')
     }
 
-    // Fetch pending and all events
-    const pendingEvents = await prisma.event.findMany({
-        where: { isApproved: false },
-        include: {
-            author: {
-                select: {
-                    name: true,
-                    email: true,
-                    role: true,
-                },
-            },
-            university: {
-                select: {
-                    name: true,
-                    shortName: true,
-                },
-            },
-        },
-        orderBy: { createdAt: 'desc' },
-    })
-
-    const recentApproved = await prisma.event.findMany({
-        where: { isApproved: true },
-        include: {
-            author: {
-                select: {
-                    name: true,
-                    email: true,
-                },
-            },
-            university: {
-                select: {
-                    name: true,
-                    shortName: true,
-                },
-            },
-        },
-        orderBy: { updatedAt: 'desc' },
-        take: 10,
-    })
-
-    const stats = {
-        pending: await prisma.event.count({ where: { isApproved: false } }),
-        approved: await prisma.event.count({ where: { isApproved: true } }),
-        total: await prisma.event.count(),
+    // For ADMIN users, look up their university to filter events
+    let uniId: string | undefined
+    if (session.user.role === 'ADMIN') {
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { uniId: true },
+        })
+        uniId = user?.uniId ?? undefined
     }
+
+    const pendingEvents = await getPendingEvents({ uniId })
+    const recentApproved = await getRecentApprovedEvents({ uniId })
+    const stats = await getEventStats({ uniId })
 
     return (
         <div className="flex min-h-screen bg-[#FCFAF7]">

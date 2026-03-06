@@ -39,6 +39,11 @@ export default async function AdminPage() {
   }
 
 
+  const universities = await prisma.university.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' }
+  })
+
   return (
     <div className="flex min-h-screen bg-[#FCFAF7]">
       <Sidebar
@@ -99,7 +104,7 @@ export default async function AdminPage() {
           </Card>
         </div>
 
-        <UserRoleTabs users={users} currentUserId={userId} />
+        <UserRoleTabs users={users} universities={universities} currentUserId={userId} />
       </main>
     </div>
   )

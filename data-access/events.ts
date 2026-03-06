@@ -72,9 +72,12 @@ export const createEvent = async ({
     return { success: true, event }
 }
 
-export const getPendingEvents = async () => {
+export const getPendingEvents = async (options?: { uniId?: string }) => {
     const events = await prisma.event.findMany({
-        where: { isApproved: false },
+        where: {
+            isApproved: false,
+            ...(options?.uniId && { uniId: options.uniId }),
+        },
         include: {
             author: {
                 select: {
@@ -94,6 +97,43 @@ export const getPendingEvents = async () => {
     })
 
     return events
+}
+
+export const getRecentApprovedEvents = async (options?: { uniId?: string; take?: number }) => {
+    const events = await prisma.event.findMany({
+        where: {
+            isApproved: true,
+            ...(options?.uniId && { uniId: options.uniId }),
+        },
+        include: {
+            author: {
+                select: {
+                    name: true,
+                    email: true,
+                },
+            },
+            university: {
+                select: {
+                    name: true,
+                    shortName: true,
+                },
+            },
+        },
+        orderBy: { updatedAt: 'desc' },
+        take: options?.take ?? 10,
+    })
+
+    return events
+}
+
+export const getEventStats = async (options?: { uniId?: string }) => {
+    const where = options?.uniId ? { uniId: options.uniId } : {}
+
+    const pending = await prisma.event.count({ where: { ...where, isApproved: false } })
+    const approved = await prisma.event.count({ where: { ...where, isApproved: true } })
+    const total = await prisma.event.count({ where })
+
+    return { pending, approved, total }
 }
 
 export const getApprovedEvents = async () => {

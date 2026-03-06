@@ -32,11 +32,6 @@ export default async function EventsPage() {
                         </div>
                         {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
                             <EventEditor universities={universities} />
-                            <div className="p-3 md:p-4 rounded-xl bg-blue-50 border border-blue-200">
-                                <p className="text-sm text-blue-800">
-                                    <a href="/dashboard" className="font-semibold underline">Dashboard</a>
-                                </p>
-                            </div>
                         </div>}
 
                         {!session && (

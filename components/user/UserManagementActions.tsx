@@ -11,6 +11,7 @@ interface UserManagementActionsProps {
   userId: string
   userEmail: string
   currentRole: Role
+  userUniId: string | null
   isActive: boolean
   isCurrentUser: boolean
 }
@@ -19,6 +20,7 @@ export function UserManagementActions({
   userId,
   userEmail,
   currentRole,
+  userUniId,
   isActive,
   isCurrentUser,
 }: UserManagementActionsProps) {
@@ -60,6 +62,11 @@ export function UserManagementActions({
   const handleChangeRole = async (newRole: Role) => {
     if (isCurrentUser && newRole !== 'SUPER_ADMIN') {
       toast.warning('You cannot change your own role')
+      return
+    }
+
+    if (newRole === 'ADMIN' && !userUniId) {
+      toast.warning('Please assign a university to this user first')
       return
     }
 

@@ -4,7 +4,7 @@ import { hash } from "bcryptjs"
 import type { Role } from '@/types/auth'
 
 export const createUser = async ({ name, email, password, role }: { name: string, email: string, password: string, role: Role }) => {
-    
+
     const existingUser = await prisma.user.findUnique({
         where: { email },
         select: { id: true },
@@ -56,16 +56,47 @@ export const toggleUserStatus = async ({ userId, isActive, currentUserId }: { us
 export const changeUserRole = async ({ userId, role }: { userId: string, role: Role }) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { id: true },
+        select: { id: true, uniId: true },
     })
 
     if (!user) {
         throw new ApiError('User not found', 404)
     }
 
+    if (role === 'ADMIN' && !user.uniId) {
+        throw new ApiError('User must be assigned to a university before promoting to Admin', 400)
+    }
+
     await prisma.user.update({
         where: { id: userId },
         data: { role },
+    })
+
+    return { success: true }
+}
+
+export const changeUserUniversity = async ({ userId, uniId }: { userId: string, uniId: string | null }) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, role: true },
+    })
+
+    if (!user) {
+        throw new ApiError('User not found', 404)
+    }
+
+    if (user.role === 'ADMIN' && !uniId) {
+        throw new ApiError('Admin users must belong to a university. Please change their role first or select a valid university.', 400)
+    }
+
+    let resolvedUniId = uniId
+    if (uniId === 'none') {
+        resolvedUniId = null
+    }
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: { uniId: resolvedUniId },
     })
 
     return { success: true }

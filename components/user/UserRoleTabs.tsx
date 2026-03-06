@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { UserManagementActions } from '@/components/user/UserManagementActions'
+import { UserUniversitySelect } from '@/components/user/UserUniversitySelect'
 
 interface UserRecord {
   id: string
@@ -13,6 +14,7 @@ interface UserRecord {
   role: 'SUPER_ADMIN' | 'ADMIN' | 'USER'
   authProvider: 'MANUAL' | 'GOOGLE'
   isActive: boolean
+  uniId?: string | null
   createdAt: Date | string
   _count: {
     events: number
@@ -21,6 +23,7 @@ interface UserRecord {
 
 interface UserRoleTabsProps {
   users: UserRecord[]
+  universities: { id: string; name: string }[]
   currentUserId: string
 }
 
@@ -44,7 +47,7 @@ const tabConfig = [
 
 type TabKey = (typeof tabConfig)[number]['key']
 
-export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
+export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTabsProps) {
   const [activeTab, setActiveTab] = useState<TabKey>('SUPER_ADMIN')
 
   const groupedUsers = useMemo(() => {
@@ -93,6 +96,7 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">User</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Email</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Role</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">University</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Provider</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Status</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Events</th>
@@ -128,6 +132,14 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                       </Badge>
                     </td>
                     <td className="py-4 px-4">
+                      <UserUniversitySelect
+                        userId={user.id}
+                        currentUniId={user.uniId || null}
+                        universities={universities}
+                        isCurrentUser={user.id === currentUserId}
+                      />
+                    </td>
+                    <td className="py-4 px-4">
                       <Badge variant={user.authProvider === 'GOOGLE' ? 'info' : 'default'}>
                         {user.authProvider}
                       </Badge>
@@ -146,6 +158,7 @@ export function UserRoleTabs({ users, currentUserId }: UserRoleTabsProps) {
                         userId={user.id}
                         userEmail={user.email}
                         currentRole={user.role}
+                        userUniId={user.uniId || null}
                         isActive={user.isActive}
                         isCurrentUser={user.id === currentUserId}
                       />

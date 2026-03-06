@@ -17,3 +17,8 @@ export const toggleStatusSchema = z.object({
   userId: z.string().trim().min(1, 'Invalid request'),
   isActive: z.boolean(),
 })
+
+export const changeUniversitySchema = z.object({
+  userId: z.string().trim().min(1, 'Invalid request'),
+  uniId: z.string().nullable().or(z.literal('none')),
+})
