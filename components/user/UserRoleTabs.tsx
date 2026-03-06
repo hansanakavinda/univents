@@ -96,11 +96,11 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">User</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Email</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Role</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">University</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Provider</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Status</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Events</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">Joined</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#4B3621]">University</th>
                   <th className="text-right py-3 px-4 text-sm font-semibold text-[#4B3621]">Actions</th>
                 </tr>
               </thead>
@@ -132,14 +132,6 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
                       </Badge>
                     </td>
                     <td className="py-4 px-4">
-                      <UserUniversitySelect
-                        userId={user.id}
-                        currentUniId={user.uniId || null}
-                        universities={universities}
-                        isCurrentUser={user.id === currentUserId}
-                      />
-                    </td>
-                    <td className="py-4 px-4">
                       <Badge variant={user.authProvider === 'GOOGLE' ? 'info' : 'default'}>
                         {user.authProvider}
                       </Badge>
@@ -152,6 +144,14 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
                     <td className="py-4 px-4 text-sm text-gray-600">{user._count.events}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {new Date(user.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="py-4 px-4">
+                      <UserUniversitySelect
+                        userId={user.id}
+                        currentUniId={user.uniId || null}
+                        universities={universities}
+                        isCurrentUser={user.id === currentUserId}
+                      />
                     </td>
                     <td className="py-4 px-4">
                       <UserManagementActions

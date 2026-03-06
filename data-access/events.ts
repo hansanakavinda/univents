@@ -179,9 +179,23 @@ export const getUserEvents = async (userId: string, options?: { take?: number; s
     return events
 }
 
-export const getApprovedEventsPaginated = async (options?: { take?: number; skip?: number; userId?: string }) => {
+export const getApprovedEventsPaginated = async (options?: { take?: number; skip?: number; userId?: string; uniId?: string; sortBy?: 'recent' | 'happening' }) => {
+    const sortBy = options?.sortBy ?? 'recent'
+
+    const where: Record<string, unknown> = { isApproved: true }
+    if (options?.uniId) {
+        where.uniId = options.uniId
+    }
+    if (sortBy === 'happening') {
+        where.endDate = { gte: new Date() }
+    }
+
+    const orderBy = sortBy === 'happening'
+        ? { endDate: 'asc' as const }
+        : { createdAt: 'desc' as const }
+
     const events = await prisma.event.findMany({
-        where: { isApproved: true },
+        where,
         include: {
             author: {
                 select: {
@@ -207,7 +221,7 @@ export const getApprovedEventsPaginated = async (options?: { take?: number; skip
                 },
             }),
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         take: options?.take ?? 4,
         skip: options?.skip ?? 0,
     })

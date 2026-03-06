@@ -46,7 +46,7 @@ export default async function EventsPage() {
 
                 {/* Events Grid */}
                 <div className="max-w-4xl mx-auto">
-                    <EventsList initialEvents={initialEvents} currentUserId={userId} />
+                    <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} />
                 </div>
             </main>
         </div>
