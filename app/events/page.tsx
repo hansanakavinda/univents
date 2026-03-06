@@ -15,7 +15,14 @@ export default async function EventsPage() {
 
     return (
         <div className="flex min-h-screen bg-[#FCFAF7]">
-            <main className="flex-1 w-full max-w-full overflow-hidden p-4 md:p-8">
+            {session && (
+                <Sidebar
+                    userRole={session.user?.role || 'USER'}
+                    userName={session.user?.name || 'User'}
+                    userEmail={session.user?.email || ''}
+                />
+            )}
+            <main className={`flex-1 w-full max-w-full overflow-hidden p-4 md:p-8 ${session ? 'md:ml-64 pt-20 md:pt-8' : ''}`}>
                 {/* Header */}
                 <div className="max-w-4xl mx-auto mb-8">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">

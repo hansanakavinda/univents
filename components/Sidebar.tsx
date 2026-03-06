@@ -99,7 +99,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-full bg-white z-50 flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed left-0 top-0 h-screen w-full md:w-64 bg-white z-50 flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'
           } md:translate-x-0`}
       >
         {/* Logo and Close Button */}
