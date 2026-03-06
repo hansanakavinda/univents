@@ -18,15 +18,16 @@ interface EventsListProps {
     initialEvents: Event[]
     currentUserId?: string
     universities: University[]
+    isAuthenticated: boolean
 }
 
 type SortBy = 'recent' | 'happening'
 
-export function EventsList({ initialEvents, currentUserId, universities }: EventsListProps) {
+export function EventsList({ initialEvents, currentUserId, universities, isAuthenticated }: EventsListProps) {
     const router = useRouter()
     const [events, setEvents] = useState<Event[]>(initialEvents)
     const [isLoading, setIsLoading] = useState(false)
-    const [hasMore, setHasMore] = useState(initialEvents.length >= 4)
+    const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= 4)
     const [lastScrollY, setLastScrollY] = useState(0)
     const loadingRef = useRef(false)
 
@@ -45,8 +46,10 @@ export function EventsList({ initialEvents, currentUserId, universities }: Event
         return `/api/events/list?${params.toString()}`
     }, [selectedUniId, sortBy])
 
-    // Re-fetch events when filters change
+    // Re-fetch events when filters change (only for authenticated users)
     useEffect(() => {
+        if (!isAuthenticated) return
+
         const fetchFiltered = async () => {
             setIsFiltering(true)
             loadingRef.current = true
@@ -68,10 +71,10 @@ export function EventsList({ initialEvents, currentUserId, universities }: Event
         }
 
         fetchFiltered()
-    }, [selectedUniId, sortBy, buildFetchUrl])
+    }, [selectedUniId, sortBy, buildFetchUrl, isAuthenticated])
 
     const fetchMoreEvents = async () => {
-        if (loadingRef.current || !hasMore) return
+        if (!isAuthenticated || loadingRef.current || !hasMore) return
 
         loadingRef.current = true
         setIsLoading(true)
@@ -178,42 +181,44 @@ export function EventsList({ initialEvents, currentUserId, universities }: Event
 
     return (
         <>
-            {/* Filter Bar */}
-            <div className="mb-6 flex flex-col sm:flex-row items-stretch gap-3">
-                <select
-                    value={selectedUniId}
-                    onChange={(e) => setSelectedUniId(e.target.value)}
-                    className="w-full sm:w-auto min-w-[200px] h-11 px-4 text-sm rounded-xl border border-[#E5E5E4] bg-white text-[#4B3621] focus:outline-none focus:ring-2 focus:ring-[#CC5500] transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234B3621%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10"
-                >
-                    <option value="">All Universities</option>
-                    {universities.map((uni) => (
-                        <option key={uni.id} value={uni.id}>
-                            {uni.name}
-                        </option>
-                    ))}
-                </select>
+            {/* Filter Bar — only for authenticated users */}
+            {isAuthenticated && (
+                <div className="mb-6 flex flex-col sm:flex-row items-stretch gap-3">
+                    <select
+                        value={selectedUniId}
+                        onChange={(e) => setSelectedUniId(e.target.value)}
+                        className="w-full sm:w-auto min-w-[200px] h-11 px-4 text-sm rounded-xl border border-[#E5E5E4] bg-white text-[#4B3621] focus:outline-none focus:ring-2 focus:ring-[#CC5500] transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234B3621%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10"
+                    >
+                        <option value="">All Universities</option>
+                        {universities.map((uni) => (
+                            <option key={uni.id} value={uni.id}>
+                                {uni.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <div className="flex h-11 rounded-xl border border-[#E5E5E4] overflow-hidden bg-white sm:flex-none">
-                    <button
-                        onClick={() => setSortBy('recent')}
-                        className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
-                            ? 'bg-[#CC5500] text-white'
-                            : 'text-[#4B3621] hover:bg-[#F5F5F4]'
-                            }`}
-                    >
-                        Recently Added
-                    </button>
-                    <button
-                        onClick={() => setSortBy('happening')}
-                        className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-[#E5E5E4] ${sortBy === 'happening'
-                            ? 'bg-[#CC5500] text-white'
-                            : 'text-[#4B3621] hover:bg-[#F5F5F4]'
-                            }`}
-                    >
-                        Happening Soon
-                    </button>
+                    <div className="flex h-11 rounded-xl border border-[#E5E5E4] overflow-hidden bg-white sm:flex-none">
+                        <button
+                            onClick={() => setSortBy('recent')}
+                            className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
+                                ? 'bg-[#CC5500] text-white'
+                                : 'text-[#4B3621] hover:bg-[#F5F5F4]'
+                                }`}
+                        >
+                            Recently Added
+                        </button>
+                        <button
+                            onClick={() => setSortBy('happening')}
+                            className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-[#E5E5E4] ${sortBy === 'happening'
+                                ? 'bg-[#CC5500] text-white'
+                                : 'text-[#4B3621] hover:bg-[#F5F5F4]'
+                                }`}
+                        >
+                            Happening Soon
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Loading overlay for filter changes */}
             {isFiltering && (
@@ -326,9 +331,25 @@ export function EventsList({ initialEvents, currentUserId, universities }: Event
             )}
 
             {/* End of Events */}
-            {!hasMore && events.length > 0 && !isFiltering && (
+            {!hasMore && events.length > 0 && !isFiltering && isAuthenticated && (
                 <div className="text-center py-8">
                     <p className="text-sm text-gray-500">You&apos;ve reached the end! 🎉</p>
+                </div>
+            )}
+
+            {/* Sign-in CTA for unauthenticated users */}
+            {!isAuthenticated && events.length > 0 && (
+                <div className="text-center py-10">
+                    <div className="inline-block p-6 rounded-2xl bg-gradient-to-br from-[#FFF7ED] to-[#FEF3C7] border border-[#F59E0B]/20">
+                        <p className="text-[#4B3621] font-semibold mb-2">Want to see more events?</p>
+                        <p className="text-sm text-gray-600 mb-4">Sign in to browse all events and create your own.</p>
+                        <a
+                            href="/login"
+                            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#CC5500] text-white font-medium text-sm hover:bg-[#B34C00] transition-colors"
+                        >
+                            Sign in to continue
+                        </a>
+                    </div>
                 </div>
             )}
         </>

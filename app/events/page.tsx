@@ -8,9 +8,9 @@ import { EventsList } from './EventsList'
 export default async function EventsPage() {
     const session = await auth()
 
-    // Fetch initial 4 events
+    const isAuthenticated = !!session
     const userId = session?.user?.id
-    const initialEvents = await getApprovedEventsPaginated({ take: 4, skip: 0, userId })
+    const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? 4 : 2, skip: 0, userId })
     const universities = await getAllUniversities()
 
     return (
@@ -46,7 +46,7 @@ export default async function EventsPage() {
 
                 {/* Events Grid */}
                 <div className="max-w-4xl mx-auto">
-                    <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} />
+                    <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} isAuthenticated={isAuthenticated} />
                 </div>
             </main>
         </div>
