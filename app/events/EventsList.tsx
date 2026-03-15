@@ -265,7 +265,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
             {/* Events List */}
             {!isFiltering && events.length > 0 && (
                 <div className="space-y-6 flex flex-col items-center w-full px-2 md:px-0">
-                    {events.map((event) => (
+                    {events.map((event, index) => (
                         <Card key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
                             <CardContent className="p-0 lg:p-6">
                                 {/* Author Info */}
@@ -307,6 +307,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                             className="w-full h-auto max-h-[50vh] lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
                                             width={1080}
                                             height={1920}
+                                            priority={index < 4}
                                         />
                                     </div>
                                 )}

@@ -187,7 +187,9 @@ export const getApprovedEventsPaginated = async (options?: { take?: number; skip
         where.uniId = options.uniId
     }
     if (sortBy === 'happening') {
-        where.endDate = { gte: new Date() }
+        const startOfToday = new Date()
+        startOfToday.setHours(0, 0, 0, 0)
+        where.endDate = { gte: startOfToday }
     }
 
     const orderBy = sortBy === 'happening'
