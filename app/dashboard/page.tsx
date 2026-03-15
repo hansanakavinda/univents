@@ -124,7 +124,7 @@ export default async function DashboardPage() {
               <div className="text-center py-8">
                 <p className="text-gray-500 mb-4">You haven&apos;t created any events yet.</p>
                 <a
-                  href="/events"
+                  href="/events?create=true"
                   className="inline-flex items-center px-4 py-2 rounded-xl bg-[#CC5500] text-white hover:bg-[#B34C00] transition-colors"
                 >
                   Create Your First Event
@@ -159,47 +159,6 @@ export default async function DashboardPage() {
             )}
           </CardContent>
         </Card>
-
-        {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card hover className="cursor-pointer">
-            <a href="/events" className="block">
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-xl bg-[#CC5500] flex items-center justify-center text-white">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">Create New Event</CardTitle>
-                    <CardDescription>Share an event with the community</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-            </a>
-          </Card>
-
-          {(session.user.role === 'ADMIN' || session.user.role === 'SUPER_ADMIN') && (
-            <Card hover className="cursor-pointer">
-              <a href="/admin/events" className="block">
-                <CardHeader>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#2D5A27] flex items-center justify-center text-white">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">Moderate Events</CardTitle>
-                      <CardDescription>Review and approve pending submissions</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </a>
-            </Card>
-          )}
-        </div>
       </main>
     </div>
   )

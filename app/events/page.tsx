@@ -5,8 +5,10 @@ import { EventEditor } from './EventEditor'
 import { EventsList } from './EventsList'
 import getSession from '@/lib/getSession'
 
-export default async function EventsPage() {
+export default async function EventsPage({ searchParams }: { searchParams: Promise<{ create?: string }> }) {
     const session = await getSession()
+    const params = await searchParams
+    const shouldOpenEditor = params.create === 'true'
 
     const isAuthenticated = !!session
     const userId = session?.user?.id
@@ -31,7 +33,7 @@ export default async function EventsPage() {
                             <p className="text-gray-600 text-center md:text-left">Discover and share events happening across campuses</p>
                         </div>
                         {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
-                            <EventEditor universities={universities} />
+                            <EventEditor universities={universities} defaultOpen={shouldOpenEditor} />
                         </div>}
 
                         {!session && (

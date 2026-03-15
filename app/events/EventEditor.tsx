@@ -17,12 +17,13 @@ interface University {
 
 interface EventEditorProps {
     universities: University[]
+    defaultOpen?: boolean
 }
 
-export function EventEditor({ universities }: EventEditorProps) {
+export function EventEditor({ universities, defaultOpen = false }: EventEditorProps) {
     const router = useRouter()
     const toast = useToast()
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(defaultOpen)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
