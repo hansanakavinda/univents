@@ -4,6 +4,19 @@ import { getAllUniversities } from '@/data-access/universities'
 import { EventEditor } from './EventEditor'
 import { EventsList } from './EventsList'
 import getSession from '@/lib/getSession'
+import type { Metadata } from 'next'
+
+// SEO: Static metadata for the events listing page.
+// Uses the title template from root layout → "Upcoming University Events | Univents"
+export const metadata: Metadata = {
+    description:
+        'Browse upcoming university events across Sri Lanka. Find campus activities, workshops, cultural shows, and more on Univents.',
+    openGraph: {
+        title: 'Univents',
+        description:
+            'Browse upcoming university events across Sri Lanka. Find campus activities, workshops, cultural shows, and more.',
+    },
+}
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<{ create?: string }> }) {
     const session = await getSession()
@@ -24,9 +37,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                     userEmail={session.user?.email || ''}
                 />
             )}
-            <main className={`flex-1 w-full max-w-full overflow-hidden p-4 md:p-8 ${session ? 'md:ml-64 pt-20 md:pt-8' : ''}`}>
-                {/* Header */}
-                <div className="max-w-4xl mx-auto mb-8">
+            <main className={`flex-1 w-full max-w-full overflow-hidden md:p-6 ${session ? 'md:ml-64 pt-20 md:pt-8' : ''}`}>
+                {/* SEO: <header> for the page heading area improves document structure for crawlers */}
+                <header className="max-w-4xl mx-auto mb-4 ">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-4xl font-bold text-[#4B3621] mb-2">Univents</h1>
@@ -44,13 +57,14 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                             </div>
                         )}
                     </div>
-                </div>
+                </header>
 
-                {/* Events Grid */}
-                <div className="max-w-4xl mx-auto">
+                {/* SEO: <section> with aria-label identifies the events list for screen readers and crawlers */}
+                <section aria-label="University events" className="max-w-4xl mx-auto">
                     <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} isAuthenticated={isAuthenticated} />
-                </div>
+                </section>
             </main>
         </div>
     )
 }
+

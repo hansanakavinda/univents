@@ -284,3 +284,44 @@ export const toggleEventLike = async (eventId: string, userId: string) => {
 
     return { liked: !existing, likeCount }
 }
+
+/**
+ * Fetch a single event by ID with author and university details.
+ * Used by the /events/[id] detail page for SEO metadata and JSON-LD.
+ */
+export const getEventById = async (id: string) => {
+    const event = await prisma.event.findUnique({
+        where: { id, isApproved: true },
+        include: {
+            author: {
+                select: {
+                    name: true,
+                    email: true,
+                },
+            },
+            university: {
+                select: {
+                    name: true,
+                    shortName: true,
+                },
+            },
+            _count: {
+                select: { likes: true },
+            },
+        },
+    })
+
+    return event
+}
+
+/**
+ * Fetch all approved event IDs for sitemap generation and static params.
+ */
+export const getAllApprovedEventIds = async () => {
+    const events = await prisma.event.findMany({
+        where: { isApproved: true },
+        select: { id: true, updatedAt: true },
+    })
+    return events
+}
+
