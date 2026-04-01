@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
+import Link from 'next/link'
 
 export function LoginForm() {
     const router = useRouter()
@@ -152,6 +153,16 @@ export function LoginForm() {
                             </Button>
                         </form>
 
+                        {/* Forgot Password Link */}
+                        <div className="text-right mt-2">
+                            <Link
+                                href="/auth/forgot-password"
+                                className="text-sm text-[#CC5500] hover:text-[#B34C00] transition-colors"
+                            >
+                                Forgot password?
+                            </Link>
+                        </div>
+
                         {/* Divider */}
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">
@@ -190,9 +201,21 @@ export function LoginForm() {
                             </svg>
                             <span>{isGoogleLoading ? 'Signing In...' : 'Sign in with Google'}</span>
                         </Button>
+
+                        {/* Sign up link */}
+                        <p className="text-center text-sm text-gray-600 mt-6">
+                            Don&apos;t have an account?{' '}
+                            <Link
+                                href="/auth/signup"
+                                className="font-medium text-[#CC5500] hover:text-[#B34C00] transition-colors"
+                            >
+                                Sign Up
+                            </Link>
+                        </p>
                     </CardContent>
                 </Card>
             </div>
         </div>
     )
 }
+
