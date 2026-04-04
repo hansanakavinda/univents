@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
 import { getAllApprovedEventIds } from '@/data-access/events'
 
+export const dynamic = 'force-dynamic'
+
 const BASE_URL = process.env.NEXTAUTH_URL || 'https://univents.com.lk'
 
 /**
