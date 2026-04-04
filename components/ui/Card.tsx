@@ -6,11 +6,25 @@ interface CardProps {
   hover?: boolean
 }
 
-export function Card({ children, className = '', hover = false }: CardProps) {
+export function EventCard({ children, className = '', hover = false }: CardProps) {
   return (
     <div
       className={`
-        bg-white rounded-xl shadow-sm border border-[#F5F5F4] p-6
+        bg-white rounded-xl shadow-sm border border-[#F5F5F4]
+        ${hover ? 'hover:shadow-md transition-shadow duration-200' : ''}
+        ${className}
+      `}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function Card({ children, className = '', hover = false }: CardProps) {
+  return (
+    <div
+      className={`p-2 md:p-6
+        bg-white rounded-xl shadow-sm border border-[#F5F5F4]
         ${hover ? 'hover:shadow-md transition-shadow duration-200' : ''}
         ${className}
       `}

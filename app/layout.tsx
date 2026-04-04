@@ -15,9 +15,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// SEO: metadataBase enables proper resolution of relative OG image URLs
+// and is required for sitemap/robots generation with absolute URLs.
 export const metadata: Metadata = {
-  title: "Univents ",
-  description: "Univents is a platform for event management",
+  metadataBase: new URL(
+    process.env.NEXTAUTH_URL || "https://univents.com.lk"
+  ),
+  title: {
+    default: "Univents",
+    template: "%s | Univents",
+  },
+  description:
+    "Discover and share events happening across university campuses in Sri Lanka. Browse upcoming events, connect with communities, and never miss what matters.",
+  openGraph: {
+    siteName: "Univents",
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

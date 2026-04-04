@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Card, CardContent } from '@/components/ui/Card'
+import { EventCard, Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { LikeButton } from '@/components/ui/LikeButton'
 import Image from 'next/image'
 import type { Event } from '@/types/event'
 import { formatDate } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface University {
     id: string
@@ -24,7 +25,6 @@ interface EventsListProps {
 type SortBy = 'recent' | 'happening'
 
 export function EventsList({ initialEvents, currentUserId, universities, isAuthenticated }: EventsListProps) {
-    const router = useRouter()
     const [events, setEvents] = useState<Event[]>(initialEvents)
     const [isLoading, setIsLoading] = useState(false)
     const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= 4)
@@ -136,71 +136,16 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
         return () => window.removeEventListener('scroll', handleScroll)
     }, [lastScrollY, hasMore])
 
-    const handleLike = async (eventId: string) => {
-        if (!currentUserId) {
-            router.push('/login')
-            return
-        }
-
-        // Optimistic update
-        setEvents(prev =>
-            prev.map(event => {
-                if (event.id !== eventId) return event
-                const wasLiked = event.isLikedByUser
-                return {
-                    ...event,
-                    isLikedByUser: !wasLiked,
-                    likeCount: wasLiked ? event.likeCount - 1 : event.likeCount + 1,
-                }
-            })
-        )
-
-        try {
-            const response = await fetch('/api/events/like', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ eventId }),
-            })
-
-            if (!response.ok) {
-                throw new Error('Failed to toggle like')
-            }
-
-            const data = await response.json()
-
-            // Sync with server state
-            setEvents(prev =>
-                prev.map(event =>
-                    event.id === eventId
-                        ? { ...event, isLikedByUser: data.liked, likeCount: data.likeCount }
-                        : event
-                )
-            )
-        } catch {
-            // Rollback on failure
-            setEvents(prev =>
-                prev.map(event => {
-                    if (event.id !== eventId) return event
-                    const wasLiked = event.isLikedByUser
-                    return {
-                        ...event,
-                        isLikedByUser: !wasLiked,
-                        likeCount: wasLiked ? event.likeCount - 1 : event.likeCount + 1,
-                    }
-                })
-            )
-        }
-    }
 
     return (
         <>
             {/* Filter Bar — only for authenticated users */}
             {isAuthenticated && (
-                <div className="mb-6 flex flex-col sm:flex-row items-stretch gap-3">
+                <div className="mb-6 p-4 md:p-0 flex flex-col lg:flex-row items-stretch gap-3">
                     <select
                         value={selectedUniId}
                         onChange={(e) => setSelectedUniId(e.target.value)}
-                        className="w-full sm:w-auto min-w-[200px] h-11 px-4 text-sm rounded-xl border border-[#E5E5E4] bg-white text-[#4B3621] focus:outline-none focus:ring-2 focus:ring-[#CC5500] transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234B3621%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10"
+                        className="w-full lg:w-auto min-w-[200px] h-11 px-4 text-sm rounded-xl border border-[#E5E5E4] bg-white text-[#4B3621] focus:outline-none focus:ring-2 focus:ring-[#CC5500] transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234B3621%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10"
                     >
                         <option value="">All Universities</option>
                         {universities.map((uni) => (
@@ -210,10 +155,10 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                         ))}
                     </select>
 
-                    <div className="flex h-11 rounded-xl border border-[#E5E5E4] overflow-hidden bg-white sm:flex-none">
+                    <div className="flex h-11 rounded-xl border border-[#E5E5E4] overflow-hidden bg-white lg:flex-none">
                         <button
                             onClick={() => setSortBy('recent')}
-                            className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
+                            className={`flex-1 lg:flex-none px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
                                 ? 'bg-[#CC5500] text-white'
                                 : 'text-[#4B3621] hover:bg-[#F5F5F4]'
                                 }`}
@@ -222,7 +167,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                         </button>
                         <button
                             onClick={() => setSortBy('happening')}
-                            className={`flex-1 sm:flex-none px-4 sm:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-[#E5E5E4] ${sortBy === 'happening'
+                            className={`flex-1 lg:flex-none px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-[#E5E5E4] ${sortBy === 'happening'
                                 ? 'bg-[#CC5500] text-white'
                                 : 'text-[#4B3621] hover:bg-[#F5F5F4]'
                                 }`}
@@ -264,82 +209,72 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             {/* Events List */}
             {!isFiltering && events.length > 0 && (
-                <div className="space-y-6 flex flex-col items-center w-full px-2 md:px-0">
+                <div className="space-y-6 flex flex-col items-center w-full ">
                     {events.map((event, index) => (
-                        <Card key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
-                            <CardContent className="p-0 lg:p-6">
-                                {/* Author Info */}
-                                <div className="flex items-center space-x-3 mb-4">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
-                                        {event.author.name?.charAt(0).toUpperCase() || 'U'}
+                        <EventCard key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
+                            {/* SEO: <article> identifies each event as a self-contained piece of content */}
+                            <article>
+                                <CardContent className="p-0">
+                                    <div className="p-3 md:p-6">
+                                        <Link href={`/events/${event.id}`}>
+                                            {/* Author Info */}
+                                            <div className="flex items-center space-x-3 mb-4">
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CC5500] to-[#2D5A27] flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
+                                                    {event.author.name?.charAt(0).toUpperCase() || 'U'}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                                                        <p className="font-semibold text-[#4B3621] truncate">{event.author.name || 'Anonymous'}</p>
+                                                        <Badge variant="default" className="text-xs whitespace-nowrap">
+                                                            {event.university.shortName}
+                                                        </Badge>
+                                                    </div>
+                                                    {/* SEO: <time> with ISO dateTime helps crawlers parse event dates */}
+                                                    <time dateTime={new Date(event.createdAt).toISOString()} className="text-sm text-gray-500">
+                                                        {formatDate(event.createdAt)}
+                                                    </time>
+                                                </div>
+                                            </div>
+                                            <h2 className="text-xl md:text-2xl font-bold text-[#4B3621] mb-3 break-words">
+                                                {event.title}
+                                            </h2>
+                                        </Link>
+                                        <p className={`text-gray-700 whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>{event.content}</p>
+                                        {event.content.split('\n').length > 3 || event.content.length > 200 ? (
+                                            <button
+                                                onClick={() => toggleExpand(event.id)}
+                                                className="text-[#CC5500] text-sm font-medium hover:underline mb-4 cursor-pointer"
+                                            >
+                                                {expandedEvents.has(event.id) ? 'See less' : 'See more'}
+                                            </button>
+                                        ) : <div className="mb-3" />}
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                                            <p className="font-semibold text-[#4B3621] truncate">{event.author.name || 'Anonymous'}</p>
-                                            <Badge variant="default" className="text-xs whitespace-nowrap">
-                                                {event.university.shortName}
-                                            </Badge>
+                                    {/* Event Image */}
+                                    {event.imagePath && (
+                                        <div className="mb-4 overflow-hidden flex items-center justify-center rounded-lg">
+                                            <Image
+                                                src={event.imagePath}
+                                                alt={event.title}
+                                                className="w-full h-auto max-h-[50vh] lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
+                                                width={1080}
+                                                height={1920}
+                                                priority={index < 4}
+                                            />
                                         </div>
-                                        <p className="text-sm text-gray-500">
-                                            {formatDate(event.createdAt)}
-                                        </p>
-                                    </div>
-                                </div>
+                                    )}
 
-                                {/* Event Content */}
-                                <h2 className="text-xl md:text-2xl font-bold text-[#4B3621] mb-3 break-words">{event.title}</h2>
-                                <p className={`text-gray-700 whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>{event.content}</p>
-                                {event.content.split('\n').length > 3 || event.content.length > 200 ? (
-                                    <button
-                                        onClick={() => toggleExpand(event.id)}
-                                        className="text-[#CC5500] text-sm font-medium hover:underline mb-4 cursor-pointer"
-                                    >
-                                        {expandedEvents.has(event.id) ? 'See less' : 'See more'}
-                                    </button>
-                                ) : <div className="mb-3" />}
-
-                                {/* Event Image */}
-                                {event.imagePath && (
-                                    <div className="mb-4 overflow-hidden flex items-center justify-center rounded-lg">
-                                        <Image
-                                            src={event.imagePath}
-                                            alt={event.title}
-                                            className="w-full h-auto max-h-[50vh] lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
-                                            width={1080}
-                                            height={1920}
-                                            priority={index < 4}
+                                    {/* Footer */}
+                                    <div className="mt-4 pt-4 border-t border-[#F5F5F4] flex items-center p-6">
+                                        <LikeButton
+                                            eventId={event.id}
+                                            initialLikeCount={event.likeCount}
+                                            initialIsLiked={event.isLikedByUser}
+                                            currentUserId={currentUserId}
                                         />
                                     </div>
-                                )}
-
-                                {/* Footer */}
-                                <div className="mt-4 pt-4 border-t border-[#F5F5F4] flex items-center">
-                                    <button
-                                        onClick={() => handleLike(event.id)}
-                                        className="flex items-center space-x-2 group transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
-                                        title={currentUserId ? (event.isLikedByUser ? 'Unlike' : 'Like') : 'Sign in to like'}
-                                    >
-                                        <svg
-                                            className={`w-6 h-6 transition-colors duration-200 ${event.isLikedByUser
-                                                ? 'text-red-500 fill-red-500'
-                                                : 'text-gray-400 fill-none group-hover:text-red-400'
-                                                }`}
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            strokeWidth={2}
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                        </svg>
-                                        <span className={`text-sm font-medium ${event.isLikedByUser ? 'text-red-500' : 'text-gray-500'
-                                            }`}>
-                                            {event.likeCount > 0 ? event.likeCount : ''}
-                                        </span>
-                                    </button>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </article>
+                        </EventCard>
                     ))}
                 </div>
             )}
