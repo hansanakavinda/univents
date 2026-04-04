@@ -9,6 +9,8 @@ import { LikeButton } from '@/components/ui/LikeButton'
 import getSession from '@/lib/getSession'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic';
+
 // SEO: Generate unique metadata for each event page.
 // Google uses this for search result titles, descriptions, and social sharing previews.
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
