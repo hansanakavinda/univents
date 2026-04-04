@@ -1,4 +1,4 @@
-import { getEventById, getAllApprovedEventIds } from '@/data-access/events'
+import { getEventById } from '@/data-access/events'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -43,12 +43,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             }),
         },
     }
-}
-
-// SEO: Pre-render approved event pages at build time for faster loading and indexing.
-export async function generateStaticParams() {
-    const events = await getAllApprovedEventIds()
-    return events.map((event) => ({ id: event.id }))
 }
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
