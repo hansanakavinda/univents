@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Card, CardContent } from '@/components/ui/Card'
+import { EventCard, Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import Image from 'next/image'
@@ -211,7 +211,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
             {!isFiltering && events.length > 0 && (
                 <div className="space-y-6 flex flex-col items-center w-full ">
                     {events.map((event, index) => (
-                        <Card key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
+                        <EventCard key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
                             {/* SEO: <article> identifies each event as a self-contained piece of content */}
                             <article>
                                 <CardContent className="p-0">
@@ -274,7 +274,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     </div>
                                 </CardContent>
                             </article>
-                        </Card>
+                        </EventCard>
                     ))}
                 </div>
             )}
