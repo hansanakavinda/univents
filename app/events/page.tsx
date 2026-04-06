@@ -16,6 +16,9 @@ export const metadata: Metadata = {
         description:
             'Browse upcoming university events across Sri Lanka. Find campus activities, workshops, cultural shows, and more.',
     },
+    alternates: {
+        canonical: 'https://univents.com.lk/events', // The "Master" URL
+    },
 }
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<{ create?: string }> }) {
