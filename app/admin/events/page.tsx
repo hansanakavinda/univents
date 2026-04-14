@@ -29,7 +29,7 @@ export default async function AdminEventsPage() {
     const stats = await getEventStats({ uniId })
 
     return (
-        <div className="flex min-h-screen bg-[#FCFAF7]">
+        <div className="flex min-h-screen">
             <Sidebar
                 userRole={session.user.role}
                 userName={session.user.name || 'User'}
@@ -39,8 +39,8 @@ export default async function AdminEventsPage() {
             <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-[#4B3621] mb-2">Event Moderation</h1>
-                    <p className="text-gray-600">Review and approve pending events</p>
+                    <h1 className="text-4xl font-bold text-white mb-2">Event Moderation</h1>
+                    <p className="text-[#9ca3af]">Review and approve pending events</p>
                 </div>
 
                 {/* Stats */}
@@ -48,19 +48,19 @@ export default async function AdminEventsPage() {
                     <Card>
                         <CardHeader>
                             <CardDescription>Pending Review</CardDescription>
-                            <CardTitle className="text-4xl text-yellow-600">{stats.pending}</CardTitle>
+                            <CardTitle className="text-4xl text-yellow-400">{stats.pending}</CardTitle>
                         </CardHeader>
                     </Card>
                     <Card>
                         <CardHeader>
                             <CardDescription>Approved</CardDescription>
-                            <CardTitle className="text-4xl text-[#2D5A27]">{stats.approved}</CardTitle>
+                            <CardTitle className="text-4xl text-green-400">{stats.approved}</CardTitle>
                         </CardHeader>
                     </Card>
                     <Card>
                         <CardHeader>
                             <CardDescription>Total Events</CardDescription>
-                            <CardTitle className="text-4xl text-[#CC5500]">{stats.total}</CardTitle>
+                            <CardTitle className="text-4xl text-[#a78bfa]">{stats.total}</CardTitle>
                         </CardHeader>
                     </Card>
                 </div>
@@ -74,21 +74,21 @@ export default async function AdminEventsPage() {
                     <CardContent>
                         {pendingEvents.length === 0 ? (
                             <div className="text-center py-8">
-                                <p className="text-gray-500">No events pending approval</p>
+                                <p className="text-[#6b6b7b]">No events pending approval</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
                                 {pendingEvents.map((event) => (
                                     <div
                                         key={event.id}
-                                        className="p-6 rounded-xl bg-[#F5F5F4] border-l-4 border-yellow-500"
+                                        className="p-6 rounded-xl bg-[#1a1a2e] border-l-4 border-yellow-500"
                                     >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex-1">
-                                                <h3 className="text-xl font-semibold text-[#4B3621] mb-2">
+                                                <h3 className="text-xl font-semibold text-white mb-2">
                                                     {event.title}
                                                 </h3>
-                                                <div className="flex items-center flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                                                <div className="flex items-center flex-wrap gap-2 text-sm text-[#9ca3af] mb-3">
                                                     <span className="whitespace-nowrap">By {event.author.name || 'Unknown'}</span>
                                                     <span className="hidden sm:inline">•</span>
                                                     <span className="whitespace-nowrap">{event.author.email}</span>
@@ -103,7 +103,7 @@ export default async function AdminEventsPage() {
                                                     </span>
                                                 </div>
 
-                                                <p className="text-gray-700 whitespace-pre-wrap">{event.content}</p>
+                                                <p className="text-[#c4c4cc] whitespace-pre-wrap">{event.content}</p>
                                             </div>
                                         </div>
                                         <EventModerationActions eventId={event.id} />
@@ -125,13 +125,13 @@ export default async function AdminEventsPage() {
                             {recentApproved.map((event) => (
                                 <div
                                     key={event.id}
-                                    className="p-4 rounded-xl bg-[#F5F5F4] border-l-4 border-[#2D5A27]"
+                                    className="p-4 rounded-xl bg-[#1a1a2e] border-l-4 border-green-500"
                                 >
                                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="font-semibold text-[#4B3621] mb-1 break-words">{event.title}</h4>
-                                            <p className="text-sm text-gray-600 line-clamp-2 mb-2">{event.content}</p>
-                                            <div className="flex items-center flex-wrap gap-2 text-xs text-gray-500">
+                                            <h4 className="font-semibold text-white mb-1 break-words">{event.title}</h4>
+                                            <p className="text-sm text-[#9ca3af] line-clamp-2 mb-2">{event.content}</p>
+                                            <div className="flex items-center flex-wrap gap-2 text-xs text-[#6b6b7b]">
                                                 <span className="whitespace-nowrap">{event.author.name}</span>
                                                 <span className="hidden sm:inline">•</span>
                                                 <span className="whitespace-nowrap">{event.university.shortName}</span>

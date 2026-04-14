@@ -109,13 +109,13 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
             >
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {error && (
-                        <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                            <p className="text-sm text-red-800">{error}</p>
+                        <div className="p-3 rounded-xl bg-red-900/30 border border-red-800/30">
+                            <p className="text-sm text-red-400">{error}</p>
                         </div>
                     )}
 
-                    <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-                        <p className="text-sm text-blue-800">
+                    <div className="p-4 rounded-xl bg-blue-900/30 border border-blue-800/30">
+                        <p className="text-sm text-blue-400">
                             Your event will be reviewed by moderators before appearing publicly.
                         </p>
                     </div>

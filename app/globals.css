@@ -1,22 +1,33 @@
 @import "tailwindcss";
 
-/* Earthy Modern Dashboard Theme */
+/* Dark Purple & Black Theme */
 :root {
   /* Color Palette */
-  --primary: #CC5500;         /* Burnt Orange */
+  --primary: #CC5500;
+  /* Burnt Orange (accent) */
   --primary-hover: #B34C00;
-  --secondary: #2D5A27;       /* Forest Green */
-  --secondary-hover: #244820;
-  --accent: #4B3621;          /* Earth Brown */
-  --accent-hover: #3D2D1A;
-  --surface: #F5F5F4;         /* Stone Grey */
-  --background: #FCFAF7;      /* Ivory White */
-  --foreground: #1F1F1F;
-  --text-muted: #6B6B6B;
-  
+  --secondary: #7c3aed;
+  /* Purple */
+  --secondary-hover: #6d28d9;
+  --accent: #a78bfa;
+  /* Light Purple */
+  --accent-hover: #8b5cf6;
+  --surface: #1a1a2e;
+  /* Dark Purple Surface */
+  --surface-hover: #25253d;
+  /* Slightly lighter surface on hover */
+  --background: #0a0a0a;
+  /* Near Black */
+  --foreground: #f0f0f0;
+  --text-muted: #9ca3af;
+  --card-bg: #16161a;
+  /* Dark card background */
+  --border-color: #2d2d44;
+  /* Dark purple border */
+
   /* Glassmorphism */
-  --glass-bg: rgba(245, 245, 244, 0.7);
-  --glass-border: rgba(75, 54, 33, 0.1);
+  --glass-bg: rgba(22, 22, 26, 0.85);
+  --glass-border: rgba(125, 58, 237, 0.15);
 }
 
 @theme inline {
@@ -27,7 +38,9 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #0a0a0a 0%, #110a20 25%, #3b1a78 50%, #110a20 75%, #0a0a0a 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
   color: var(--foreground);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-feature-settings: 'kern' 1, 'liga' 1;
@@ -37,7 +50,7 @@ body {
 
 /* High Contrast Text for Accessibility */
 .high-contrast {
-  color: #000000;
+  color: #ffffff;
   font-weight: 500;
 }
 
@@ -60,12 +73,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: var(--secondary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
+  background: var(--secondary-hover);
 }
 
 /* Animations */
@@ -73,6 +86,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -82,6 +96,7 @@ body {
   from {
     transform: scale(0.95);
   }
+
   to {
     transform: scale(1);
   }
@@ -97,6 +112,7 @@ body {
     opacity: 0;
     transform: translateX(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -108,6 +124,7 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(100%);
@@ -118,6 +135,7 @@ body {
   from {
     width: 100%;
   }
+
   to {
     width: 0%;
   }

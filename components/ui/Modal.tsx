@@ -39,20 +39,20 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div
         ref={modalRef}
         className={`
-          w-full ${sizes[size]} bg-white rounded-xl shadow-2xl
+          w-full ${sizes[size]} bg-[#16161a] rounded-xl shadow-2xl border border-[#2d2d44]
           transform transition-all animate-in fade-in zoom-in duration-200
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#F5F5F4]">
-          <h2 className="text-2xl font-semibold text-[#4B3621]">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[#2d2d44]">
+          <h2 className="text-2xl font-semibold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-[#6b6b7b] hover:text-white transition-colors"
             aria-label="Close modal"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

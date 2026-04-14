@@ -17,11 +17,11 @@ export function Button({
   const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-radius-[12px]'
   
   const variants = {
-    primary: 'bg-[#CC5500] text-white hover:bg-[#B34C00] shadow-sm',
+    primary: 'bg-[#7c3aed] text-white hover:bg-[#6d28d9] shadow-sm shadow-[#7c3aed]/20',
     secondary: 'bg-[#2D5A27] text-white hover:bg-[#244820] shadow-sm',
-    accent: 'bg-[#4B3621] text-white hover:bg-[#3D2D1A] shadow-sm',
-    outline: 'border-2 border-[#CC5500] text-[#CC5500] hover:bg-[#CC5500] hover:text-white',
-    ghost: 'text-[#4B3621] hover:bg-[#F5F5F4]',
+    accent: 'bg-[#a78bfa] text-[#0a0a0a] hover:bg-[#8b5cf6] shadow-sm',
+    outline: 'border-2 border-[#7c3aed] text-[#a78bfa] hover:bg-[#7c3aed] hover:text-white',
+    ghost: 'text-[#c4c4cc] hover:bg-[#1a1a2e] hover:text-white',
     danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
   }
   

@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-[#4B3621] mb-1.5">
+          <label className="block text-sm font-medium text-[#c4c4cc] mb-1.5">
             {label}
           </label>
         )}
@@ -19,18 +19,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={`
             w-full px-4 py-2.5 rounded-xl border
-            ${error ? 'border-red-500' : 'border-[#E5E5E4]'}
-            bg-white text-[#4B3621]
-            placeholder:text-gray-400
-            focus:outline-none focus:ring-2 focus:ring-[#CC5500] focus:border-transparent
-            disabled:bg-[#F5F5F4] disabled:cursor-not-allowed
+            ${error ? 'border-red-500' : 'border-[#2d2d44]'}
+            bg-[#1a1a2e] text-white
+            placeholder:text-[#6b6b7b]
+            focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:border-transparent
+            disabled:bg-[#111118] disabled:cursor-not-allowed disabled:text-[#6b6b7b]
             transition-all duration-200
             ${className}
           `}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-xs text-red-600">{error}</p>
+          <p className="mt-1 text-xs text-red-400">{error}</p>
         )}
       </div>
     )
@@ -46,18 +46,18 @@ export function Textarea({ label, error, className = '', ...props }: TextareaPro
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-[#4B3621] mb-1.5">
+        <label className="block text-sm font-medium text-[#c4c4cc] mb-1.5">
           {label}
         </label>
       )}
       <textarea
         className={`
           w-full px-4 py-2.5 rounded-xl border
-          ${error ? 'border-red-500' : 'border-[#E5E5E4]'}
-          bg-white text-[#4B3621]
-          placeholder:text-gray-400
-          focus:outline-none focus:ring-2 focus:ring-[#CC5500] focus:border-transparent
-          disabled:bg-[#F5F5F4] disabled:cursor-not-allowed
+          ${error ? 'border-red-500' : 'border-[#2d2d44]'}
+          bg-[#1a1a2e] text-white
+          placeholder:text-[#6b6b7b]
+          focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:border-transparent
+          disabled:bg-[#111118] disabled:cursor-not-allowed disabled:text-[#6b6b7b]
           transition-all duration-200
           resize-vertical
           ${className}
@@ -65,7 +65,7 @@ export function Textarea({ label, error, className = '', ...props }: TextareaPro
         {...props}
       />
       {error && (
-        <p className="mt-1 text-xs text-red-600">{error}</p>
+        <p className="mt-1 text-xs text-red-400">{error}</p>
       )}
     </div>
   )

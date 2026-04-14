@@ -132,29 +132,29 @@ const VARIANT_STYLES: Record<
   { bg: string; border: string; icon: string; iconBg: string; progressColor: string }
 > = {
   success: {
-    bg: 'bg-white',
-    border: 'border-[#2D5A27]/20',
+    bg: 'bg-[#16161a]',
+    border: 'border-green-800/30',
     icon: '✓',
-    iconBg: 'bg-[#2D5A27]',
-    progressColor: '#2D5A27',
+    iconBg: 'bg-green-600',
+    progressColor: '#16a34a',
   },
   error: {
-    bg: 'bg-white',
-    border: 'border-red-200',
+    bg: 'bg-[#16161a]',
+    border: 'border-red-800/30',
     icon: '✕',
     iconBg: 'bg-red-600',
     progressColor: '#dc2626',
   },
   warning: {
-    bg: 'bg-white',
-    border: 'border-amber-200',
+    bg: 'bg-[#16161a]',
+    border: 'border-amber-800/30',
     icon: '⚠',
     iconBg: 'bg-amber-500',
     progressColor: '#f59e0b',
   },
   info: {
-    bg: 'bg-white',
-    border: 'border-blue-200',
+    bg: 'bg-[#16161a]',
+    border: 'border-blue-800/30',
     icon: 'ℹ',
     iconBg: 'bg-blue-500',
     progressColor: '#3b82f6',
@@ -227,13 +227,13 @@ function ToastCard({ toast, onClose, onPause, onResume, onExpire }: ToastCardPro
       </span>
 
       {/* Message */}
-      <p className="flex-1 pt-0.5 text-sm text-[#4B3621] leading-snug">{toast.message}</p>
+      <p className="flex-1 pt-0.5 text-sm text-[#e0e0e0] leading-snug">{toast.message}</p>
 
       {/* Close button */}
       <button
         type="button"
         onClick={onClose}
-        className="shrink-0 rounded-lg p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+        className="shrink-0 rounded-lg p-1 text-[#6b6b7b] hover:text-white hover:bg-[#2d2d44] transition-colors"
         aria-label="Close notification"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
