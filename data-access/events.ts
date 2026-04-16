@@ -42,6 +42,31 @@ export const moderateEvent = async ({ eventId, action }: { eventId: string, acti
     return { success: true }
 }
 
+export const deleteEventById = async (eventId: string) => {
+    const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        select: { id: true, imagePath: true },
+    })
+
+    if (!event) {
+        throw new ApiError('Event not found', 404)
+    }
+
+    // Delete the event's image from Cloudinary if it exists
+    if (event.imagePath) {
+        const publicId = extractPublicId(event.imagePath)
+        if (publicId) {
+            deleteImage(publicId).catch(() => { })
+        }
+    }
+
+    await prisma.event.delete({
+        where: { id: eventId },
+    })
+
+    return { success: true }
+}
+
 export const createEvent = async ({
     title,
     content,

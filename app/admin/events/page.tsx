@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/Badge'
 import { prisma } from '@/lib/prisma'
 import { EventModerationActions } from './EventModerationActions'
+import { RecentlyApprovedEvents } from './RecentlyApprovedEvents'
 import { getPendingEvents, getRecentApprovedEvents, getEventStats } from '@/data-access/events'
 
 export default async function AdminEventsPage() {
@@ -115,39 +116,7 @@ export default async function AdminEventsPage() {
                 </Card>
 
                 {/* Recently Approved */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Recently Approved</CardTitle>
-                        <CardDescription>Latest approved events</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {recentApproved.map((event) => (
-                                <div
-                                    key={event.id}
-                                    className="p-4 rounded-xl bg-surface border-l-4 border-green-500"
-                                >
-                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-semibold text-white mb-1 break-words">{event.title}</h4>
-                                            <p className="text-sm text-text-muted line-clamp-2 mb-2">{event.content}</p>
-                                            <div className="flex items-center flex-wrap gap-2 text-xs text-text-dim">
-                                                <span className="whitespace-nowrap">{event.author.name}</span>
-                                                <span className="hidden sm:inline">•</span>
-                                                <span className="whitespace-nowrap">{event.university.shortName}</span>
-                                                <span className="hidden sm:inline">•</span>
-                                                <span className="whitespace-nowrap">{new Date(event.updatedAt).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-                                        <div className="self-start sm:self-auto shrink-0 mt-2 sm:mt-0">
-                                            <Badge variant="success">Approved</Badge>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                <RecentlyApprovedEvents events={recentApproved} />
             </main>
         </div>
     )
