@@ -47,7 +47,7 @@ export function ForgotPasswordForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Univents</h1>
-          <p className="text-[#9ca3af]">Reset your password</p>
+          <p className="text-text-muted">Reset your password</p>
         </div>
 
         <Card>
@@ -93,11 +93,11 @@ export function ForgotPasswordForm() {
             </form>
 
             {/* Back to login */}
-            <p className="text-center text-sm text-[#9ca3af] mt-6">
+            <p className="text-center text-sm text-text-muted mt-6">
               Remember your password?{' '}
               <Link
                 href="/login"
-                className="font-medium text-[#a78bfa] hover:text-[#8b5cf6] transition-colors"
+                className="font-medium text-accent hover:text-accent-hover transition-colors"
               >
                 Sign In
               </Link>

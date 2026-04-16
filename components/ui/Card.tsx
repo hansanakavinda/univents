@@ -10,8 +10,8 @@ export function EventCard({ children, className = '', hover = false }: CardProps
   return (
     <div
       className={`
-        bg-[#16161a] rounded-xl shadow-sm border border-[#2d2d44]
-        ${hover ? 'hover:shadow-md hover:shadow-[#7c3aed]/5 transition-shadow duration-200' : ''}
+        bg-card/50 rounded-xl shadow-sm border border-border
+        ${hover ? 'hover:shadow-md hover:shadow-primary/5 transition-shadow duration-200' : ''}
         ${className}
       `}
     >
@@ -24,8 +24,8 @@ export function Card({ children, className = '', hover = false }: CardProps) {
   return (
     <div
       className={`p-2 md:p-6
-        bg-[#16161a] rounded-xl shadow-sm border border-[#2d2d44]
-        ${hover ? 'hover:shadow-md hover:shadow-[#7c3aed]/5 transition-shadow duration-200' : ''}
+        bg-card rounded-xl shadow-sm border border-border
+        ${hover ? 'hover:shadow-md hover:shadow-primary/5 transition-shadow duration-200' : ''}
         ${className}
       `}
     >
@@ -43,7 +43,7 @@ export function CardTitle({ children, className = '' }: { children: React.ReactN
 }
 
 export function CardDescription({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <p className={`text-sm text-[#9ca3af] mt-1 ${className}`}>{children}</p>
+  return <p className={`text-sm text-text-muted mt-1 ${className}`}>{children}</p>
 }
 
 export function CardContent({ children, className = '' }: { children: React.ReactNode; className?: string }) {

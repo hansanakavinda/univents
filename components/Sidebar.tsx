@@ -81,7 +81,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
       {/* Mobile Toggle Button (Visible only on mobile when sidebar is closed) */}
       <button
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-30 p-2 rounded-xl bg-[#1a1a2e] shadow-md text-[#a78bfa]"
+        className="md:hidden fixed top-4 left-4 z-30 p-2 rounded-xl bg-surface shadow-md text-accent"
         aria-label="Open sidebar"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,11 +99,11 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-full md:w-64 bg-black/10 border-r border-[#2d2d44] z-50 flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed left-0 top-0 h-screen w-full md:w-64 bg-black/10 border-r border-border z-50 flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'
           } md:translate-x-0`}
       >
         {/* Logo and Close Button */}
-        <div className="p-6 border-b border-[#2d2d44] flex items-center justify-between">
+        <div className="p-6 border-b border-border flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <div>
               <h1 className="text-lg font-bold text-white">Univents</h1>
@@ -112,7 +112,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
 
           <button
             onClick={() => setIsOpen(false)}
-            className="md:hidden p-2 text-[#9ca3af] hover:text-white"
+            className="md:hidden p-2 text-text-muted hover:text-white"
             aria-label="Close sidebar"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,8 +132,8 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
                 flex items-center space-x-3 px-4 py-3 rounded-xl
                 transition-all duration-200
                 ${isActive(item.path)
-                  ? 'bg-[#7c3aed] text-white shadow-md shadow-[#7c3aed]/20'
-                  : 'text-[#c4c4cc] hover:bg-[#1a1a2e] hover:text-white'
+                  ? 'bg-primary text-white shadow-md shadow-primary/20'
+                  : 'text-text-primary hover:bg-surface hover:text-white'
                 }
               `}
             >
@@ -145,19 +145,19 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
 
         {/* User Info */}
         {userName && (
-          <div className="p-4 border-t border-[#2d2d44]">
-            <div className="flex items-center space-x-3 p-3 rounded-xl bg-[#1a1a2e]">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#CC5500] flex items-center justify-center text-white font-semibold flex-shrink-0">
+          <div className="p-4 border-t border-border">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-surface">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold flex-shrink-0">
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">{userName}</p>
-                <p className="text-xs text-[#9ca3af] truncate">{userEmail}</p>
+                <p className="text-xs text-text-muted truncate">{userEmail}</p>
               </div>
             </div>
             <button
               onClick={() => signOut({ redirectTo: '/login' })}
-              className="w-full px-4 py-2 rounded-xl text-sm font-medium text-[#a78bfa] hover:bg-[#1a1a2e] transition-colors duration-200 mt-2"
+              className="w-full px-4 py-2 rounded-xl text-sm font-medium text-accent hover:bg-surface transition-colors duration-200 mt-2"
             >
               Sign Out
             </button>

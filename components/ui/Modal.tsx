@@ -43,16 +43,16 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       <div
         ref={modalRef}
         className={`
-          w-full ${sizes[size]} bg-[#16161a] rounded-xl shadow-2xl border border-[#2d2d44]
+          w-full ${sizes[size]} bg-card rounded-xl shadow-2xl border border-border
           transform transition-all animate-in fade-in zoom-in duration-200
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#2d2d44]">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-2xl font-semibold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="text-[#6b6b7b] hover:text-white transition-colors"
+            className="text-text-dim hover:text-white transition-colors"
             aria-label="Close modal"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

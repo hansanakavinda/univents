@@ -108,7 +108,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                     {/* Back navigation */}
                     <Link
                         href="/events"
-                        className="inline-flex items-center text-sm text-[#a78bfa] hover:text-[#8b5cf6] font-medium mb-6 transition-colors"
+                        className="inline-flex items-center text-sm text-accent hover:text-accent-hover font-medium mb-6 transition-colors"
                     >
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -116,10 +116,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                         Back to Events
                     </Link>
 
-                    <article className="bg-[#16161a] rounded-2xl shadow-sm border border-[#2d2d44] overflow-hidden">
+                    <article className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
                         {/* Event Image */}
                         {event.imagePath && (
-                            <div className="w-full flex items-center justify-center bg-[#111118]">
+                            <div className="w-full flex items-center justify-center bg-card-disabled">
                                 <Image
                                     src={event.imagePath}
                                     alt={event.title}
@@ -138,7 +138,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                             </h1>
 
                             {/* Meta info */}
-                            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-[#9ca3af]">
+                            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-text-muted">
                                 <Badge variant="default">{event.university.shortName}</Badge>
                                 <span className="flex items-center gap-1">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,20 +157,20 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
                             {/* Content */}
                             <div className="prose prose-invert max-w-none">
-                                <p className="text-[#c4c4cc] whitespace-pre-wrap leading-relaxed text-base">
+                                <p className="text-text-primary whitespace-pre-wrap leading-relaxed text-base">
                                     {event.content}
                                 </p>
                             </div>
 
                             {/* Footer with Like Button */}
-                            <div className="mt-8 pt-4 border-t border-[#2d2d44] flex items-center justify-between">
+                            <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
                                 <LikeButton
                                     eventId={event.id}
                                     initialLikeCount={event._count.likes}
                                     initialIsLiked={isLikedByUser}
                                     currentUserId={currentUserId}
                                 />
-                                <p className="text-xs text-[#6b6b7b]">
+                                <p className="text-xs text-text-dim">
                                     Posted <time dateTime={new Date(event.createdAt).toISOString()}>{formatDate(event.createdAt)}</time>
                                 </p>
                             </div>

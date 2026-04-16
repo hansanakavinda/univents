@@ -113,11 +113,11 @@ export function AddUserForm() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-[#c4c4cc] mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Role
             </label>
             <select
-              className="w-full px-4 py-2.5 rounded-xl border border-[#2d2d44] bg-[#1a1a2e] text-white focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:border-transparent disabled:bg-[#111118] disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-surface text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-card-disabled disabled:cursor-not-allowed transition-all duration-200"
               value={role}
               onChange={(event) => setRole(event.target.value as Role)}
               disabled={isLoading}

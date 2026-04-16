@@ -92,24 +92,24 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#2d2d44]">
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">User</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Email</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Role</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Provider</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Status</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Events</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Joined</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#c4c4cc]">University</th>
-                  <th className="text-right py-3 px-4 text-sm font-semibold text-[#c4c4cc]">Actions</th>
+                <tr className="border-b border-border">
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">User</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Email</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Role</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Provider</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Status</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Events</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">Joined</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-text-primary">University</th>
+                  <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {tableUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-[#2d2d44]/50 hover:bg-[#1a1a2e] transition-colors">
+                  <tr key={user.id} className="border-b border-border/50 hover:bg-surface transition-colors">
                     <td className="py-4 px-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#CC5500] flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold">
                           {user.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         <div>
@@ -117,7 +117,7 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-sm text-[#9ca3af]">{user.email}</td>
+                    <td className="py-4 px-4 text-sm text-text-muted">{user.email}</td>
                     <td className="py-4 px-4">
                       <Badge
                         variant={
@@ -141,8 +141,8 @@ export function UserRoleTabs({ users, universities, currentUserId }: UserRoleTab
                         {user.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </td>
-                    <td className="py-4 px-4 text-sm text-[#9ca3af]">{user._count.events}</td>
-                    <td className="py-4 px-4 text-sm text-[#9ca3af]">
+                    <td className="py-4 px-4 text-sm text-text-muted">{user._count.events}</td>
+                    <td className="py-4 px-4 text-sm text-text-muted">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-4 px-4">

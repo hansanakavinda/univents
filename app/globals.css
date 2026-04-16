@@ -1,40 +1,46 @@
 @import "tailwindcss";
 
-/* Dark Purple & Black Theme */
-:root {
-  /* Color Palette */
-  --primary: #CC5500;
-  /* Burnt Orange (accent) */
-  --primary-hover: #B34C00;
-  --secondary: #7c3aed;
-  /* Purple */
-  --secondary-hover: #6d28d9;
-  --accent: #a78bfa;
-  /* Light Purple */
-  --accent-hover: #8b5cf6;
-  --surface: #1a1a2e;
-  /* Dark Purple Surface */
-  --surface-hover: #25253d;
-  /* Slightly lighter surface on hover */
-  --background: #0a0a0a;
-  /* Near Black */
-  --foreground: #f0f0f0;
-  --text-muted: #9ca3af;
-  --card-bg: #16161a;
-  /* Dark card background */
-  --border-color: #2d2d44;
-  /* Dark purple border */
-
-  /* Glassmorphism */
-  --glass-bg: rgba(22, 22, 26, 0.85);
-  --glass-border: rgba(125, 58, 237, 0.15);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/* Dark Purple & Black Theme — Single source of truth */
+@theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Base */
+  --color-background: #0a0a0a;
+  --color-foreground: #f0f0f0;
+
+  /* Primary (Purple) */
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+
+  /* Accent (Light Purple) */
+  --color-accent: #a78bfa;
+  --color-accent-hover: #8b5cf6;
+
+  /* Brand (Burnt Orange) */
+  --color-brand: #CC5500;
+
+  /* Success (Green) */
+  --color-success: #2D5A27;
+  --color-success-hover: #244820;
+
+  /* Surfaces */
+  --color-surface: #1a1a2e;
+  --color-surface-hover: #25253d;
+  --color-card: #16161a;
+  --color-card-disabled: #111118;
+
+  /* Borders */
+  --color-border: #2d2d44;
+
+  /* Text */
+  --color-text-primary: #c4c4cc;
+  --color-text-muted: #9ca3af;
+  --color-text-dim: #6b6b7b;
+
+  /* Glassmorphism */
+  --color-glass-bg: rgba(22, 22, 26, 0.85);
+  --color-glass-border: rgba(125, 58, 237, 0.15);
 }
 
 body {
@@ -56,10 +62,10 @@ body {
 
 /* Glassmorphic Sidebar */
 .glass-sidebar {
-  background: var(--glass-bg);
+  background: var(--color-glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-right: 1px solid var(--glass-border);
+  border-right: 1px solid var(--color-glass-border);
 }
 
 /* Custom Scrollbar */
@@ -69,16 +75,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: var(--color-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--secondary);
+  background: var(--color-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-hover);
+  background: var(--color-primary-hover);
 }
 
 /* Animations */

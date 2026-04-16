@@ -51,7 +51,7 @@ export function SignUpForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Univents</h1>
-          <p className="text-[#9ca3af]">Create your account</p>
+          <p className="text-text-muted">Create your account</p>
         </div>
 
         <Card>
@@ -116,11 +116,11 @@ export function SignUpForm() {
             </form>
 
             {/* Link to login */}
-            <p className="text-center text-sm text-[#9ca3af] mt-6">
+            <p className="text-center text-sm text-text-muted mt-6">
               Already have an account?{' '}
               <Link
                 href="/login"
-                className="font-medium text-[#a78bfa] hover:text-[#8b5cf6] transition-colors"
+                className="font-medium text-accent hover:text-accent-hover transition-colors"
               >
                 Sign In
               </Link>

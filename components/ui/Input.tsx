@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-[#c4c4cc] mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             {label}
           </label>
         )}
@@ -19,11 +19,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={`
             w-full px-4 py-2.5 rounded-xl border
-            ${error ? 'border-red-500' : 'border-[#2d2d44]'}
-            bg-[#1a1a2e] text-white
-            placeholder:text-[#6b6b7b]
-            focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:border-transparent
-            disabled:bg-[#111118] disabled:cursor-not-allowed disabled:text-[#6b6b7b]
+            ${error ? 'border-red-500' : 'border-border'}
+            bg-surface text-white
+            placeholder:text-text-dim
+            focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+            disabled:bg-card-disabled disabled:cursor-not-allowed disabled:text-text-dim
             transition-all duration-200
             ${className}
           `}
@@ -46,18 +46,18 @@ export function Textarea({ label, error, className = '', ...props }: TextareaPro
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-[#c4c4cc] mb-1.5">
+        <label className="block text-sm font-medium text-text-primary mb-1.5">
           {label}
         </label>
       )}
       <textarea
         className={`
           w-full px-4 py-2.5 rounded-xl border
-          ${error ? 'border-red-500' : 'border-[#2d2d44]'}
-          bg-[#1a1a2e] text-white
-          placeholder:text-[#6b6b7b]
-          focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:border-transparent
-          disabled:bg-[#111118] disabled:cursor-not-allowed disabled:text-[#6b6b7b]
+          ${error ? 'border-red-500' : 'border-border'}
+          bg-surface text-white
+          placeholder:text-text-dim
+          focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+          disabled:bg-card-disabled disabled:cursor-not-allowed disabled:text-text-dim
           transition-all duration-200
           resize-vertical
           ${className}

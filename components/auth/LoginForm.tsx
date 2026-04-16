@@ -85,7 +85,7 @@ export function LoginForm() {
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-white mb-2">Univents</h1>
-                    <p className="text-[#9ca3af]">Sign in to access your dashboard</p>
+                    <p className="text-text-muted">Sign in to access your dashboard</p>
                 </div>
 
                 <Card>
@@ -157,7 +157,7 @@ export function LoginForm() {
                         <div className="text-right mt-2">
                             <Link
                                 href="/auth/forgot-password"
-                                className="text-sm text-[#a78bfa] hover:text-[#8b5cf6] transition-colors"
+                                className="text-sm text-accent hover:text-accent-hover transition-colors"
                             >
                                 Forgot password?
                             </Link>
@@ -166,10 +166,10 @@ export function LoginForm() {
                         {/* Divider */}
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-[#2d2d44]"></div>
+                                <div className="w-full border-t border-border"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-[#16161a] text-[#9ca3af]">Or continue with</span>
+                                <span className="px-2 bg-card text-text-muted">Or continue with</span>
                             </div>
                         </div>
 
@@ -203,11 +203,11 @@ export function LoginForm() {
                         </Button>
 
                         {/* Sign up link */}
-                        <p className="text-center text-sm text-[#9ca3af] mt-6">
+                        <p className="text-center text-sm text-text-muted mt-6">
                             Don&apos;t have an account?{' '}
                             <Link
                                 href="/auth/signup"
-                                className="font-medium text-[#a78bfa] hover:text-[#8b5cf6] transition-colors"
+                                className="font-medium text-accent hover:text-accent-hover transition-colors"
                             >
                                 Sign Up
                             </Link>

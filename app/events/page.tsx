@@ -46,15 +46,15 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-4xl font-bold text-white mb-2">Univents</h1>
-                            <p className="text-[#9ca3af] text-center md:text-left">Discover and share amazing events</p>
+                            <p className="text-text-muted text-center md:text-left">Discover and share amazing events</p>
                         </div>
                         {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
                             <EventEditor universities={universities} defaultOpen={shouldOpenEditor} />
                         </div>}
 
                         {!session && (
-                            <div className="p-3 md:p-4 rounded-xl bg-[#1a1a2e] border border-[#2d2d44]">
-                                <p className="text-sm text-[#a78bfa]">
+                            <div className="p-3 md:p-4 rounded-xl bg-surface border border-border">
+                                <p className="text-sm text-accent">
                                     <a href="/login" className="font-semibold underline">Sign in</a>
                                 </p>
                             </div>

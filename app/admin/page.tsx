@@ -57,7 +57,7 @@ export default async function AdminPage() {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">User Management</h1>
-            <p className="text-[#9ca3af]">
+            <p className="text-text-muted">
               Manage user roles, status, and view activity logs
             </p>
           </div>
@@ -69,7 +69,7 @@ export default async function AdminPage() {
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Total Users</CardDescription>
-              <CardTitle className="text-2xl text-[#a78bfa]">{userStats.total}</CardTitle>
+              <CardTitle className="text-2xl text-accent">{userStats.total}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
@@ -87,7 +87,7 @@ export default async function AdminPage() {
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Super Admins</CardDescription>
-              <CardTitle className="text-2xl text-[#a78bfa]">{userStats.superAdmins}</CardTitle>
+              <CardTitle className="text-2xl text-accent">{userStats.superAdmins}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
@@ -99,7 +99,7 @@ export default async function AdminPage() {
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Users</CardDescription>
-              <CardTitle className="text-2xl text-[#9ca3af]">{userStats.regularUsers}</CardTitle>
+              <CardTitle className="text-2xl text-text-muted">{userStats.regularUsers}</CardTitle>
             </CardHeader>
           </Card>
         </div>
