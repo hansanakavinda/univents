@@ -9,6 +9,10 @@ export const createEventSchema = z.object({
     discardedImageIds: z.array(z.string()).optional(),
 })
 
+export const updateEventSchema = createEventSchema.extend({
+    eventId: z.string().min(1, 'Event ID is required'),
+})
+
 export const likeSchema = z.object({
     eventId: z.string().min(1, 'Event ID is required'),
 })

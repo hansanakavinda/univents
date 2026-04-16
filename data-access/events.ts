@@ -97,6 +97,59 @@ export const createEvent = async ({
     return { success: true, event }
 }
 
+export const updateEvent = async ({
+    eventId,
+    title,
+    content,
+    imagePath,
+    endDate,
+    uniId,
+    authorId,
+}: {
+    eventId: string
+    title: string
+    content: string
+    imagePath?: string
+    endDate: Date
+    uniId: string
+    authorId: string
+}) => {
+    const existing = await prisma.event.findUnique({
+        where: { id: eventId },
+        select: { id: true, authorId: true, imagePath: true },
+    })
+
+    if (!existing) {
+        throw new ApiError('Event not found', 404)
+    }
+
+    if (existing.authorId !== authorId) {
+        throw new ApiError('You can only edit your own events', 403)
+    }
+
+    // Clean up the old image from Cloudinary if image changed
+    if (existing.imagePath && existing.imagePath !== imagePath) {
+        const publicId = extractPublicId(existing.imagePath)
+        if (publicId) {
+            deleteImage(publicId).catch(() => { })
+        }
+    }
+
+    const event = await prisma.event.update({
+        where: { id: eventId },
+        data: {
+            title: title.trim(),
+            content: content.trim(),
+            imagePath: imagePath || null,
+            endDate,
+            uniId,
+            isApproved: false, // Re-submit for review after editing
+        },
+    })
+
+    return { success: true, event }
+}
+
 export const getPendingEvents = async (options?: { uniId?: string }) => {
     const events = await prisma.event.findMany({
         where: {

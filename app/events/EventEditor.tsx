@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
@@ -15,17 +15,33 @@ interface University {
     shortName: string
 }
 
+export interface EventData {
+    id: string
+    title: string
+    content: string
+    imagePath: string | null
+    endDate: string | Date
+    uniId: string
+}
+
 interface EventEditorProps {
     universities: University[]
     defaultOpen?: boolean
+    /** If provided, the editor opens in "edit" mode with pre-filled values */
+    eventData?: EventData
+    /** Custom trigger button — when provided, the default button is not rendered */
+    trigger?: React.ReactNode
+    onOpenChange?: (open: boolean) => void
 }
 
-export function EventEditor({ universities, defaultOpen = false }: EventEditorProps) {
+export function EventEditor({ universities, defaultOpen = false, eventData, trigger, onOpenChange }: EventEditorProps) {
     const router = useRouter()
     const toast = useToast()
     const [isOpen, setIsOpen] = useState(defaultOpen)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
+
+    const isEditMode = !!eventData
 
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
@@ -34,19 +50,44 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
     const [uniId, setUniId] = useState('')
     const discardedImageIds = useRef<string[]>([])
 
+    // Pre-fill form when editing
+    useEffect(() => {
+        if (eventData) {
+            setTitle(eventData.title)
+            setContent(eventData.content)
+            setImagePath(eventData.imagePath || '')
+            setEndDate(
+                typeof eventData.endDate === 'string'
+                    ? eventData.endDate.split('T')[0]
+                    : eventData.endDate.toISOString().split('T')[0]
+            )
+            setUniId(eventData.uniId)
+        }
+    }, [eventData])
+
     const universityOptions = universities.map((uni) => ({
         value: uni.id,
         label: `${uni.name} (${uni.shortName})`,
     }))
 
     const resetForm = () => {
-        setTitle('')
-        setContent('')
-        setImagePath('')
-        setEndDate('')
-        setUniId('')
+        if (!isEditMode) {
+            setTitle('')
+            setContent('')
+            setImagePath('')
+            setEndDate('')
+            setUniId('')
+        }
         setError('')
         discardedImageIds.current = []
+    }
+
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open)
+        onOpenChange?.(open)
+        if (!open) {
+            setError('')
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -60,27 +101,40 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
 
         setIsLoading(true)
         try {
-            const response = await fetch('/api/events/create', {
-                method: 'POST',
+            const url = isEditMode ? '/api/events/update' : '/api/events/create'
+            const method = isEditMode ? 'PUT' : 'POST'
+
+            const body: Record<string, unknown> = {
+                title,
+                content,
+                imagePath,
+                endDate,
+                uniId,
+                discardedImageIds: discardedImageIds.current,
+            }
+
+            if (isEditMode && eventData) {
+                body.eventId = eventData.id
+            }
+
+            const response = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title,
-                    content,
-                    imagePath,
-                    endDate,
-                    uniId,
-                    discardedImageIds: discardedImageIds.current,
-                }),
+                body: JSON.stringify(body),
             })
 
             if (response.ok) {
                 resetForm()
-                setIsOpen(false)
+                handleOpenChange(false)
                 router.refresh()
-                toast.info('Event submitted for review! An admin will approve it soon.')
+                toast.info(
+                    isEditMode
+                        ? 'Event updated! It will be reviewed again by moderators.'
+                        : 'Event submitted for review! An admin will approve it soon.'
+                )
             } else {
                 const data = await response.json()
-                toast.error(data.error || 'Failed to create event')
+                toast.error(data.error || `Failed to ${isEditMode ? 'update' : 'create'} event`)
             }
         } catch (err) {
             setError(`An unexpected error occurred: ${err}`)
@@ -91,20 +145,21 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
 
     return (
         <>
-            <Button variant="primary" onClick={() => setIsOpen(true)} className='whitespace-nowrap'>
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Create Event
-            </Button>
+            {trigger ? (
+                <div onClick={() => handleOpenChange(true)}>{trigger}</div>
+            ) : (
+                <Button variant="primary" onClick={() => handleOpenChange(true)} className='whitespace-nowrap'>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create Event
+                </Button>
+            )}
 
             <Modal
                 isOpen={isOpen}
-                onClose={() => {
-                    setIsOpen(false)
-                    setError('')
-                }}
-                title="Create New Event"
+                onClose={() => handleOpenChange(false)}
+                title={isEditMode ? 'Edit Event' : 'Create New Event'}
                 size="lg"
             >
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -116,7 +171,9 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
 
                     <div className="p-4 rounded-xl bg-blue-900/30 border border-blue-800/30">
                         <p className="text-sm text-blue-400">
-                            Your event will be reviewed by moderators before appearing publicly.
+                            {isEditMode
+                                ? 'Editing your event will require re-approval by moderators.'
+                                : 'Your event will be reviewed by moderators before appearing publicly.'}
                         </p>
                     </div>
 
@@ -174,12 +231,14 @@ export function EventEditor({ universities, defaultOpen = false }: EventEditorPr
                             disabled={isLoading}
                             className="flex-1"
                         >
-                            {isLoading ? 'Submitting...' : 'Submit for Review'}
+                            {isLoading
+                                ? 'Submitting...'
+                                : 'Submit for Review'}
                         </Button>
                         <Button
                             type="button"
                             variant="ghost"
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => handleOpenChange(false)}
                             disabled={isLoading}
                         >
                             Cancel

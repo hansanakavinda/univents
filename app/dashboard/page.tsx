@@ -1,10 +1,11 @@
-import { auth } from '@/lib/auth'
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { prisma } from '@/lib/prisma'
+import { getAllUniversities } from '@/data-access/universities'
+import { RecentEvents } from './RecentEvents'
 
 export default async function DashboardPage() {
   const session = await getSession()
@@ -27,6 +28,8 @@ export default async function DashboardPage() {
     orderBy: { createdAt: 'desc' },
     take: 5,
   })
+
+  const universities = await getAllUniversities()
 
   const totalEvents = await prisma.event.count({
     where: { authorId: session.user.id },
@@ -120,43 +123,10 @@ export default async function DashboardPage() {
             <CardDescription>Your latest submissions and their status</CardDescription>
           </CardHeader>
           <CardContent>
-            {userEvents.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-text-muted mb-4">You haven&apos;t created any events yet.</p>
-                <a
-                  href="/events?create=true"
-                  className="inline-flex items-center px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors"
-                >
-                  Create Your First Event
-                </a>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {userEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex items-start justify-between p-4 rounded-xl bg-surface hover:bg-surface-hover transition-colors"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-white mb-1">{event.title}</h4>
-                      <p className="text-sm text-text-muted line-clamp-2">{event.content}</p>
-                      <div className="flex items-center space-x-2 text-xs text-text-dim mt-2">
-                        <span>
-                          📅 {new Date(event.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                    <Badge variant={event.isApproved ? 'success' : 'warning'}>
-                      {event.isApproved ? 'Approved' : 'Pending'}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            )}
+            <RecentEvents
+              events={JSON.parse(JSON.stringify(userEvents))}
+              universities={universities}
+            />
           </CardContent>
         </Card>
       </main>
