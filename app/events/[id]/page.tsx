@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
+import { ShareButton } from '@/components/ui/ShareButton'
 import getSession from '@/lib/getSession'
 import { prisma } from '@/lib/prisma'
 
@@ -162,14 +163,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                                 </p>
                             </div>
 
-                            {/* Footer with Like Button */}
+                            {/* Footer with Like Button and Share Button */}
                             <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
-                                <LikeButton
-                                    eventId={event.id}
-                                    initialLikeCount={event._count.likes}
-                                    initialIsLiked={isLikedByUser}
-                                    currentUserId={currentUserId}
-                                />
+                                <div className="flex items-center space-x-6">
+                                    <LikeButton
+                                        eventId={event.id}
+                                        initialLikeCount={event._count.likes}
+                                        initialIsLiked={isLikedByUser}
+                                        currentUserId={currentUserId}
+                                    />
+                                    <ShareButton eventId={event.id} title={event.title} />
+                                </div>
                                 <p className="text-xs text-text-dim">
                                     Posted <time dateTime={new Date(event.createdAt).toISOString()}>{formatDate(event.createdAt)}</time>
                                 </p>

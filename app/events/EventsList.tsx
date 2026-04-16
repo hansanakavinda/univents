@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { EventCard, Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
+import { ShareButton } from '@/components/ui/ShareButton'
 import Image from 'next/image'
 import type { Event } from '@/types/event'
 import { formatDate } from '@/lib/utils'
@@ -264,13 +265,14 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     )}
 
                                     {/* Footer */}
-                                    <div className="mt-4 pt-4 border-t border-border flex items-center p-6">
+                                    <div className="mt-4 pt-4 border-t border-border flex items-center p-6 space-x-6">
                                         <LikeButton
                                             eventId={event.id}
                                             initialLikeCount={event.likeCount}
                                             initialIsLiked={event.isLikedByUser}
                                             currentUserId={currentUserId}
                                         />
+                                        <ShareButton eventId={event.id} title={event.title} />
                                     </div>
                                 </CardContent>
                             </article>
