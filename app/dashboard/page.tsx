@@ -47,7 +47,7 @@ export default async function DashboardPage() {
   })
 
   return (
-    <div className="flex min-h-screen bg-[#FCFAF7]">
+    <div className="flex min-h-screen">
       <Sidebar
         userRole={session.user.role}
         userName={session.user.name || 'User'}
@@ -57,10 +57,10 @@ export default async function DashboardPage() {
       <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[#4B3621] mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Welcome back, {session.user.name}!
           </h1>
-          <p className="text-gray-600">
+          <p className="text-text-muted">
             Here&apos;s what&apos;s happening with your account today.
           </p>
         </div>
@@ -85,30 +85,30 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader>
               <CardDescription>Total Events</CardDescription>
-              <CardTitle className="text-4xl text-[#CC5500]">{totalEvents}</CardTitle>
+              <CardTitle className="text-4xl text-accent">{totalEvents}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">All your submitted events</p>
+              <p className="text-sm text-text-muted">All your submitted events</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardDescription>Approved</CardDescription>
-              <CardTitle className="text-4xl text-[#2D5A27]">{approvedEvents}</CardTitle>
+              <CardTitle className="text-4xl text-green-400">{approvedEvents}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">Visible to the public</p>
+              <p className="text-sm text-text-muted">Visible to the public</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardDescription>Pending Approval</CardDescription>
-              <CardTitle className="text-4xl text-yellow-600">{pendingEvents}</CardTitle>
+              <CardTitle className="text-4xl text-yellow-400">{pendingEvents}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">Awaiting moderation</p>
+              <p className="text-sm text-text-muted">Awaiting moderation</p>
             </CardContent>
           </Card>
         </div>
@@ -122,10 +122,10 @@ export default async function DashboardPage() {
           <CardContent>
             {userEvents.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">You haven&apos;t created any events yet.</p>
+                <p className="text-text-muted mb-4">You haven&apos;t created any events yet.</p>
                 <a
                   href="/events?create=true"
-                  className="inline-flex items-center px-4 py-2 rounded-xl bg-[#CC5500] text-white hover:bg-[#B34C00] transition-colors"
+                  className="inline-flex items-center px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors"
                 >
                   Create Your First Event
                 </a>
@@ -135,12 +135,12 @@ export default async function DashboardPage() {
                 {userEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="flex items-start justify-between p-4 rounded-xl bg-[#F5F5F4] hover:bg-[#ECECEB] transition-colors"
+                    className="flex items-start justify-between p-4 rounded-xl bg-surface hover:bg-surface-hover transition-colors"
                   >
                     <div className="flex-1">
-                      <h4 className="font-semibold text-[#4B3621] mb-1">{event.title}</h4>
-                      <p className="text-sm text-gray-600 line-clamp-2">{event.content}</p>
-                      <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
+                      <h4 className="font-semibold text-white mb-1">{event.title}</h4>
+                      <p className="text-sm text-text-muted line-clamp-2">{event.content}</p>
+                      <div className="flex items-center space-x-2 text-xs text-text-dim mt-2">
                         <span>
                           📅 {new Date(event.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',

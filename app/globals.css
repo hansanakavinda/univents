@@ -1,33 +1,52 @@
 @import "tailwindcss";
 
-/* Earthy Modern Dashboard Theme */
-:root {
-  /* Color Palette */
-  --primary: #CC5500;         /* Burnt Orange */
-  --primary-hover: #B34C00;
-  --secondary: #2D5A27;       /* Forest Green */
-  --secondary-hover: #244820;
-  --accent: #4B3621;          /* Earth Brown */
-  --accent-hover: #3D2D1A;
-  --surface: #F5F5F4;         /* Stone Grey */
-  --background: #FCFAF7;      /* Ivory White */
-  --foreground: #1F1F1F;
-  --text-muted: #6B6B6B;
-  
-  /* Glassmorphism */
-  --glass-bg: rgba(245, 245, 244, 0.7);
-  --glass-border: rgba(75, 54, 33, 0.1);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/* Dark Purple & Black Theme — Single source of truth */
+@theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Base */
+  --color-background: #0a0a0a;
+  --color-foreground: #f0f0f0;
+
+  /* Primary (Purple) */
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+
+  /* Accent (Light Purple) */
+  --color-accent: #a78bfa;
+  --color-accent-hover: #8b5cf6;
+
+  /* Brand (Burnt Orange) */
+  --color-brand: #CC5500;
+
+  /* Success (Green) */
+  --color-success: #2D5A27;
+  --color-success-hover: #244820;
+
+  /* Surfaces */
+  --color-surface: #1a1a2e;
+  --color-surface-hover: #25253d;
+  --color-card: #16161a;
+  --color-card-disabled: #111118;
+
+  /* Borders */
+  --color-border: #2d2d44;
+
+  /* Text */
+  --color-text-primary: #c4c4cc;
+  --color-text-muted: #9ca3af;
+  --color-text-dim: #6b6b7b;
+
+  /* Glassmorphism */
+  --color-glass-bg: rgba(22, 22, 26, 0.85);
+  --color-glass-border: rgba(125, 58, 237, 0.15);
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #0a0a0a 0%, #110a20 25%, #3b1a78 50%, #110a20 75%, #0a0a0a 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
   color: var(--foreground);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-feature-settings: 'kern' 1, 'liga' 1;
@@ -37,16 +56,16 @@ body {
 
 /* High Contrast Text for Accessibility */
 .high-contrast {
-  color: #000000;
+  color: #ffffff;
   font-weight: 500;
 }
 
 /* Glassmorphic Sidebar */
 .glass-sidebar {
-  background: var(--glass-bg);
+  background: var(--color-glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-right: 1px solid var(--glass-border);
+  border-right: 1px solid var(--color-glass-border);
 }
 
 /* Custom Scrollbar */
@@ -56,16 +75,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: var(--color-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: var(--color-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
+  background: var(--color-primary-hover);
 }
 
 /* Animations */
@@ -73,6 +92,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -82,6 +102,7 @@ body {
   from {
     transform: scale(0.95);
   }
+
   to {
     transform: scale(1);
   }
@@ -97,6 +118,7 @@ body {
     opacity: 0;
     transform: translateX(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -108,6 +130,7 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(100%);
@@ -118,6 +141,7 @@ body {
   from {
     width: 100%;
   }
+
   to {
     width: 0%;
   }

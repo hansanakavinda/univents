@@ -17,19 +17,19 @@ export function Select({ label, error, options, placeholder, className = '', val
     return (
         <div className="w-full">
             {label && (
-                <label className="block text-sm font-medium text-[#4B3621] mb-1.5">
+                <label className="block text-sm font-medium text-text-primary mb-1.5">
                     {label}
                 </label>
             )}
             <select
                 className={`
           w-full px-4 py-2.5 rounded-xl border
-          ${error ? 'border-red-500' : 'border-[#E5E5E4]'}
-          bg-white text-[#4B3621]
-          focus:outline-none focus:ring-2 focus:ring-[#CC5500] focus:border-transparent
-          disabled:bg-[#F5F5F4] disabled:cursor-not-allowed
+          ${error ? 'border-red-500' : 'border-border'}
+          bg-surface text-white
+          focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+          disabled:bg-card-disabled disabled:cursor-not-allowed disabled:text-text-dim
           transition-all duration-200
-          ${!value ? 'text-gray-400' : ''}
+          ${!value ? 'text-text-dim' : ''}
           ${className}
         `}
                 value={value}
@@ -47,7 +47,7 @@ export function Select({ label, error, options, placeholder, className = '', val
                 ))}
             </select>
             {error && (
-                <p className="mt-1 text-xs text-red-600">{error}</p>
+                <p className="mt-1 text-xs text-red-400">{error}</p>
             )}
         </div>
     )

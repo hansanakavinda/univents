@@ -45,7 +45,7 @@ export default async function AdminPage() {
   })
 
   return (
-    <div className="flex min-h-screen bg-[#FCFAF7]">
+    <div className="flex min-h-screen">
       <Sidebar
         userRole={session.user.role}
         userName={session.user.name || 'User'}
@@ -56,8 +56,8 @@ export default async function AdminPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-[#4B3621] mb-2">User Management</h1>
-            <p className="text-gray-600">
+            <h1 className="text-4xl font-bold text-white mb-2">User Management</h1>
+            <p className="text-text-muted">
               Manage user roles, status, and view activity logs
             </p>
           </div>
@@ -69,37 +69,37 @@ export default async function AdminPage() {
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Total Users</CardDescription>
-              <CardTitle className="text-2xl text-[#CC5500]">{userStats.total}</CardTitle>
+              <CardTitle className="text-2xl text-accent">{userStats.total}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Active</CardDescription>
-              <CardTitle className="text-2xl text-[#2D5A27]">{userStats.active}</CardTitle>
+              <CardTitle className="text-2xl text-green-400">{userStats.active}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Inactive</CardDescription>
-              <CardTitle className="text-2xl text-red-600">{userStats.inactive}</CardTitle>
+              <CardTitle className="text-2xl text-red-400">{userStats.inactive}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Super Admins</CardDescription>
-              <CardTitle className="text-2xl text-[#4B3621]">{userStats.superAdmins}</CardTitle>
+              <CardTitle className="text-2xl text-accent">{userStats.superAdmins}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Admins</CardDescription>
-              <CardTitle className="text-2xl text-blue-600">{userStats.admins}</CardTitle>
+              <CardTitle className="text-2xl text-blue-400">{userStats.admins}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
               <CardDescription className="text-xs">Users</CardDescription>
-              <CardTitle className="text-2xl text-gray-600">{userStats.regularUsers}</CardTitle>
+              <CardTitle className="text-2xl text-text-muted">{userStats.regularUsers}</CardTitle>
             </CardHeader>
           </Card>
         </div>

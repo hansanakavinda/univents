@@ -50,12 +50,12 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FCFAF7] via-[#F5F5F4] to-[#E5E5E4] p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#4B3621] mb-2">Univents</h1>
-          <p className="text-gray-600">Set your new password</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Univents</h1>
+          <p className="text-text-muted">Set your new password</p>
         </div>
 
         <Card>
@@ -67,7 +67,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           <CardContent>
             {/* Server Messages */}
             {serverMessage && (
-              <div className="mb-4 p-3 rounded-xl border bg-red-50 border-red-200 text-red-800">
+              <div className="mb-4 p-3 rounded-xl border bg-red-900/30 border-red-800/30 text-red-400">
                 <p className="text-sm">{serverMessage.text}</p>
               </div>
             )}
@@ -105,10 +105,10 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             </form>
 
             {/* Back to login */}
-            <p className="text-center text-sm text-gray-600 mt-6">
+            <p className="text-center text-sm text-text-muted mt-6">
               <Link
                 href="/login"
-                className="font-medium text-[#CC5500] hover:text-[#B34C00] transition-colors"
+                className="font-medium text-accent hover:text-accent-hover transition-colors"
               >
                 ← Back to Sign In
               </Link>

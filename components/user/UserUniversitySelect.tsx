@@ -54,7 +54,7 @@ export function UserUniversitySelect({
 
     return (
         <select
-            className="max-w-[150px] px-3 py-1.5 text-sm rounded-lg border border-[#E5E5E4] bg-white text-[#4B3621] focus:outline-none focus:ring-2 focus:ring-[#CC5500] disabled:opacity-50 truncate"
+            className="max-w-[150px] px-3 py-1.5 text-sm rounded-lg border border-border bg-surface text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 truncate"
             value={currentUniId || 'none'}
             onChange={(e) => handleChangeUniversity(e.target.value)}
             title={universities.find(u => u.id === currentUniId)?.name || 'None'}

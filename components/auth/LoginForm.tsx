@@ -80,12 +80,12 @@ export function LoginForm() {
     const errorMessage = error ? getErrorMessage(error) : null
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FCFAF7] via-[#F5F5F4] to-[#E5E5E4] p-4">
+        <div className="min-h-screen flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-[#4B3621] mb-2">Univents</h1>
-                    <p className="text-gray-600">Sign in to access your dashboard</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">Univents</h1>
+                    <p className="text-text-muted">Sign in to access your dashboard</p>
                 </div>
 
                 <Card>
@@ -99,8 +99,8 @@ export function LoginForm() {
                     <CardContent>
                         {/* Error Messages */}
                         {(errorMessage || formError) && (
-                            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200">
-                                <p className="text-sm text-red-800">{errorMessage || formError}</p>
+                            <div className="mb-4 p-3 rounded-xl bg-red-900/30 border border-red-800/30">
+                                <p className="text-sm text-red-400">{errorMessage || formError}</p>
                             </div>
                         )}
 
@@ -157,7 +157,7 @@ export function LoginForm() {
                         <div className="text-right mt-2">
                             <Link
                                 href="/auth/forgot-password"
-                                className="text-sm text-[#CC5500] hover:text-[#B34C00] transition-colors"
+                                className="text-sm text-accent hover:text-accent-hover transition-colors"
                             >
                                 Forgot password?
                             </Link>
@@ -166,10 +166,10 @@ export function LoginForm() {
                         {/* Divider */}
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-[#E5E5E4]"></div>
+                                <div className="w-full border-t border-border"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                                <span className="px-2 bg-card text-text-muted">Or continue with</span>
                             </div>
                         </div>
 
@@ -203,11 +203,11 @@ export function LoginForm() {
                         </Button>
 
                         {/* Sign up link */}
-                        <p className="text-center text-sm text-gray-600 mt-6">
+                        <p className="text-center text-sm text-text-muted mt-6">
                             Don&apos;t have an account?{' '}
                             <Link
                                 href="/auth/signup"
-                                className="font-medium text-[#CC5500] hover:text-[#B34C00] transition-colors"
+                                className="font-medium text-accent hover:text-accent-hover transition-colors"
                             >
                                 Sign Up
                             </Link>

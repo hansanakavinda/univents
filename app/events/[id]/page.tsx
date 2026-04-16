@@ -103,12 +103,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <div className="min-h-screen bg-[#FCFAF7]">
+            <div className="min-h-screen">
                 <main className="max-w-3xl mx-auto px-4 py-8 md:py-12">
                     {/* Back navigation */}
                     <Link
                         href="/events"
-                        className="inline-flex items-center text-sm text-[#CC5500] hover:text-[#B34C00] font-medium mb-6 transition-colors"
+                        className="inline-flex items-center text-sm text-accent hover:text-accent-hover font-medium mb-6 transition-colors"
                     >
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -116,10 +116,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                         Back to Events
                     </Link>
 
-                    <article className="bg-white rounded-2xl shadow-sm border border-[#F5F5F4] overflow-hidden">
+                    <article className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
                         {/* Event Image */}
                         {event.imagePath && (
-                            <div className="w-full flex items-center justify-center bg-[#F9F7F4]">
+                            <div className="w-full flex items-center justify-center bg-card-disabled">
                                 <Image
                                     src={event.imagePath}
                                     alt={event.title}
@@ -133,12 +133,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
                         <div className="p-6 md:p-8">
                             {/* Title */}
-                            <h1 className="text-2xl md:text-3xl font-bold text-[#4B3621] mb-4">
+                            <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
                                 {event.title}
                             </h1>
 
                             {/* Meta info */}
-                            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-gray-600">
+                            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-text-muted">
                                 <Badge variant="default">{event.university.shortName}</Badge>
                                 <span className="flex items-center gap-1">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,21 +156,21 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                             </div>
 
                             {/* Content */}
-                            <div className="prose prose-gray max-w-none">
-                                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-base">
+                            <div className="prose prose-invert max-w-none">
+                                <p className="text-text-primary whitespace-pre-wrap leading-relaxed text-base">
                                     {event.content}
                                 </p>
                             </div>
 
                             {/* Footer with Like Button */}
-                            <div className="mt-8 pt-4 border-t border-[#F5F5F4] flex items-center justify-between">
+                            <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
                                 <LikeButton
                                     eventId={event.id}
                                     initialLikeCount={event._count.likes}
                                     initialIsLiked={isLikedByUser}
                                     currentUserId={currentUserId}
                                 />
-                                <p className="text-xs text-gray-400">
+                                <p className="text-xs text-text-dim">
                                     Posted <time dateTime={new Date(event.createdAt).toISOString()}>{formatDate(event.createdAt)}</time>
                                 </p>
                             </div>
