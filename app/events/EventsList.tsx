@@ -278,7 +278,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                             <Image
                                                 src={event.imagePath}
                                                 alt={event.title}
-                                                className="w-full h-auto max-h-[50vh] lg:max-w-[50vw] lg:max-h-[70vh] object-contain"
+                                                className="w-full h-auto lg:max-w-3xl object-contain"
                                                 width={1080}
                                                 height={1920}
                                                 priority={index < 4}
