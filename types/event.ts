@@ -4,6 +4,8 @@ export type Event = {
     content: string
     imagePath: string | null
     endDate: Date | string
+    eventTime?: string | null
+    venue?: string | null
     isApproved: boolean
     createdAt: Date | string
     likeCount: number

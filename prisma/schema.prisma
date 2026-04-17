@@ -58,6 +58,8 @@ model Event {
   content    String   @db.Text
   imagePath  String?
   endDate    DateTime
+  eventTime  String?    // Local time as "HH:mm" (no timezone conversion)
+  venue      String?
   uniId      String
   university University @relation(fields: [uniId], references: [id], onDelete: Cascade)
   isApproved Boolean  @default(false)

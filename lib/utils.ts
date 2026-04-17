@@ -36,6 +36,18 @@ export function formatDateTime(date: Date | string): string {
 }
 
 /**
+ * Format a time string ("HH:mm") into a readable 12-hour format like "2:30 PM".
+ * Used for eventTime which is stored as a plain string to preserve local time.
+ */
+export function formatTime(time: string): string {
+    const [h, m] = time.split(':').map(Number)
+    if (isNaN(h) || isNaN(m)) return time
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const h12 = h % 12 || 12
+    return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+}
+
+/**
  * Truncate text with ellipsis
  */
 export function truncate(text: string, maxLength: number): string {

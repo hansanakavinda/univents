@@ -16,6 +16,8 @@ interface UserEvent {
     content: string
     imagePath: string | null
     endDate: Date | string
+    eventTime?: string | null
+    venue?: string | null
     uniId: string
     isApproved: boolean
     createdAt: Date | string
@@ -77,6 +79,8 @@ export function RecentEvents({ events, universities }: RecentEventsProps) {
                                         content: event.content,
                                         imagePath: event.imagePath,
                                         endDate: event.endDate,
+                                        eventTime: event.eventTime,
+                                        venue: event.venue,
                                         uniId: event.uniId,
                                     })
                                 }

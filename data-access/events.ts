@@ -72,6 +72,8 @@ export const createEvent = async ({
     content,
     imagePath,
     endDate,
+    eventTime,
+    venue,
     uniId,
     authorId,
 }: {
@@ -79,6 +81,8 @@ export const createEvent = async ({
     content: string
     imagePath?: string
     endDate: Date
+    eventTime?: string
+    venue?: string
     uniId: string
     authorId: string
 }) => {
@@ -88,6 +92,8 @@ export const createEvent = async ({
             content: content.trim(),
             imagePath,
             endDate,
+            eventTime: eventTime || null,
+            venue: venue?.trim() || null,
             uniId,
             authorId,
             isApproved: false,
@@ -103,6 +109,8 @@ export const updateEvent = async ({
     content,
     imagePath,
     endDate,
+    eventTime,
+    venue,
     uniId,
     authorId,
 }: {
@@ -111,6 +119,8 @@ export const updateEvent = async ({
     content: string
     imagePath?: string
     endDate: Date
+    eventTime?: string
+    venue?: string
     uniId: string
     authorId: string
 }) => {
@@ -142,6 +152,8 @@ export const updateEvent = async ({
             content: content.trim(),
             imagePath: imagePath || null,
             endDate,
+            eventTime: eventTime || null,
+            venue: venue?.trim() || null,
             uniId,
             isApproved: false, // Re-submit for review after editing
         },

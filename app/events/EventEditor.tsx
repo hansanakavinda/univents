@@ -21,6 +21,8 @@ export interface EventData {
     content: string
     imagePath: string | null
     endDate: string | Date
+    eventTime?: string | null
+    venue?: string | null
     uniId: string
 }
 
@@ -47,6 +49,8 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
     const [content, setContent] = useState('')
     const [imagePath, setImagePath] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [eventTime, setEventTime] = useState('')
+    const [venue, setVenue] = useState('')
     const [uniId, setUniId] = useState('')
     const discardedImageIds = useRef<string[]>([])
 
@@ -61,6 +65,8 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
                     ? eventData.endDate.split('T')[0]
                     : eventData.endDate.toISOString().split('T')[0]
             )
+            setEventTime(eventData.eventTime || '')
+            setVenue(eventData.venue || '')
             setUniId(eventData.uniId)
         }
     }, [eventData])
@@ -76,6 +82,8 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
             setContent('')
             setImagePath('')
             setEndDate('')
+            setEventTime('')
+            setVenue('')
             setUniId('')
         }
         setError('')
@@ -109,6 +117,8 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
                 content,
                 imagePath,
                 endDate,
+                eventTime: eventTime || undefined,
+                venue: venue || undefined,
                 uniId,
                 discardedImageIds: discardedImageIds.current,
             }
@@ -206,7 +216,24 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
                     />
 
                     <Input
-                        label="Event End Date"
+                        label="Event Time"
+                        type="time"
+                        value={eventTime}
+                        onChange={(e) => setEventTime(e.target.value)}
+                        disabled={isLoading}
+                    />
+
+                    <Input
+                        label="Venue"
+                        placeholder="e.g. Main Auditorium, UCSC"
+                        value={venue}
+                        onChange={(e) => setVenue(e.target.value)}
+                        disabled={isLoading}
+                        maxLength={300}
+                    />
+
+                    <Input
+                        label="Event Date"
                         type="date"
                         value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}

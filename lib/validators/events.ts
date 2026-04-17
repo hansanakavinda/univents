@@ -5,6 +5,8 @@ export const createEventSchema = z.object({
     content: z.string().trim().min(1, 'Description is required').max(5000, 'Description must be 5000 characters or less'),
     imagePath: z.string().trim().optional(),
     endDate: z.coerce.date({ message: 'End date is required' }),
+    eventTime: z.string().trim().optional(),
+    venue: z.string().trim().max(300, 'Venue must be 300 characters or less').optional(),
     uniId: z.string().trim().min(1, 'University is required'),
     discardedImageIds: z.array(z.string()).optional(),
 })

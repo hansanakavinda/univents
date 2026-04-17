@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatTime, formatDateToLong } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
@@ -74,14 +74,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         description: event.content.length > 300
             ? event.content.slice(0, 297) + '...'
             : event.content,
-        startDate: new Date(event.createdAt).toISOString(),
+        startDate: new Date(event.endDate).toISOString(),
         endDate: new Date(event.endDate).toISOString(),
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         ...(event.imagePath && { image: event.imagePath }),
         location: {
             '@type': 'Place',
-            name: event.university.name,
+            name: event.venue || event.university.name,
+            ...(event.venue && {
+                address: event.venue,
+            }),
         },
         organizer: {
             '@type': 'Organization',
@@ -147,13 +150,29 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                                     </svg>
                                     {event.author.name || 'Anonymous'}
                                 </span>
-                                <span className="flex items-center gap-1">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            </div>
+
+                            {/* Event Details Compact Box */}
+                            <div className="bg-accent/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-accent/20 flex flex-wrap items-center gap-x-6 gap-y-3 mb-6 shadow-sm w-fit max-w-full">
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    {/* SEO: <time> with datetime attribute helps search engines understand event timing */}
-                                    Ends <time dateTime={new Date(event.endDate).toISOString()}>{formatDate(event.endDate)}</time>
-                                </span>
+                                    <span className="text-white text-sm font-medium">{formatDateToLong(event.endDate)}</span>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span className="text-white text-sm font-medium">{event.eventTime ? formatTime(event.eventTime) : 'TBA'}</span>
+                                </div>
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <svg className="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span className="text-white text-sm font-medium line-clamp-1 break-words">{event.venue || event.university.name}</span>
+                                </div>
                             </div>
 
                             {/* Content */}

@@ -7,7 +7,7 @@ import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
 import Image from 'next/image'
 import type { Event } from '@/types/event'
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatTime, formatDateToLong } from '@/lib/utils'
 import Link from 'next/link'
 
 interface University {
@@ -156,10 +156,10 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                         ))}
                     </select>
 
-                    <div className="flex h-11 rounded-xl border border-border overflow-hidden bg-surface lg:flex-none">
+                    <div className="grid grid-cols-2 h-11 rounded-xl border border-border overflow-hidden bg-surface lg:flex-none">
                         <button
                             onClick={() => setSortBy('recent')}
-                            className={`flex-1 lg:flex-none px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
+                            className={`px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
                                 ? 'bg-primary text-white'
                                 : 'text-text-primary hover:bg-surface-hover'
                                 }`}
@@ -168,7 +168,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                         </button>
                         <button
                             onClick={() => setSortBy('happening')}
-                            className={`flex-1 lg:flex-none px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-border ${sortBy === 'happening'
+                            className={`px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-border ${sortBy === 'happening'
                                 ? 'bg-primary text-white'
                                 : 'text-text-primary hover:bg-surface-hover'
                                 }`}
@@ -217,28 +217,50 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                             <article>
                                 <CardContent className="p-0">
                                     <div className="p-3 md:p-6">
-                                        <Link href={`/events/${event.id}`}>
-                                            {/* Author Info */}
-                                            <div className="flex items-center space-x-3 mb-4">
-                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
-                                                    {event.author.name?.charAt(0).toUpperCase() || 'U'}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                                                        <p className="font-semibold text-white truncate">{event.author.name || 'Anonymous'}</p>
-                                                        <Badge variant="default" className="text-xs whitespace-nowrap">
-                                                            {event.university.shortName}
-                                                        </Badge>
-                                                    </div>
-                                                    {/* SEO: <time> with ISO dateTime helps crawlers parse event dates */}
-                                                    <time dateTime={new Date(event.createdAt).toISOString()} className="text-sm text-text-muted">
-                                                        {formatDate(event.createdAt)}
-                                                    </time>
+                                        <Link href={`/events/${event.id}`} >
+                                            <div className='flex justify-between'>
+                                                {/* Author Info */}
+                                                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 ">
+                                                    {event.title}
+                                                </h1>
+
+                                                {/* Meta info */}
+                                                <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-text-muted">
+                                                    <Badge variant="default">{event.university.shortName}</Badge>
+                                                    <span className="flex items-center gap-1">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        </svg>
+                                                        {event.author.name || 'Anonymous'}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <h2 className="text-xl md:text-2xl font-bold text-white mb-3 break-words">
-                                                {event.title}
-                                            </h2>
+
+                                            <div className="bg-accent/10 backdrop-blur-sm px-3 py-2.5 rounded-lg border border-accent/20 flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 shadow-sm w-fit max-w-full">
+                                                <div className="flex items-center gap-1.5 shrink-0">
+                                                    <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <span className="text-white text-xs font-semibold">{formatDateToLong(event.endDate)}</span>
+                                                </div>
+                                                {event.eventTime && (
+                                                    <div className="flex items-center gap-1.5 shrink-0">
+                                                        <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <span className="text-white text-xs font-semibold">{formatTime(event.eventTime)}</span>
+                                                    </div>
+                                                )}
+                                                {event.venue && (
+                                                    <div className="flex items-center gap-1.5 min-w-0">
+                                                        <svg className="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        <span className="text-white text-xs font-semibold line-clamp-1 break-words">{event.venue}</span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </Link>
                                         <p className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>{event.content}</p>
                                         {event.content.split('\n').length > 3 || event.content.length > 200 ? (

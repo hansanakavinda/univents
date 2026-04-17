@@ -13,7 +13,7 @@ export const PUT = asyncCatcher(async (request: Request) => {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const { eventId, title, content, imagePath, endDate, uniId, discardedImageIds } =
+    const { eventId, title, content, imagePath, endDate, eventTime, venue, uniId, discardedImageIds } =
         await validateRequest(request, updateEventSchema)
 
     const result = await updateEvent({
@@ -22,6 +22,8 @@ export const PUT = asyncCatcher(async (request: Request) => {
         content,
         imagePath: imagePath || undefined,
         endDate,
+        eventTime,
+        venue,
         uniId,
         authorId: session.user.id,
     })
