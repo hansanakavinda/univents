@@ -212,7 +212,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
             {!isFiltering && events.length > 0 && (
                 <div className="space-y-6 flex flex-col items-center w-full ">
                     {events.map((event, index) => (
-                        <EventCard key={event.id} hover className='max-w-full lg:max-w-[40vw] w-full'>
+                        <EventCard key={event.id} hover className='max-w-full lg:max-w-3xl w-full'>
                             {/* SEO: <article> identifies each event as a self-contained piece of content */}
                             <article>
                                 <CardContent className="p-0">
@@ -274,7 +274,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     </div>
                                     {/* Event Image */}
                                     {event.imagePath && (
-                                        <div className="mb-4 overflow-hidden flex items-center justify-center rounded-lg">
+                                        <div className="overflow-hidden flex items-center justify-center rounded-lg">
                                             <Image
                                                 src={event.imagePath}
                                                 alt={event.title}
@@ -287,7 +287,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     )}
 
                                     {/* Footer */}
-                                    <div className="mt-4 pt-4 border-t border-border flex items-center p-6 space-x-6">
+                                    <div className="pt-4 border-t border-border flex items-center p-6 space-x-6">
                                         <LikeButton
                                             eventId={event.id}
                                             initialLikeCount={event.likeCount}
