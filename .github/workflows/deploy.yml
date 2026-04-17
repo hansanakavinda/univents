@@ -17,6 +17,5 @@ jobs:
             set -e
             cd ~/univents
             git pull origin main
-            docker compose run --rm db-tools npm run db:push 
             docker compose up -d --build 2>&1
             docker system prune -f

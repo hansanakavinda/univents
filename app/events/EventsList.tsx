@@ -218,7 +218,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                 <CardContent className="p-0">
                                     <div className="p-3 md:p-6">
                                         <Link href={`/events/${event.id}`} >
-                                            <div className='flex justify-between'>
+                                            <div className='sm:flex sm:justify-between'>
                                                 {/* Author Info */}
                                                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 ">
                                                     {event.title}
