@@ -12,40 +12,6 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic';
 
-// SEO: Generate unique metadata for each event page.
-// Google uses this for search result titles, descriptions, and social sharing previews.
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-    const { id } = await params
-    const event = await getEventById(id)
-
-    if (!event) {
-        return { title: 'Event Not Found' }
-    }
-
-    // Truncate description to 160 chars for SEO best practice
-    const description = event.content.length > 160
-        ? event.content.slice(0, 157) + '...'
-        : event.content
-
-    return {
-        title: event.title,
-        description,
-        openGraph: {
-            title: `${event.title} | Univents`,
-            description,
-            type: 'article',
-            ...(event.imagePath && {
-                images: [
-                    {
-                        url: event.imagePath,
-                        alt: event.title,
-                    },
-                ],
-            }),
-        },
-    }
-}
-
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const event = await getEventById(id)
@@ -81,10 +47,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         ...(event.imagePath && { image: event.imagePath }),
         location: {
             '@type': 'Place',
-            name: event.venue || event.university.name,
-            ...(event.venue && {
-                address: event.venue,
-            }),
+            "name": event.venue || event.university.name,
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "LK"
+            }
         },
         organizer: {
             '@type': 'Organization',
