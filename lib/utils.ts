@@ -8,7 +8,6 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
 export const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleString('en-US', {
     dateStyle: 'medium',
-    timeStyle: 'short',
   })
 }
 
