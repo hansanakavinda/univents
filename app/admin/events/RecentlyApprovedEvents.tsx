@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { useToast } from '@/components/ui/Toast'
+import { LinkifyText } from '@/components/ui/LinkifyText'
 import { ApiClient } from '@/lib/api/api-client'
 
 interface ApprovedEvent {
@@ -79,7 +80,9 @@ export function RecentlyApprovedEvents({ events }: RecentlyApprovedEventsProps) 
                                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
                                             <h4 className="font-semibold text-white mb-1 break-words">{event.title}</h4>
-                                            <p className="text-sm text-text-muted line-clamp-2 mb-2">{event.content}</p>
+                                            <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-2">
+                                                {event.content}
+                                            </LinkifyText>
                                             <div className="flex items-center flex-wrap gap-2 text-xs text-text-dim">
                                                 <span className="whitespace-nowrap">{event.author.name}</span>
                                                 <span className="hidden sm:inline">•</span>

@@ -7,6 +7,7 @@ import { formatDate, formatTime, formatDateToLong, formatDateTime } from '@/lib/
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
+import { LinkifyText } from '@/components/ui/LinkifyText'
 import getSession from '@/lib/getSession'
 import { prisma } from '@/lib/prisma'
 
@@ -144,9 +145,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
                             {/* Content */}
                             <div className="prose prose-invert max-w-none">
-                                <p className="text-text-primary whitespace-pre-wrap leading-relaxed text-base">
+                                <LinkifyText className="text-text-primary whitespace-pre-wrap leading-relaxed text-base">
                                     {event.content}
-                                </p>
+                                </LinkifyText>
                             </div>
 
                             {/* Footer with Like Button and Share Button */}

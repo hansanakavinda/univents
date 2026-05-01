@@ -5,6 +5,7 @@ import { EventCard, Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
+import { LinkifyText } from '@/components/ui/LinkifyText'
 import Image from 'next/image'
 import type { Event } from '@/types/event'
 import { formatDate, formatTime, formatDateToLong } from '@/lib/utils'
@@ -262,7 +263,9 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                 )}
                                             </div>
                                         </Link>
-                                        <p className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>{event.content}</p>
+                                        <LinkifyText className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>
+                                            {event.content}
+                                        </LinkifyText>
                                         {event.content.split('\n').length > 3 || event.content.length > 200 ? (
                                             <button
                                                 onClick={() => toggleExpand(event.id)}

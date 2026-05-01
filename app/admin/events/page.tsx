@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { LinkifyText } from '@/components/ui/LinkifyText'
 import { prisma } from '@/lib/prisma'
 import { EventModerationActions } from './EventModerationActions'
 import { RecentlyApprovedEvents } from './RecentlyApprovedEvents'
@@ -104,7 +105,9 @@ export default async function AdminEventsPage() {
                                                     </span>
                                                 </div>
 
-                                                <p className="text-text-primary whitespace-pre-wrap">{event.content}</p>
+                                                <LinkifyText className="text-text-primary whitespace-pre-wrap">
+                                                    {event.content}
+                                                </LinkifyText>
                                             </div>
                                         </div>
                                         <EventModerationActions eventId={event.id} />

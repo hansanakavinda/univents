@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Badge } from '@/components/ui/Badge'
 import { EventEditor, type EventData } from '@/app/events/EventEditor'
+import { LinkifyText } from '@/components/ui/LinkifyText'
 
 interface University {
     id: string
@@ -59,7 +60,9 @@ export function RecentEvents({ events, universities }: RecentEventsProps) {
                     >
                         <div className="flex-1 min-w-0">
                             <h4 className="font-semibold text-white mb-1">{event.title}</h4>
-                            <p className="text-sm text-text-muted line-clamp-2">{event.content}</p>
+                            <LinkifyText className="text-sm text-text-muted line-clamp-2">
+                                {event.content}
+                            </LinkifyText>
                             <div className="flex items-center space-x-2 text-xs text-text-dim mt-2">
                                 <span>
                                     📅 {new Date(event.createdAt).toLocaleDateString('en-US', {
