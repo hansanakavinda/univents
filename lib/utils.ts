@@ -123,3 +123,26 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false
   }
 }
+
+/**
+ * Optimize image for Open Graph by stripping .webp/.avif and forcing .jpg
+ * and adding Cloudinary transforms.
+ */
+export function optimizeOgImage(url: string | null | undefined): string {
+  if (!url) return '';
+  
+  let optimizedUrl = url;
+
+  // Replace .webp or .avif with .jpg
+  optimizedUrl = optimizedUrl.replace(/\.(webp|avif)$/i, '.jpg');
+
+  // If it's a Cloudinary URL, inject transformations
+  if (optimizedUrl.includes('res.cloudinary.com') && optimizedUrl.includes('/upload/')) {
+    // Add f_jpg,c_fill,w_1200,h_630,q_80 for OG image standard size and compression
+    if (!optimizedUrl.includes('f_jpg') && !optimizedUrl.includes('c_fill')) {
+        optimizedUrl = optimizedUrl.replace('/upload/', '/upload/f_jpg,c_fill,w_1200,h_630,q_80/');
+    }
+  }
+
+  return optimizedUrl;
+}

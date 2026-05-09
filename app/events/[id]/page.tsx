@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { formatDate, formatTime, formatDateToLong, formatDateTime } from '@/lib/utils'
+import { formatDate, formatTime, formatDateToLong, formatDateTime, optimizeOgImage } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
@@ -13,6 +13,62 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic';
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const event = await getEventById(id);
+
+    if (!event) {
+        return {
+            title: 'Event Not Found',
+        };
+    }
+
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://univents.com.lk';
+    // Ensure absolute URL
+    const eventUrl = `${baseUrl}/events/${id}`;
+
+    // Optimize OG Image if available
+    let absoluteOgImage = `${baseUrl}/default-og.jpg`; // Fallback image
+    if (event.imagePath) {
+        const optimized = optimizeOgImage(event.imagePath);
+        absoluteOgImage = optimized.startsWith('http') 
+            ? optimized 
+            : `${baseUrl}${optimized.startsWith('/') ? '' : '/'}${optimized}`;
+    }
+
+    const title = event.title;
+    const description = event.content.length > 150 
+        ? event.content.slice(0, 147) + '...' 
+        : event.content;
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: eventUrl,
+        },
+        openGraph: {
+            title,
+            description,
+            url: eventUrl,
+            images: [
+                {
+                    url: absoluteOgImage,
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                }
+            ],
+            type: 'article',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [absoluteOgImage],
+        }
+    };
+}
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const event = await getEventById(id)
