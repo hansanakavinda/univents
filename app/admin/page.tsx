@@ -49,7 +49,7 @@ export default async function AdminPage() {
       <Sidebar
         userRole={session.user.role}
         userName={session.user.name || 'User'}
-        userEmail={session.user.email || ''}
+        userImage={session.user.image || null}
       />
 
       <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">

@@ -38,7 +38,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                 <Sidebar
                     userRole={session.user?.role || 'USER'}
                     userName={session.user?.name || 'User'}
-                    userEmail={session.user?.email || ''}
+                    userImage={session.user?.image || null}
                 />
             )}
             <main className={`flex-1 w-full max-w-full overflow-hidden md:p-6 ${session ? 'md:ml-64 pt-20 md:pt-8' : ''}`}>

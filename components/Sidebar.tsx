@@ -9,10 +9,10 @@ import { Role } from '@/types/auth'
 interface SidebarProps {
   userRole?: Role
   userName?: string
-  userEmail?: string
+  userImage?: string | null
 }
 
-export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
+export function Sidebar({ userRole, userName, userImage }: SidebarProps) {
   const pathname = usePathname()
 
   const isActive = (path: string) => pathname === path
@@ -104,9 +104,17 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
       >
         {/* Logo and Close Button */}
         <div className="p-6 border-b border-border flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <div>
-              <span className="text-lg font-bold text-white">Univents</span>
+          <Link href="/profile" className="flex items-center space-x-3 w-full hover:bg-surface p-2 rounded-xl transition-colors">
+            {userImage ? (
+              <img src={userImage} alt={userName || 'User'} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold flex-shrink-0">
+                {userName?.charAt(0).toUpperCase() || 'U'}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <span className="text-sm font-bold text-white truncate block">{userName || 'User'}</span>
+              <span className="text-xs text-text-muted truncate block">View Profile</span>
             </div>
           </Link>
 
@@ -146,20 +154,14 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
         {/* User Info */}
         {userName && (
           <div className="p-4 border-t border-border">
-            <div className="flex items-center space-x-3 p-3 rounded-xl bg-surface">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold flex-shrink-0">
-                {userName.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{userName}</p>
-                <p className="text-xs text-text-muted truncate">{userEmail}</p>
-              </div>
-            </div>
             <button
               onClick={() => signOut({ redirectTo: '/login' })}
-              className="w-full px-4 py-2 rounded-xl text-sm font-medium text-accent hover:bg-surface transition-colors duration-200 mt-2"
+              className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-sm font-medium text-accent hover:bg-surface transition-colors duration-200"
             >
-              Sign Out
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Sign Out</span>
             </button>
           </div>
         )}
