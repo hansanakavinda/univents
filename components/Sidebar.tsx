@@ -106,7 +106,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
         <div className="p-6 border-b border-border flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <div>
-              <h1 className="text-lg font-bold text-white">Univents</h1>
+              <span className="text-lg font-bold text-white">Univents</span>
             </div>
           </Link>
 

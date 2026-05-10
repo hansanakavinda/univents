@@ -9,12 +9,13 @@ import type { Metadata } from 'next'
 // SEO: Static metadata for the events listing page.
 // Uses the title template from root layout → "Upcoming University Events | Univents"
 export const metadata: Metadata = {
+    title: 'University Events Sri Lanka',
     description:
-        'Browse upcoming university events across Sri Lanka. Find campus activities, workshops, cultural shows, and more on Univents.',
+        'Browse the best upcoming university events across Sri Lanka. Find the latest campus activities, hackathons, and undergraduate workshops on Univents.',
     openGraph: {
-        title: 'Univents',
+        title: 'University Events Sri Lanka | Univents',
         description:
-            'Browse upcoming university events across Sri Lanka. Find campus activities, workshops, cultural shows, and more.',
+            'Browse the best upcoming university events across Sri Lanka. Find the latest campus activities, hackathons, and undergraduate workshops on Univents.',
     },
     alternates: {
         canonical: 'https://univents.com.lk/events', // The "Master" URL
@@ -46,7 +47,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-4xl font-bold text-white mb-2">Univents</h1>
-                            <p className="text-text-muted text-center md:text-left">Discover and share amazing events</p>
+                            <h2 className="text-text-muted text-center md:text-left text-sm font-normal">Your hub for University events in Sri Lanka, Campus hackathons, and Undergraduate workshops</h2>
                         </div>
                         {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
                             <EventEditor universities={universities} defaultOpen={shouldOpenEditor} />

@@ -43,6 +43,7 @@ export function ShareButton({ eventId, title }: ShareButtonProps) {
             onClick={handleShare}
             className="flex items-center space-x-2 group transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 text-gray-400 hover:text-blue-400"
             title="Share this event"
+            aria-label="Share this event"
         >
             <svg
                 className="w-6 h-6 transition-colors duration-200 fill-none"

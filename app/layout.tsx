@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Univents",
   },
   description:
-    "Discover and share events happening across university campuses in Sri Lanka. Browse upcoming events, connect with communities, and never miss what matters.",
+    "Discover and share University events Sri Lanka, Campus hackathons, and Undergraduate workshops and more on Univents, the premier Sri Lanka university event portal.",
   openGraph: {
     siteName: "Univents",
     locale: "en_US",
