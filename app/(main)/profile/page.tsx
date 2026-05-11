@@ -1,6 +1,6 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-import { Sidebar } from '@/components/Sidebar'
+
 import { prisma } from '@/lib/prisma'
 import { getAllUniversities } from '@/data-access/universities'
 import { ProfileForm } from './ProfileForm'
@@ -30,14 +30,8 @@ export default async function ProfilePage() {
     const universities = await getAllUniversities()
 
     return (
-        <div className="flex min-h-screen">
-            <Sidebar
-                userRole={session.user.role}
-                userName={user.name || 'User'}
-                userImage={user.image}
-            />
-
-            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
+        <>
+            <div className="p-4 md:p-8">
                 <div className="max-w-2xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-bold text-white mb-2">Your Profile</h1>
@@ -56,7 +50,7 @@ export default async function ProfilePage() {
                         />
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </>
     )
 }

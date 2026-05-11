@@ -1,6 +1,6 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-import { Sidebar } from '@/components/Sidebar'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { prisma } from '@/lib/prisma'
@@ -50,14 +50,8 @@ export default async function DashboardPage() {
   })
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar
-        userRole={session.user.role}
-        userName={session.user.name || 'User'}
-        userImage={session.user.image || null}
-      />
-
-      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
+    <>
+      <div className="p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">
@@ -129,7 +123,7 @@ export default async function DashboardPage() {
             />
           </CardContent>
         </Card>
-      </main>
-    </div>
+      </div>
+    </>
   )
 }

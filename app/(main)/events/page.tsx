@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/Sidebar'
+
 import { getApprovedEventsPaginated } from '@/data-access/events'
 import { getAllUniversities } from '@/data-access/universities'
 import { EventEditor } from './EventEditor'
@@ -33,15 +33,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     const universities = await getAllUniversities()
 
     return (
-        <div className="flex min-h-screen">
-            {session && (
-                <Sidebar
-                    userRole={session.user?.role || 'USER'}
-                    userName={session.user?.name || 'User'}
-                    userImage={session.user?.image || null}
-                />
-            )}
-            <main className={`flex-1 w-full max-w-full overflow-hidden md:p-6 ${session ? 'md:ml-64 pt-20 md:pt-8' : ''}`}>
+        <>
+            <div className="md:p-6">
                 {/* SEO: <header> for the page heading area improves document structure for crawlers */}
                 <header className="max-w-4xl mx-auto mb-4 mt-4">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
@@ -67,8 +60,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                 <section aria-label="University events" className="max-w-4xl mx-2 sm:mx-auto ">
                     <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} isAuthenticated={isAuthenticated} />
                 </section>
-            </main>
-        </div>
+            </div>
+        </>
     )
 }
 
