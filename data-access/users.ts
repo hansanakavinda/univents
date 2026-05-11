@@ -101,3 +101,20 @@ export const changeUserUniversity = async ({ userId, uniId }: { userId: string, 
 
     return { success: true }
 }
+
+export const updateUserProfile = async ({ userId, name, uniId }: { userId: string, name?: string, uniId?: string | null }) => {
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            name,
+            uniId,
+        },
+        select: {
+            name: true,
+            uniId: true,
+            image: true,
+        }
+    })
+
+    return updatedUser
+}

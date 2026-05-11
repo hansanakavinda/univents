@@ -1,6 +1,6 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-import { Sidebar } from '@/components/Sidebar'
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { getAllUniversities } from '@/data-access/universities'
@@ -16,14 +16,8 @@ export default async function AdminUniversitiesPage() {
     const universities = await getAllUniversities()
 
     return (
-        <div className="flex min-h-screen">
-            <Sidebar
-                userRole={session.user.role}
-                userName={session.user.name || 'User'}
-                userEmail={session.user.email || ''}
-            />
-
-            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
+        <>
+            <div className="p-4 md:p-8">
                 {/* Header */}
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
@@ -97,7 +91,7 @@ export default async function AdminUniversitiesPage() {
                         )}
                     </CardContent>
                 </Card>
-            </main>
-        </div>
+            </div>
+        </>
     )
 }

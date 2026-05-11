@@ -1,6 +1,6 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-import { Sidebar } from '@/components/Sidebar'
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LinkifyText } from '@/components/ui/LinkifyText'
@@ -31,14 +31,8 @@ export default async function AdminEventsPage() {
     const stats = await getEventStats({ uniId })
 
     return (
-        <div className="flex min-h-screen">
-            <Sidebar
-                userRole={session.user.role}
-                userName={session.user.name || 'User'}
-                userEmail={session.user.email || ''}
-            />
-
-            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-full overflow-hidden">
+        <>
+            <div className="p-4 md:p-8">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-white mb-2">Event Moderation</h1>
@@ -120,7 +114,7 @@ export default async function AdminEventsPage() {
 
                 {/* Recently Approved */}
                 <RecentlyApprovedEvents events={recentApproved} />
-            </main>
-        </div>
+            </div>
+        </>
     )
 }

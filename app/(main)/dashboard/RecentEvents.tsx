@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Badge } from '@/components/ui/Badge'
-import { EventEditor, type EventData } from '@/app/events/EventEditor'
+import { EventEditor, type EventData } from '@/app/(main)/events/EventEditor'
 import { LinkifyText } from '@/components/ui/LinkifyText'
 
 interface University {
