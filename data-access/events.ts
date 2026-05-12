@@ -14,7 +14,7 @@ function extractPublicId(url: string): string | null {
 export const moderateEvent = async ({ eventId, action }: { eventId: string, action: 'approve' | 'reject' }) => {
     const event = await prisma.event.findUnique({
         where: { id: eventId },
-        select: { id: true, imagePath: true },
+        select: { id: true, imagePath: true, title: true },
     })
 
     if (!event) {
@@ -26,6 +26,8 @@ export const moderateEvent = async ({ eventId, action }: { eventId: string, acti
             where: { id: eventId },
             data: { isApproved: true },
         })
+        // Return event info so callers can build push notification payloads
+        return { success: true, event: { id: event.id, title: event.title } }
     } else {
         // Delete the event's image from Cloudinary if it exists
         if (event.imagePath) {
@@ -39,7 +41,7 @@ export const moderateEvent = async ({ eventId, action }: { eventId: string, acti
         })
     }
 
-    return { success: true }
+    return { success: true, event: null }
 }
 
 export const deleteEventById = async (eventId: string) => {

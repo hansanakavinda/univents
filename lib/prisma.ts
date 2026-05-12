@@ -4,7 +4,12 @@ import { Pool } from "pg";
 
 // 1. Setup the connection pool (Prisma 7 uses native JS drivers)
 const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+const pool = new Pool({
+  connectionString,
+  connectionTimeoutMillis: 10_000, // wait up to 10s for Neon cold start
+  idleTimeoutMillis: 30_000,       // keep idle connections alive for 30s
+  max: 5,                          // limit pool size for serverless env
+});
 const adapter = new PrismaPg(pool);
 
 // 2. Define the Singleton using the global object
