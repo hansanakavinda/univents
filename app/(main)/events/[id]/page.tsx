@@ -97,9 +97,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         description: event.content.length > 300
             ? event.content.slice(0, 297) + '...'
             : event.content,
-        startDate: new Date(event.endDate).toISOString(),
-        endDate: new Date(event.endDate).toISOString(),
-        eventStatus: 'https://schema.org/EventScheduled',
+        ...(event.endDate && {
+            startDate: new Date(event.endDate).toISOString(),
+            endDate: new Date(event.endDate).toISOString(),
+        }),
+        eventStatus: event.isComingSoon
+            ? 'https://schema.org/EventPostponed'
+            : 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         ...(event.imagePath && { image: event.imagePath }),
         location: {
@@ -186,7 +190,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                                         <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-sm font-medium">{formatDateToLong(event.endDate)}</time>
+                                        {event.isComingSoon || !event.endDate ? (
+                                            <span className="text-accent text-sm font-semibold tracking-wide">Coming Soon</span>
+                                        ) : (
+                                            <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-sm font-medium">{formatDateToLong(event.endDate)}</time>
+                                        )}
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
                                         <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -13,6 +13,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label className="block text-sm font-medium text-text-primary mb-1.5">
             {label}
+            {props.required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}
         <input
@@ -48,6 +49,7 @@ export function Textarea({ label, error, className = '', ...props }: TextareaPro
       {label && (
         <label className="block text-sm font-medium text-text-primary mb-1.5">
           {label}
+          {props.required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       <textarea

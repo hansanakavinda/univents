@@ -242,7 +242,11 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                     <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-xs font-semibold">{formatDateToLong(event.endDate)}</time>
+                                                    {event.isComingSoon || !event.endDate ? (
+                                                        <span className="text-accent text-xs font-semibold tracking-wide">Coming Soon</span>
+                                                    ) : (
+                                                        <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-xs font-semibold">{formatDateToLong(event.endDate)}</time>
+                                                    )}
                                                 </div>
                                                 {event.eventTime && (
                                                     <div className="flex items-center gap-1.5 shrink-0">

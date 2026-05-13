@@ -19,6 +19,7 @@ export function Select({ label, error, options, placeholder, className = '', val
             {label && (
                 <label className="block text-sm font-medium text-text-primary mb-1.5">
                     {label}
+                    {props.required && <span className="text-red-500 ml-1">*</span>}
                 </label>
             )}
             <select

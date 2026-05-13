@@ -23,7 +23,10 @@ async function cleanupExpiredEvents() {
     const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
     const expiredEvents = await prisma.event.findMany({
-        where: { endDate: { lt: cutoff } },
+        where: {
+            isComingSoon: false,
+            endDate: { lt: cutoff },
+        },
         select: { id: true, title: true, imagePath: true },
     })
 

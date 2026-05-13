@@ -56,9 +56,10 @@ model Event {
   id         String   @id @default(cuid())
   title      String
   content    String   @db.Text
-  imagePath  String?
-  endDate    DateTime
-  eventTime  String?    // Local time as "HH:mm" (no timezone conversion)
+  imagePath    String?
+  endDate      DateTime?
+  isComingSoon Boolean  @default(false)
+  eventTime    String?    // Local time as "HH:mm" (no timezone conversion)
   venue      String?
   uniId      String
   university University @relation(fields: [uniId], references: [id], onDelete: Cascade)

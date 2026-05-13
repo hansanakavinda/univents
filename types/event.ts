@@ -3,7 +3,8 @@ export type Event = {
     title: string
     content: string
     imagePath: string | null
-    endDate: Date | string
+    endDate: Date | string | null
+    isComingSoon: boolean
     eventTime?: string | null
     venue?: string | null
     isApproved: boolean

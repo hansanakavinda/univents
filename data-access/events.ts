@@ -74,6 +74,7 @@ export const createEvent = async ({
     content,
     imagePath,
     endDate,
+    isComingSoon,
     eventTime,
     venue,
     uniId,
@@ -82,7 +83,8 @@ export const createEvent = async ({
     title: string
     content: string
     imagePath?: string
-    endDate: Date
+    endDate?: Date
+    isComingSoon?: boolean
     eventTime?: string
     venue?: string
     uniId: string
@@ -93,7 +95,8 @@ export const createEvent = async ({
             title: title.trim(),
             content: content.trim(),
             imagePath,
-            endDate,
+            endDate: endDate ?? null,
+            isComingSoon: isComingSoon ?? false,
             eventTime: eventTime || null,
             venue: venue?.trim() || null,
             uniId,
@@ -111,6 +114,7 @@ export const updateEvent = async ({
     content,
     imagePath,
     endDate,
+    isComingSoon,
     eventTime,
     venue,
     uniId,
@@ -120,7 +124,8 @@ export const updateEvent = async ({
     title: string
     content: string
     imagePath?: string
-    endDate: Date
+    endDate?: Date
+    isComingSoon?: boolean
     eventTime?: string
     venue?: string
     uniId: string
@@ -153,7 +158,8 @@ export const updateEvent = async ({
             title: title.trim(),
             content: content.trim(),
             imagePath: imagePath || null,
-            endDate,
+            endDate: endDate ?? null,
+            isComingSoon: isComingSoon ?? false,
             eventTime: eventTime || null,
             venue: venue?.trim() || null,
             uniId,
@@ -246,7 +252,7 @@ export const getApprovedEvents = async () => {
                 },
             },
         },
-        orderBy: { endDate: 'asc' },
+        orderBy: { endDate: { sort: 'asc', nulls: 'last' } },
     })
 
     return events
@@ -285,7 +291,7 @@ export const getApprovedEventsPaginated = async (options?: { take?: number; skip
     }
 
     const orderBy = sortBy === 'happening'
-        ? { endDate: 'asc' as const }
+        ? { endDate: { sort: 'asc' as const, nulls: 'last' as const } }
         : { createdAt: 'desc' as const }
 
     const events = await prisma.event.findMany({

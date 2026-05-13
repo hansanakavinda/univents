@@ -20,7 +20,8 @@ export interface EventData {
     title: string
     content: string
     imagePath: string | null
-    endDate: string | Date
+    endDate: string | Date | null
+    isComingSoon?: boolean
     eventTime?: string | null
     venue?: string | null
     uniId: string
@@ -49,6 +50,7 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
     const [content, setContent] = useState('')
     const [imagePath, setImagePath] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [isComingSoon, setIsComingSoon] = useState(false)
     const [eventTime, setEventTime] = useState('')
     const [venue, setVenue] = useState('')
     const [uniId, setUniId] = useState('')
@@ -60,10 +62,13 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
             setTitle(eventData.title)
             setContent(eventData.content)
             setImagePath(eventData.imagePath || '')
+            setIsComingSoon(eventData.isComingSoon ?? false)
             setEndDate(
-                typeof eventData.endDate === 'string'
-                    ? eventData.endDate.split('T')[0]
-                    : eventData.endDate.toISOString().split('T')[0]
+                eventData.endDate
+                    ? (typeof eventData.endDate === 'string'
+                        ? eventData.endDate.split('T')[0]
+                        : eventData.endDate.toISOString().split('T')[0])
+                    : ''
             )
             setEventTime(eventData.eventTime || '')
             setVenue(eventData.venue || '')
@@ -82,6 +87,7 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
             setContent('')
             setImagePath('')
             setEndDate('')
+            setIsComingSoon(false)
             setEventTime('')
             setVenue('')
             setUniId('')
@@ -98,12 +104,24 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
         }
     }
 
+    const handleComingSoonToggle = (checked: boolean) => {
+        setIsComingSoon(checked)
+        if (checked) {
+            setEndDate('') // Clear date when marking as coming soon
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError('')
 
-        if (!title.trim() || !content.trim() || !endDate || !uniId) {
+        if (!title.trim() || !content.trim() || !uniId) {
             setError('Please fill in all required fields')
+            return
+        }
+
+        if (!isComingSoon && !endDate) {
+            setError('Please provide an event date or mark it as Coming Soon')
             return
         }
 
@@ -116,7 +134,8 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
                 title,
                 content,
                 imagePath,
-                endDate,
+                endDate: isComingSoon ? undefined : endDate,
+                isComingSoon,
                 eventTime: eventTime || undefined,
                 venue: venue || undefined,
                 uniId,
@@ -232,14 +251,36 @@ export function EventEditor({ universities, defaultOpen = false, eventData, trig
                         maxLength={300}
                     />
 
-                    <Input
-                        label="Event Date"
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        required
-                        disabled={isLoading}
-                    />
+                    {/* Coming Soon toggle */}
+                    <label className="flex items-center gap-3 cursor-pointer select-none group">
+                        <div className="relative">
+                            <input
+                                id="isComingSoon"
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={isComingSoon}
+                                onChange={(e) => handleComingSoonToggle(e.target.checked)}
+                                disabled={isLoading}
+                            />
+                            <div className="w-10 h-6 bg-surface border border-border rounded-full peer-checked:bg-primary transition-colors duration-200" />
+                            <div className="absolute top-1 left-1 w-4 h-4 bg-text-dim rounded-full transition-all duration-200 peer-checked:translate-x-4 peer-checked:bg-white" />
+                        </div>
+                        <span className="text-sm text-text-primary group-hover:text-white transition-colors">
+                            Date not confirmed yet <span className="text-accent font-medium">(Coming Soon)</span>
+                        </span>
+                    </label>
+
+                    {/* Event Date — hidden when Coming Soon */}
+                    {!isComingSoon && (
+                        <Input
+                            label="Event Date"
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            required
+                            disabled={isLoading}
+                        />
+                    )}
 
                     <Select
                         label="University"
