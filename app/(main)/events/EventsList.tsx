@@ -211,101 +211,106 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             {/* Events List */}
             {!isFiltering && events.length > 0 && (
-                <div className="space-y-6 flex flex-col items-center w-full ">
+                <div className="columns-1 md:columns-2 lg:columns-3 gap-6 w-full">
                     {events.map((event, index) => (
-                        <EventCard key={event.id} hover className='max-w-full lg:max-w-3xl w-full'>
-                            {/* SEO: <article> identifies each event as a self-contained piece of content */}
-                            <article>
-                                <CardContent className="p-0">
-                                    <div className="p-3 md:p-6">
-                                        <Link href={`/events/${event.id}`} >
-                                            <div className='sm:flex sm:justify-between'>
-                                                {/* Author Info */}
-                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 ">
-                                                    {event.title}
-                                                </h3>
-
-                                                {/* Meta info */}
-                                                <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-text-muted">
-                                                    <Badge variant="default">{event.university.shortName}</Badge>
-                                                    <span className="flex items-center gap-1">
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                        </svg>
-                                                        {event.author.name || 'Anonymous'}
-                                                    </span>
+                        <div key={event.id} className="break-inside-avoid mb-6">
+                            <EventCard hover className="w-full flex flex-col relative overflow-hidden">
+                                {/* SEO: <article> identifies each event as a self-contained piece of content */}
+                                <article className="flex flex-col h-full">
+                                    <CardContent className="p-0 flex flex-col h-full">
+                                        {/* Event Image (Top) */}
+                                        {event.imagePath && (
+                                            <Link href={`/events/${event.id}`}>
+                                                <div className="w-full overflow-hidden bg-black/10 shrink-0">
+                                                    <Image
+                                                        src={event.imagePath}
+                                                        alt={`${event.title} at ${event.university.name}`}
+                                                        className="w-full object-cover max-h-[400px] hover:scale-105 transition-transform duration-500"
+                                                        width={800}
+                                                        height={800}
+                                                        priority={index < 4}
+                                                    />
                                                 </div>
-                                            </div>
+                                            </Link>
+                                        )}
 
-                                            <div className="bg-accent/10 backdrop-blur-sm px-3 py-2.5 rounded-lg border border-accent/20 flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 shadow-sm w-fit max-w-full">
-                                                <div className="flex items-center gap-1.5 shrink-0">
-                                                    <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                    {event.isComingSoon || !event.endDate ? (
-                                                        <span className="text-accent text-xs font-semibold tracking-wide">Coming Soon</span>
-                                                    ) : (
-                                                        <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-xs font-semibold">{formatDateToLong(event.endDate)}</time>
-                                                    )}
+                                        <div className="p-4 md:p-5 flex flex-col grow">
+                                            <Link href={`/events/${event.id}`}>
+                                                <div className="mb-2">
+                                                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                                        <Badge variant="default">{event.university.shortName}</Badge>
+                                                        <span className="flex items-center gap-1 text-xs text-text-muted">
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                            </svg>
+                                                            {event.author.name || 'Anonymous'}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-3">
+                                                        {event.title}
+                                                    </h3>
                                                 </div>
-                                                {event.eventTime && (
+
+                                                {/* Meta Badges */}
+                                                <div className="bg-accent/10 backdrop-blur-sm px-2.5 py-2 rounded-lg border border-accent/20 flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4 shadow-sm w-full">
                                                     <div className="flex items-center gap-1.5 shrink-0">
                                                         <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                         </svg>
-                                                        <span className="text-white text-xs font-semibold">{formatTime(event.eventTime)}</span>
+                                                        {event.isComingSoon || !event.endDate ? (
+                                                            <span className="text-accent text-xs font-semibold tracking-wide">Coming Soon</span>
+                                                        ) : (
+                                                            <time dateTime={new Date(event.endDate).toISOString()} className="text-white text-xs font-semibold">{formatDateToLong(event.endDate)}</time>
+                                                        )}
                                                     </div>
-                                                )}
-                                                {event.venue && (
-                                                    <div className="flex items-center gap-1.5 min-w-0">
-                                                        <svg className="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                        <span className="text-white text-xs font-semibold line-clamp-1 break-words">{event.venue}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </Link>
-                                        <LinkifyText className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm md:text-base ${!expandedEvents.has(event.id) ? 'line-clamp-3' : ''}`}>
-                                            {event.content}
-                                        </LinkifyText>
-                                        {event.content.split('\n').length > 3 || event.content.length > 200 ? (
-                                            <button
-                                                onClick={() => toggleExpand(event.id)}
-                                                className="text-accent text-sm font-medium hover:underline mb-4 cursor-pointer"
-                                            >
-                                                {expandedEvents.has(event.id) ? 'See less' : 'See more'}
-                                            </button>
-                                        ) : <div className="mb-3" />}
-                                    </div>
-                                    {/* Event Image */}
-                                    {event.imagePath && (
-                                        <div className="overflow-hidden flex items-center justify-center rounded-lg">
-                                            <Image
-                                                src={event.imagePath}
-                                                alt={`${event.title} at ${event.university.name} - Univents Sri Lanka`}
-                                                className="w-full h-auto lg:max-w-3xl object-contain"
-                                                width={1080}
-                                                height={1920}
-                                                priority={index < 4}
-                                            />
-                                        </div>
-                                    )}
+                                                    {event.eventTime && (
+                                                        <div className="flex items-center gap-1.5 shrink-0">
+                                                            <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            <span className="text-white text-xs font-semibold">{formatTime(event.eventTime)}</span>
+                                                        </div>
+                                                    )}
+                                                    {event.venue && (
+                                                        <div className="flex items-center gap-1.5 min-w-0">
+                                                            <svg className="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                            <span className="text-white text-xs font-semibold line-clamp-1 break-words">{event.venue}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </Link>
 
-                                    {/* Footer */}
-                                    <div className="pt-4 border-t border-border flex items-center p-6 space-x-6">
-                                        <LikeButton
-                                            eventId={event.id}
-                                            initialLikeCount={event.likeCount}
-                                            initialIsLiked={event.isLikedByUser}
-                                            currentUserId={currentUserId}
-                                        />
-                                        <ShareButton eventId={event.id} title={event.title} />
-                                    </div>
-                                </CardContent>
-                            </article>
-                        </EventCard>
+                                            <div className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? (event.imagePath ? 'line-clamp-3' : 'line-clamp-[12]') : ''}`}>
+                                                <LinkifyText>{event.content}</LinkifyText>
+                                            </div>
+                                            
+                                            {event.content.split('\n').length > (event.imagePath ? 3 : 12) || event.content.length > (event.imagePath ? 150 : 500) ? (
+                                                <button
+                                                    onClick={() => toggleExpand(event.id)}
+                                                    className="text-accent text-xs font-medium hover:underline mb-2 mt-1 cursor-pointer"
+                                                >
+                                                    {expandedEvents.has(event.id) ? 'See less' : 'See more'}
+                                                </button>
+                                            ) : <div className="mb-2" />}
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div className="pt-3 pb-4 px-5 border-t border-border flex items-center justify-between mt-auto">
+                                            <LikeButton
+                                                eventId={event.id}
+                                                initialLikeCount={event.likeCount}
+                                                initialIsLiked={event.isLikedByUser}
+                                                currentUserId={currentUserId}
+                                            />
+                                            <ShareButton eventId={event.id} title={event.title} />
+                                        </div>
+                                    </CardContent>
+                                </article>
+                            </EventCard>
+                        </div>
                     ))}
                 </div>
             )}
