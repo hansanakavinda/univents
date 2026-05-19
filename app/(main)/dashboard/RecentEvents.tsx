@@ -1,15 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
-import { EventEditor, type EventData } from '@/app/(main)/events/EventEditor'
 import { LinkifyText } from '@/components/ui/LinkifyText'
-
-interface University {
-    id: string
-    name: string
-    shortName: string
-}
 
 interface UserEvent {
     id: string
@@ -31,12 +24,9 @@ interface UserEvent {
 
 interface RecentEventsProps {
     events: UserEvent[]
-    universities: University[]
 }
 
-export function RecentEvents({ events, universities }: RecentEventsProps) {
-    const [editingEvent, setEditingEvent] = useState<EventData | null>(null)
-
+export function RecentEvents({ events }: RecentEventsProps) {
     if (events.length === 0) {
         return (
             <div className="text-center py-8">
@@ -75,20 +65,8 @@ export function RecentEvents({ events, universities }: RecentEventsProps) {
                             </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                            <button
-                                onClick={() =>
-                                    setEditingEvent({
-                                        id: event.id,
-                                        title: event.title,
-                                        content: event.content,
-                                        imagePath: event.imagePath,
-                                        endDate: event.endDate,
-                                        isComingSoon: event.isComingSoon,
-                                        eventTime: event.eventTime,
-                                        venue: event.venue,
-                                        uniId: event.uniId,
-                                    })
-                                }
+                            <Link
+                                href={`/events/${event.id}/edit`}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-accent border border-accent/40 bg-accent/10 hover:bg-accent/20 hover:border-accent/60 transition-all duration-200"
                                 title="Edit event"
                                 aria-label={`Edit ${event.title}`}
@@ -102,7 +80,7 @@ export function RecentEvents({ events, universities }: RecentEventsProps) {
                                     />
                                 </svg>
                                 Edit
-                            </button>
+                            </Link>
                             <Badge variant={event.isApproved ? 'success' : 'warning'} className="py-1.5">
                                 {event.isApproved ? 'Approved' : 'Pending'}
                             </Badge>
@@ -111,18 +89,6 @@ export function RecentEvents({ events, universities }: RecentEventsProps) {
                 ))}
             </div>
 
-            {/* Shared edit modal — only one at a time */}
-            {editingEvent && (
-                <EventEditor
-                    universities={universities}
-                    eventData={editingEvent}
-                    defaultOpen={true}
-                    onOpenChange={(open) => {
-                        if (!open) setEditingEvent(null)
-                    }}
-                    trigger={<></>}
-                />
-            )}
         </>
     )
 }

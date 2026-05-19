@@ -3,7 +3,7 @@ import getSession from '@/lib/getSession'
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
     const session = await getSession()
-    
+
     return (
         <div className="flex flex-col min-h-screen">
             {session && (

@@ -45,11 +45,10 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive(link.path)
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(link.path)
                       ? 'text-white bg-surface'
                       : 'text-text-muted hover:text-white hover:bg-surface/50'
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -59,6 +58,19 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
 
           {/* Notifications & User Profile */}
           <div className="flex items-center space-x-4">
+            {/* Create Event Button (Visible only on Events Page) */}
+            {pathname === '/events' && (
+              <Link
+                href="/events/create"
+                className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Create Event
+              </Link>
+            )}
+
             {/* Notification Bell */}
             <div className="relative flex items-center">
               <button
@@ -82,7 +94,7 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
                   <div className="absolute right-0 top-full mt-2 w-72 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
                     <div className="p-4">
                       <h3 className="text-sm font-semibold text-white mb-4">Notifications</h3>
-                      
+
                       {pushStatus !== 'unsupported' ? (
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-text-primary">Push Notifications</span>
@@ -95,21 +107,19 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
                               }
                             }}
                             disabled={pushStatus === 'loading'}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                              pushStatus === 'subscribed' ? 'bg-primary' : 'bg-gray-600'
-                            } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''}`}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${pushStatus === 'subscribed' ? 'bg-primary' : 'bg-gray-600'
+                              } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''}`}
                           >
                             <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                pushStatus === 'subscribed' ? 'translate-x-6' : 'translate-x-1'
-                              }`}
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${pushStatus === 'subscribed' ? 'translate-x-6' : 'translate-x-1'
+                                }`}
                             />
                           </button>
                         </div>
                       ) : (
                         <p className="text-xs text-text-muted">Push notifications are not supported on this device.</p>
                       )}
-                      
+
                       {pushStatus === 'denied' && (
                         <p className="text-xs text-red-400 mt-2">Notifications are blocked in your browser settings.</p>
                       )}
@@ -122,108 +132,108 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
             {/* User Profile */}
             <div className="relative">
               <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center focus:outline-none"
-            >
-              {userImage ? (
-                <img
-                  src={userImage}
-                  alt={userName || 'User'}
-                  className="w-9 h-9 rounded-full object-cover border border-border"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold border border-border">
-                  {userName?.charAt(0).toUpperCase() || 'U'}
-                </div>
-              )}
-            </button>
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center focus:outline-none"
+              >
+                {userImage ? (
+                  <img
+                    src={userImage}
+                    alt={userName || 'User'}
+                    className="w-9 h-9 rounded-full object-cover border border-border"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold border border-border">
+                    {userName?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                )}
+              </button>
 
-            {/* Dropdown Panel */}
-            {isProfileOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsProfileOpen(false)}
-                ></div>
-                <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
-                  <div className="py-1">
-                    <div className="px-4 py-2 border-b border-border mb-1">
-                      <p className="text-sm font-medium text-white truncate">{userName || 'User'}</p>
-                    </div>
-                    <Link
-                      href="/profile"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/settings"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                    >
-                      Settings
-                    </Link>
-
-                    {/* Admin Links */}
-                    {(userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') && (
-                      <>
-                        <div className="border-t border-border mt-1 mb-1"></div>
-                        <div className="px-4 py-1 text-xs font-semibold text-text-muted uppercase tracking-wider">
-                          Admin
-                        </div>
-                        <Link
-                          href="/admin/events"
-                          onClick={() => setIsProfileOpen(false)}
-                          className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                        >
-                          Moderation
-                        </Link>
-                        {userRole === 'SUPER_ADMIN' && (
-                          <>
-                            <Link
-                              href="/admin/universities"
-                              onClick={() => setIsProfileOpen(false)}
-                              className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                            >
-                              Universities
-                            </Link>
-                            <Link
-                              href="/admin"
-                              onClick={() => setIsProfileOpen(false)}
-                              className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                            >
-                              User Management
-                            </Link>
-                          </>
-                        )}
-                      </>
-                    )}
-
-                    <div className="border-t border-border mt-1">
-                      <button
-                        onClick={() => signOut({ redirectTo: '/login' })}
-                        className="block w-full text-left px-4 py-2 text-sm text-accent hover:bg-white/5 transition-colors"
+              {/* Dropdown Panel */}
+              {isProfileOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsProfileOpen(false)}
+                  ></div>
+                  <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
+                    <div className="py-1">
+                      <div className="px-4 py-2 border-b border-border mb-1">
+                        <p className="text-sm font-medium text-white truncate">{userName || 'User'}</p>
+                      </div>
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                       >
-                        Sign Out
-                      </button>
+                        Profile
+                      </Link>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                      <Link
+                        href="/settings"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                      >
+                        Settings
+                      </Link>
+
+                      {/* Admin Links */}
+                      {(userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') && (
+                        <>
+                          <div className="border-t border-border mt-1 mb-1"></div>
+                          <div className="px-4 py-1 text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Admin
+                          </div>
+                          <Link
+                            href="/admin/events"
+                            onClick={() => setIsProfileOpen(false)}
+                            className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                          >
+                            Moderation
+                          </Link>
+                          {userRole === 'SUPER_ADMIN' && (
+                            <>
+                              <Link
+                                href="/admin/universities"
+                                onClick={() => setIsProfileOpen(false)}
+                                className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                              >
+                                Universities
+                              </Link>
+                              <Link
+                                href="/admin"
+                                onClick={() => setIsProfileOpen(false)}
+                                className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                              >
+                                User Management
+                              </Link>
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      <div className="border-t border-border mt-1">
+                        <button
+                          onClick={() => signOut({ redirectTo: '/login' })}
+                          className="block w-full text-left px-4 py-2 text-sm text-accent hover:bg-white/5 transition-colors"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Navigation */}
       <div className="md:hidden overflow-x-auto border-t border-border bg-black/50">
         <div className="flex space-x-1 px-2 py-2">
@@ -231,11 +241,10 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
             <Link
               key={link.path}
               href={link.path}
-              className={`whitespace-nowrap px-3 py-2 rounded-md text-sm font-medium ${
-                isActive(link.path)
+              className={`whitespace-nowrap px-3 py-2 rounded-md text-sm font-medium ${isActive(link.path)
                   ? 'text-white bg-surface'
                   : 'text-text-muted hover:text-white hover:bg-surface/50'
-              }`}
+                }`}
             >
               {link.name}
             </Link>

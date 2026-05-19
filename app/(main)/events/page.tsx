@@ -1,7 +1,6 @@
 
 import { getApprovedEventsPaginated } from '@/data-access/events'
 import { getAllUniversities } from '@/data-access/universities'
-import { EventEditor } from './EventEditor'
 import { EventsList } from './EventsList'
 import getSession from '@/lib/getSession'
 import type { Metadata } from 'next'
@@ -24,9 +23,6 @@ export const metadata: Metadata = {
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<{ create?: string }> }) {
     const session = await getSession()
-    const params = await searchParams
-    const shouldOpenEditor = params.create === 'true'
-
     const isAuthenticated = !!session
     const userId = session?.user?.id
     const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? 4 : 2, skip: 0, userId })
@@ -41,9 +37,6 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-primary text-center md:text-left text-3xl font-semibold">Your hub for University events in Sri Lanka</h1>
                         </div>
-                        {session && <div className='flex flex-wrap gap-4 items-center justify-center'>
-                            <EventEditor universities={universities} defaultOpen={shouldOpenEditor} />
-                        </div>}
 
                         {!session && (
                             <div className="p-3 md:p-4 rounded-xl bg-surface border border-border">
