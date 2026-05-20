@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
+import { Calendar, Briefcase, Zap, ShoppingBag, Bell, BellRing } from 'lucide-react'
 
 interface TopNavProps {
   userName?: string
@@ -15,20 +16,20 @@ interface TopNavProps {
 export function TopNav({ userName, userImage, userRole }: TopNavProps) {
   const pathname = usePathname()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [isNotifOpen, setIsNotifOpen] = useState(false)
   const { status: pushStatus, subscribe, unsubscribe } = usePushNotifications()
 
   const isActive = (path: string) => pathname === path
 
   const navLinks = [
-    { name: 'Events', path: '/events' },
-    { name: 'Shop', path: '/shop' },
-    { name: 'Gigs', path: '/gigs' },
-    { name: 'Hustles', path: '/hustles' },
+    { name: 'Events', path: '/events', icon: Calendar },
+    { name: 'Gigs', path: '/gigs', icon: Briefcase },
+    { name: 'Hustles', path: '/hustles', icon: Zap },
+    { name: 'Shop', path: '/shop', icon: ShoppingBag },
   ]
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-border">
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-border">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-30">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -59,16 +60,16 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
           {/* Notifications & User Profile */}
           <div className="flex items-center space-x-4">
             {/* Create Event Button Container */}
-            <div className="w-[142px] flex justify-end">
+            <div className="w-10 md:w-[142px] flex justify-end">
               {pathname === '/events' && (
                 <Link
                   href="/events/create"
-                  className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
+                  className="inline-flex items-center p-2 md:px-4 md:py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 md:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Create Event
+                  <span className="hidden md:inline">Create Event</span>
                 </Link>
               )}
             </div>
@@ -76,59 +77,30 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
             {/* Notification Bell */}
             <div className="relative flex items-center">
               <button
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 text-text-muted hover:text-white transition-colors rounded-full hover:bg-surface focus:outline-none"
+                onClick={() => {
+                  if (pushStatus === 'subscribed') {
+                    unsubscribe()
+                  } else if (pushStatus === 'idle' || pushStatus === 'denied') {
+                    subscribe()
+                  }
+                }}
+                disabled={pushStatus === 'loading' || pushStatus === 'unsupported'}
+                className={`p-2 transition-colors rounded-full focus:outline-none ${
+                  pushStatus === 'subscribed' ? 'text-brand hover:text-brand/80' : 'text-text-muted hover:text-white hover:bg-surface'
+                } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''} ${
+                  pushStatus === 'unsupported' ? 'hidden' : ''
+                }`}
+                title={pushStatus === 'subscribed' ? 'Disable notifications' : 'Enable notifications'}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
+                {pushStatus === 'subscribed' ? (
+                  <BellRing className="w-5 h-5 md:w-6 md:h-6" />
+                ) : (
+                  <Bell className="w-5 h-5 md:w-6 md:h-6" />
+                )}
                 {pushStatus === 'subscribed' && (
-                  <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-brand rounded-full border-2 border-black"></span>
+                  <span className="absolute top-1 right-2 w-2 h-2 md:top-2 md:right-2 md:w-2.5 md:h-2.5 bg-brand rounded-full border-2 border-black"></span>
                 )}
               </button>
-
-              {isNotifOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsNotifOpen(false)}
-                  ></div>
-                  <div className="absolute right-0 top-full mt-2 w-72 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
-                    <div className="p-4">
-                      <h3 className="text-sm font-semibold text-white mb-4">Notifications</h3>
-
-                      {pushStatus !== 'unsupported' ? (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-text-primary">Push Notifications</span>
-                          <button
-                            onClick={() => {
-                              if (pushStatus === 'subscribed') {
-                                unsubscribe()
-                              } else if (pushStatus === 'idle' || pushStatus === 'denied') {
-                                subscribe()
-                              }
-                            }}
-                            disabled={pushStatus === 'loading'}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${pushStatus === 'subscribed' ? 'bg-primary' : 'bg-gray-600'
-                              } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''}`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${pushStatus === 'subscribed' ? 'translate-x-6' : 'translate-x-1'
-                                }`}
-                            />
-                          </button>
-                        </div>
-                      ) : (
-                        <p className="text-xs text-text-muted">Push notifications are not supported on this device.</p>
-                      )}
-
-                      {pushStatus === 'denied' && (
-                        <p className="text-xs text-red-400 mt-2">Notifications are blocked in your browser settings.</p>
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
 
             {/* User Profile */}
@@ -236,23 +208,29 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden overflow-x-auto border-t border-border bg-black/50">
-        <div className="flex space-x-1 px-2 py-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              href={link.path}
-              className={`whitespace-nowrap px-3 py-2 rounded-md text-sm font-medium ${isActive(link.path)
-                ? 'text-white bg-surface'
-                : 'text-text-muted hover:text-white hover:bg-surface/50'
+      </nav>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-t border-border pb-safe">
+        <div className="flex items-center justify-around px-2 py-2">
+          {navLinks.map((link) => {
+            const Icon = link.icon
+            const active = isActive(link.path)
+            return (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`flex flex-col items-center justify-center w-16 h-12 rounded-lg transition-colors ${
+                  active ? 'text-white' : 'text-text-muted hover:text-white'
                 }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+              >
+                <Icon className={`w-5 h-5 mb-1 ${active ? 'text-brand' : ''}`} />
+                <span className="text-[10px] font-medium">{link.name}</span>
+              </Link>
+            )
+          })}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   )
 }

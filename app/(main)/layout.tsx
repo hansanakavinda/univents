@@ -13,7 +13,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
                     userRole={session.user?.role || 'USER'}
                 />
             )}
-            <main className={`flex-1 w-full max-w-full overflow-hidden ${session ? 'pt-[110px] md:pt-20' : ''}`}>
+            <main className={`flex-1 w-full max-w-full overflow-hidden ${session ? 'pt-16 pb-16 md:pb-0 md:pt-20' : ''}`}>
                 {children}
             </main>
         </div>
