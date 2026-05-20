@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { EventCard, Card, CardContent } from '@/components/ui/Card'
+import { Dropdown } from '@/components/ui/Dropdown'
 import { Badge } from '@/components/ui/Badge'
 import { LikeButton } from '@/components/ui/LikeButton'
 import { ShareButton } from '@/components/ui/ShareButton'
@@ -144,18 +145,13 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
             {/* Filter Bar — only for authenticated users */}
             {isAuthenticated && (
                 <div className="mb-6 p-4 md:p-0 flex flex-col lg:flex-row items-stretch items-center justify-center gap-3">
-                    <select
+                    <Dropdown
                         value={selectedUniId}
-                        onChange={(e) => setSelectedUniId(e.target.value)}
-                        className="w-full lg:w-auto min-w-[200px] h-11 px-4 text-sm rounded-xl border border-border bg-surface text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10"
-                    >
-                        <option value="">All Universities</option>
-                        {universities.map((uni) => (
-                            <option key={uni.id} value={uni.id}>
-                                {uni.name}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={setSelectedUniId}
+                        options={universities.map(uni => ({ label: uni.name, value: uni.id }))}
+                        placeholder="All Universities"
+                        className="w-full lg:w-auto min-w-[200px] z-20"
+                    />
 
                     <div className="grid grid-cols-2 h-11 rounded-xl border border-border overflow-hidden bg-surface lg:flex-none">
                         <button
