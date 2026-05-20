@@ -29,7 +29,7 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-30">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -46,8 +46,8 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
                   key={link.path}
                   href={link.path}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(link.path)
-                      ? 'text-white bg-surface'
-                      : 'text-text-muted hover:text-white hover:bg-surface/50'
+                    ? 'text-white bg-surface'
+                    : 'text-text-muted hover:text-white hover:bg-surface/50'
                     }`}
                 >
                   {link.name}
@@ -58,18 +58,20 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
 
           {/* Notifications & User Profile */}
           <div className="flex items-center space-x-4">
-            {/* Create Event Button (Visible only on Events Page) */}
-            {pathname === '/events' && (
-              <Link
-                href="/events/create"
-                className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Create Event
-              </Link>
-            )}
+            {/* Create Event Button Container */}
+            <div className="w-[142px] flex justify-end">
+              {pathname === '/events' && (
+                <Link
+                  href="/events/create"
+                  className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Create Event
+                </Link>
+              )}
+            </div>
 
             {/* Notification Bell */}
             <div className="relative flex items-center">
@@ -242,8 +244,8 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
               key={link.path}
               href={link.path}
               className={`whitespace-nowrap px-3 py-2 rounded-md text-sm font-medium ${isActive(link.path)
-                  ? 'text-white bg-surface'
-                  : 'text-text-muted hover:text-white hover:bg-surface/50'
+                ? 'text-white bg-surface'
+                : 'text-text-muted hover:text-white hover:bg-surface/50'
                 }`}
             >
               {link.name}
