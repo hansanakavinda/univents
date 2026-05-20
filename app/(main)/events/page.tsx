@@ -4,6 +4,7 @@ import { getAllUniversities } from '@/data-access/universities'
 import { EventsList } from './EventsList'
 import getSession from '@/lib/getSession'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 // SEO: Static metadata for the events listing page.
 // Uses the title template from root layout → "Upcoming University Events | Univents"
@@ -30,7 +31,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
     return (
         <>
-            <div className="md:p-6 ">
+            <div className="px-4 md:p-6">
                 {/* SEO: <header> for the page heading area improves document structure for crawlers */}
                 <header className="w-full mx-auto mb-4 mt-4 flex items-center justify-center">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
@@ -39,17 +40,18 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                         </div>
 
                         {!session && (
-                            <div className="p-3 md:p-4 rounded-xl bg-surface border border-border">
-                                <p className="text-sm text-accent">
-                                    <a href="/login" className="font-semibold underline">Sign in</a>
-                                </p>
-                            </div>
+                            <Link 
+                                href="/login" 
+                                className="inline-flex items-center px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] whitespace-nowrap hover:-translate-y-0.5"
+                            >
+                                Sign In
+                            </Link>
                         )}
                     </div>
                 </header>
 
                 {/* SEO: <section> with aria-label identifies the events list for screen readers and crawlers */}
-                <section aria-label="University events" className="w-full mx-2 sm:mx-auto ">
+                <section aria-label="University events" className="w-full mx-auto">
                     <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} isAuthenticated={isAuthenticated} />
                 </section>
             </div>

@@ -328,16 +328,27 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             {/* Sign-in CTA for unauthenticated users */}
             {!isAuthenticated && events.length > 0 && (
-                <div className="text-center py-10">
-                    <div className="inline-block p-6 rounded-2xl bg-gradient-to-br from-surface to-card border border-border">
-                        <p className="text-white font-semibold mb-2">Want to see more events?</p>
-                        <p className="text-sm text-text-muted mb-4">Sign in to browse all events and create your own.</p>
-                        <a
-                            href="/login"
-                            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-hover transition-colors"
-                        >
-                            Sign in to continue
-                        </a>
+                <div className="text-center py-12 w-full">
+                    <div className="p-8 md:p-12 rounded-[2rem] bg-gradient-to-br from-primary/10 via-surface to-brand/10 border border-border/50 backdrop-blur-md max-w-2xl mx-auto shadow-2xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50"></div>
+                        <div className="relative z-10">
+                            <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-4 tracking-tight">Unlock All Events</h3>
+                            <p className="text-base md:text-lg text-text-muted mb-8 max-w-lg mx-auto">Sign in to discover, filter, and save all upcoming university events across Sri Lanka. Join the community today!</p>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <Link
+                                    href="/login"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-primary text-white font-medium text-base hover:bg-primary-hover transition-all hover:-translate-y-0.5 shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+                                >
+                                    Sign In
+                                </Link>
+                                <Link
+                                    href="/login"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-surface hover:bg-surface-hover text-white font-medium text-base border border-border transition-all hover:-translate-y-0.5"
+                                >
+                                    Create Account
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
