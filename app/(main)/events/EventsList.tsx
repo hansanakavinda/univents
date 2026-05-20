@@ -286,7 +286,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                             <div className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? (event.imagePath ? 'line-clamp-3' : 'line-clamp-[12]') : ''}`}>
                                                 <LinkifyText>{event.content}</LinkifyText>
                                             </div>
-                                            
+
                                             {event.content.split('\n').length > (event.imagePath ? 3 : 12) || event.content.length > (event.imagePath ? 150 : 500) ? (
                                                 <button
                                                     onClick={() => toggleExpand(event.id)}

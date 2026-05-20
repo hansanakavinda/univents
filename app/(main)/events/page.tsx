@@ -32,7 +32,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         <>
             <div className="md:p-6">
                 {/* SEO: <header> for the page heading area improves document structure for crawlers */}
-                <header className="max-w-4xl mx-auto mb-4 mt-4">
+                <header className="w-full mx-auto mb-4 mt-4">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-primary text-center md:text-left text-3xl font-semibold">Your hub for University events in Sri Lanka</h1>
@@ -49,7 +49,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                 </header>
 
                 {/* SEO: <section> with aria-label identifies the events list for screen readers and crawlers */}
-                <section aria-label="University events" className="max-w-4xl mx-2 sm:mx-auto ">
+                <section aria-label="University events" className="w-full mx-2 sm:mx-auto ">
                     <EventsList initialEvents={initialEvents} currentUserId={userId} universities={universities} isAuthenticated={isAuthenticated} />
                 </section>
             </div>
