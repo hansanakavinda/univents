@@ -143,7 +143,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
         <>
             {/* Filter Bar — only for authenticated users */}
             {isAuthenticated && (
-                <div className="mb-6 p-4 md:p-0 flex flex-col lg:flex-row items-stretch gap-3">
+                <div className="mb-6 p-4 md:p-0 flex flex-col lg:flex-row items-stretch items-center justify-center gap-3">
                     <select
                         value={selectedUniId}
                         onChange={(e) => setSelectedUniId(e.target.value)}

@@ -30,9 +30,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
     return (
         <>
-            <div className="md:p-6">
+            <div className="md:p-6 ">
                 {/* SEO: <header> for the page heading area improves document structure for crawlers */}
-                <header className="w-full mx-auto mb-4 mt-4">
+                <header className="w-full mx-auto mb-4 mt-4 flex items-center justify-center">
                     <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between gap-6 mb-4">
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-primary text-center md:text-left text-3xl font-semibold">Your hub for University events in Sri Lanka</h1>
