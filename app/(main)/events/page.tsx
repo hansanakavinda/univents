@@ -38,15 +38,6 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                         <div className='flex flex-col items-center justify-center md:items-start md:justify-start'>
                             <h1 className="text-primary text-center md:text-left text-3xl font-semibold">Your hub for University events in Sri Lanka</h1>
                         </div>
-
-                        {!session && (
-                            <Link
-                                href="/login"
-                                className="inline-flex items-center px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] whitespace-nowrap hover:-translate-y-0.5"
-                            >
-                                Sign In
-                            </Link>
-                        )}
                     </div>
                 </header>
 
