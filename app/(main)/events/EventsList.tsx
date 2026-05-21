@@ -30,7 +30,7 @@ type SortBy = 'recent' | 'happening'
 export function EventsList({ initialEvents, currentUserId, universities, isAuthenticated }: EventsListProps) {
     const [events, setEvents] = useState<Event[]>(initialEvents)
     const [isLoading, setIsLoading] = useState(false)
-    const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= 4)
+    const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= 6)
     const [lastScrollY, setLastScrollY] = useState(0)
     const loadingRef = useRef(false)
 
@@ -54,7 +54,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
     const buildFetchUrl = useCallback((skip: number) => {
         const params = new URLSearchParams({
-            take: '4',
+            take: '6',
             skip: String(skip),
         })
         if (selectedUniId) params.set('uniId', selectedUniId)
@@ -101,7 +101,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             if (data.events && data.events.length > 0) {
                 setEvents(prev => [...prev, ...data.events])
-                setHasMore(data.events.length >= 4)
+                setHasMore(data.events.length >= 6)
             } else {
                 setHasMore(false)
             }
@@ -144,34 +144,41 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
         <>
             {/* Filter Bar — only for authenticated users */}
             {isAuthenticated && (
-                <div className="mb-6 p-4 md:p-0 flex flex-col lg:flex-row items-stretch items-center justify-center gap-3">
-                    <Dropdown
-                        value={selectedUniId}
-                        onChange={setSelectedUniId}
-                        options={universities.map(uni => ({ label: uni.name, value: uni.id }))}
-                        placeholder="All Universities"
-                        className="w-full lg:w-auto min-w-[200px] z-20"
-                    />
+                <div className="mb-8 mt-2 flex justify-center sticky top-[88px] z-30 px-4 md:px-0">
+                    <div className="flex flex-col sm:flex-row items-center gap-1.5 p-1.5 rounded-[1.25rem] sm:rounded-full bg-surface/70 backdrop-blur-xl border border-white/10 shadow-xl w-full sm:w-auto max-w-2xl">
+                        <div className="w-full sm:w-auto min-w-[200px] relative z-20">
+                            <Dropdown
+                                value={selectedUniId}
+                                onChange={setSelectedUniId}
+                                options={universities.map(uni => ({ label: uni.name, value: uni.id }))}
+                                placeholder="All Universities"
+                                className="w-full [&>button]:!bg-transparent [&>button]:!border-0 [&>button]:!shadow-none [&>button]:!ring-0 hover:[&>button]:!bg-white/5 [&>button]:!rounded-full [&>button]:transition-colors"
+                            />
+                        </div>
 
-                    <div className="grid grid-cols-2 h-11 rounded-xl border border-border overflow-hidden bg-surface lg:flex-none">
-                        <button
-                            onClick={() => setSortBy('recent')}
-                            className={`px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors ${sortBy === 'recent'
-                                ? 'bg-primary text-white'
-                                : 'text-text-primary hover:bg-surface-hover'
-                                }`}
-                        >
-                            All Univents
-                        </button>
-                        <button
-                            onClick={() => setSortBy('happening')}
-                            className={`px-4 lg:px-6 h-full flex items-center justify-center text-sm font-medium transition-colors border-l border-border ${sortBy === 'happening'
-                                ? 'bg-primary text-white'
-                                : 'text-text-primary hover:bg-surface-hover'
-                                }`}
-                        >
-                            Happening Soon
-                        </button>
+                        <div className="hidden sm:block w-px h-6 bg-white/10 mx-1"></div>
+                        <div className="block sm:hidden w-full h-px bg-white/10 my-1"></div>
+
+                        <div className="flex gap-1 p-1 w-full sm:w-auto rounded-xl sm:rounded-full bg-black/30 relative border border-white/5 shadow-inner">
+                            <button
+                                onClick={() => setSortBy('recent')}
+                                className={`relative flex-1 sm:flex-none px-6 py-2 rounded-lg sm:rounded-full text-sm font-medium transition-all duration-300 z-10 ${sortBy === 'recent'
+                                    ? 'bg-surface text-primary shadow-md ring-1 ring-white/10'
+                                    : 'text-text-muted hover:text-white hover:bg-white/5'
+                                    }`}
+                            >
+                                All Univents
+                            </button>
+                            <button
+                                onClick={() => setSortBy('happening')}
+                                className={`relative flex-1 sm:flex-none px-6 py-2 rounded-lg sm:rounded-full text-sm font-medium transition-all duration-300 z-10 ${sortBy === 'happening'
+                                    ? 'bg-surface text-primary shadow-md ring-1 ring-white/10'
+                                    : 'text-text-muted hover:text-white hover:bg-white/5'
+                                    }`}
+                            >
+                                Happening Soon
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -186,15 +193,15 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             {/* Empty state */}
             {!isFiltering && events.length === 0 && (
-                <Card>
-                    <CardContent className="text-center py-12">
+                <Card className=''>
+                    <CardContent className="text-center py-12 ">
                         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
                             <svg className="w-8 h-8 text-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
                         <h3 className="text-lg font-semibold text-white mb-2">
-                            {selectedUniId || sortBy !== 'recent' ? 'No events match your filters' : 'No events yet'}
+                            {selectedUniId || sortBy !== 'recent' ? 'No events match your filters' : 'Oops no events found :('}
                         </h3>
                         <p className="text-text-muted">
                             {selectedUniId || sortBy !== 'recent'
@@ -214,21 +221,44 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                 {/* SEO: <article> identifies each event as a self-contained piece of content */}
                                 <article className="flex flex-col h-full">
                                     <CardContent className="p-0 flex flex-col h-full">
-                                        {/* Event Image (Top) */}
-                                        {event.imagePath && (
-                                            <Link href={`/events/${event.id}`}>
-                                                <div className="w-full overflow-hidden bg-black/10 shrink-0">
+                                        {/* Event Image (Top) or Placeholder */}
+                                        <Link href={`/events/${event.id}`}>
+                                            <div className="w-full overflow-hidden shrink-0 relative group bg-surface">
+                                                {event.imagePath ? (
                                                     <Image
                                                         src={event.imagePath}
                                                         alt={`${event.title} at ${event.university.name}`}
-                                                        className="w-full object-cover max-h-[400px] hover:scale-105 transition-transform duration-500"
+                                                        className="w-full object-cover max-h-[400px] group-hover:scale-105 transition-transform duration-500"
                                                         width={800}
                                                         height={800}
                                                         priority={index < 4}
                                                     />
-                                                </div>
-                                            </Link>
-                                        )}
+                                                ) : (
+                                                    <div className={`w-full h-48 md:h-56 bg-gradient-to-br ${[
+                                                        'from-primary to-brand',
+                                                        'from-violet-600 to-indigo-600',
+                                                        'from-fuchsia-600 to-purple-600',
+                                                        'from-rose-500 to-orange-500',
+                                                        'from-blue-600 to-cyan-600',
+                                                        'from-emerald-500 to-teal-600',
+                                                    ][event.id.charCodeAt(event.id.length - 1) % 6]
+                                                        } flex flex-col items-center justify-center relative overflow-hidden`}>
+                                                        {/* Abstract background pattern for texture */}
+                                                        <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8cGF0aCBkPSJNMCAwTDggOFpNOCAwTDAgOFoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] group-hover:scale-110 transition-transform duration-700"></div>
+
+                                                        {/* Floating Inner Content */}
+                                                        <div className="w-16 h-16 rounded-2xl bg-black/20 backdrop-blur-md flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 text-white z-10 group-hover:-translate-y-1 group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-300">
+                                                            <svg className="w-8 h-8 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </div>
+                                                        <span className="mt-4 text-white font-bold tracking-widest text-xs uppercase z-10 group-hover:-translate-y-0.5 transition-transform duration-300 drop-shadow-md">
+                                                            {event.university.shortName}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </Link>
 
                                         <div className="p-4 md:p-5 flex flex-col grow">
                                             <Link href={`/events/${event.id}`}>
@@ -306,6 +336,28 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     </CardContent>
                                 </article>
                             </EventCard>
+                        </div>
+                    ))}
+
+                    {/* Filler / Ghost Cards for sparse grids */}
+                    {events.length < 3 && Array.from({ length: 3 - events.length }).map((_, i) => (
+                        <div key={`ghost-${i}`} className="break-inside-avoid mb-6 h-full min-h-[350px]">
+                            <Link href="/events/create" className="block h-full group">
+                                <div className="h-full min-h-[350px] rounded-2xl border-2 border-dashed border-white/10 bg-surface/30 hover:bg-surface/50 backdrop-blur-sm p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-primary/50 group-hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 ring-1 ring-primary/20 group-hover:ring-primary/40">
+                                        <svg className="w-8 h-8 transition-transform duration-300 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                    </div>
+
+                                    <h3 className="text-xl font-bold text-white mb-2 relative z-10 transition-colors group-hover:text-primary-hover">Got an Event?</h3>
+                                    <p className="text-text-muted text-sm max-w-[200px] relative z-10">
+                                        Share your campus activity, hackathon, or workshop with the community.
+                                    </p>
+                                </div>
+                            </Link>
                         </div>
                     ))}
                 </div>

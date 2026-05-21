@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Calendar, Zap, Briefcase, ShoppingBag, ArrowRight } from 'lucide-react'
 import getSession from '@/lib/getSession'
+import { TopNav } from '@/components/TopNav'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,31 +10,15 @@ export default async function LandingPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground">
-            {/* Minimalist Navigation */}
-            <header className="w-full py-4 px-6 md:px-12 flex items-center justify-between z-10 border-b border-border/40 bg-surface/50 backdrop-blur-md sticky top-0">
-                <Link href="/" className="text-2xl font-extrabold text-white tracking-widest flex items-center">
-                    <span className="text-primary text-3xl leading-none">U</span>NIVENTS
-                </Link>
-                <div>
-                    {session ? (
-                        <Link href="/dashboard" className="px-5 py-2 text-sm font-medium rounded-xl bg-surface border border-border hover:bg-surface-hover text-white transition-colors">
-                            Dashboard
-                        </Link>
-                    ) : (
-                        <div className="flex items-center gap-4">
-                            <Link href="/login" className="text-sm font-medium text-text-primary hover:text-white transition-colors hidden sm:block">
-                                Sign In
-                            </Link>
-                            <Link href="/auth/signup" className="px-5 py-2 text-sm font-medium rounded-xl bg-primary hover:bg-primary-hover text-white transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:-translate-y-0.5">
-                                Join Now
-                            </Link>
-                        </div>
-                    )}
-                </div>
-            </header>
+            <TopNav
+                userName={session?.user?.name || 'User'}
+                userImage={session?.user?.image || null}
+                userRole={session?.user?.role || 'USER'}
+                isLoggedIn={!!session}
+            />
 
             {/* Main Content */}
-            <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden">
+            <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden pt-16 md:pt-20">
                 {/* Background Decorators */}
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -98,7 +83,7 @@ export default async function LandingPage() {
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-3">Gigs</h3>
                             <p className="text-text-muted text-sm leading-relaxed mb-6 flex-grow">
-                                Want to earn some extra cash? Find quick, skill-based micro-jobs and tasks posted by your university peers.
+                                Want to earn some extra cash? Sell your skills, services, or anything you're good at. Create a gig and see who bites.
                             </p>
                             <span className="inline-flex items-center text-sm font-semibold text-brand group-hover:brightness-125 transition-all mt-auto">
                                 Find Gigs <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />

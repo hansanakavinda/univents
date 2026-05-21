@@ -11,9 +11,10 @@ interface TopNavProps {
   userName?: string
   userImage?: string | null
   userRole?: string
+  isLoggedIn?: boolean
 }
 
-export function TopNav({ userName, userImage, userRole }: TopNavProps) {
+export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: TopNavProps) {
   const pathname = usePathname()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -51,8 +52,8 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link href="/" className="text-xl font-bold text-white tracking-wider">
-                UNIVENTS
+              <Link href="/" className="text-2xl font-extrabold text-white tracking-widest flex items-center">
+                <span className="text-primary text-3xl leading-none">U</span>NIVENTS
               </Link>
             </div>
 
@@ -76,143 +77,156 @@ export function TopNav({ userName, userImage, userRole }: TopNavProps) {
 
             {/* Notifications & User Profile */}
             <div className="flex items-center space-x-4">
-              {/* Create Event Button Container */}
-              <div className="w-10 md:w-[142px] flex justify-end">
-                {pathname === '/events' && (
-                  <Link
-                    href="/events/create"
-                    className="inline-flex items-center p-2 md:px-4 md:py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap shadow-sm"
-                  >
-                    <svg className="w-5 h-5 md:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span className="hidden md:inline">Create Event</span>
-                  </Link>
-                )}
-              </div>
-
-              {/* Notification Bell */}
-              <div className="relative flex items-center">
-                <button
-                  onClick={() => {
-                    if (pushStatus === 'subscribed') {
-                      unsubscribe()
-                    } else if (pushStatus === 'idle' || pushStatus === 'denied') {
-                      subscribe()
-                    }
-                  }}
-                  disabled={pushStatus === 'loading' || pushStatus === 'unsupported'}
-                  className={`p-2 transition-colors rounded-full focus:outline-none ${pushStatus === 'subscribed' ? 'text-brand hover:text-brand/80' : 'text-text-muted hover:text-white hover:bg-surface'
-                    } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''} ${pushStatus === 'unsupported' ? 'hidden' : ''
-                    }`}
-                  title={pushStatus === 'subscribed' ? 'Disable notifications' : 'Enable notifications'}
-                >
-                  {pushStatus === 'subscribed' ? (
-                    <BellRing className="w-5 h-5 md:w-6 md:h-6" />
-                  ) : (
-                    <Bell className="w-5 h-5 md:w-6 md:h-6" />
-                  )}
-                  {pushStatus === 'subscribed' && (
-                    <span className="absolute top-1 right-2 w-2 h-2 md:top-2 md:right-2 md:w-2.5 md:h-2.5 bg-brand rounded-full border-2 border-black"></span>
-                  )}
-                </button>
-              </div>
-
-              {/* User Profile */}
-              <div className="relative" ref={profileRef}>
-                <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center focus:outline-none"
-                >
-                  {userImage ? (
-                    <img
-                      src={userImage}
-                      alt={userName || 'User'}
-                      className="w-9 h-9 rounded-full object-cover border border-border"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold border border-border">
-                      {userName?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                  )}
-                </button>
-
-                {/* Dropdown Panel */}
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
-                    <div className="py-1">
-                      <div className="px-4 py-2 border-b border-border mb-1">
-                        <p className="text-sm font-medium text-white truncate">{userName || 'User'}</p>
-                      </div>
+              {isLoggedIn ? (
+                <>
+                  {/* Create Event Button Container */}
+                  <div className="w-10 md:w-[142px] flex justify-end">
+                    {pathname === '/events' && (
                       <Link
-                        href="/profile"
-                        onClick={() => setIsProfileOpen(false)}
-                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                        href="/events/create"
+                        className="group inline-flex items-center p-2 md:px-4 md:py-2 bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary text-white text-sm font-semibold rounded-xl transition-all duration-300 whitespace-nowrap shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] border border-white/10 hover:-translate-y-0.5"
                       >
-                        Profile
+                        <svg className="w-5 h-5 md:mr-2 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span className="hidden md:inline">Create Event</span>
                       </Link>
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setIsProfileOpen(false)}
-                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                      >
-                        Dashboard
-                      </Link>
-                      <Link
-                        href="/settings"
-                        onClick={() => setIsProfileOpen(false)}
-                        className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                      >
-                        Settings
-                      </Link>
+                    )}
+                  </div>
 
-                      {/* Admin Links */}
-                      {(userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') && (
-                        <>
-                          <div className="border-t border-border mt-1 mb-1"></div>
-                          <div className="px-4 py-1 text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Admin
+                  {/* Notification Bell */}
+                  <div className="relative flex items-center">
+                    <button
+                      onClick={() => {
+                        if (pushStatus === 'subscribed') {
+                          unsubscribe()
+                        } else if (pushStatus === 'idle' || pushStatus === 'denied') {
+                          subscribe()
+                        }
+                      }}
+                      disabled={pushStatus === 'loading' || pushStatus === 'unsupported'}
+                      className={`p-2 transition-colors rounded-full focus:outline-none ${pushStatus === 'subscribed' ? 'text-brand hover:text-brand/80' : 'text-text-muted hover:text-white hover:bg-surface'
+                        } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''} ${pushStatus === 'unsupported' ? 'hidden' : ''
+                        }`}
+                      title={pushStatus === 'subscribed' ? 'Disable notifications' : 'Enable notifications'}
+                    >
+                      {pushStatus === 'subscribed' ? (
+                        <BellRing className="w-5 h-5 md:w-6 md:h-6" />
+                      ) : (
+                        <Bell className="w-5 h-5 md:w-6 md:h-6" />
+                      )}
+                      {pushStatus === 'subscribed' && (
+                        <span className="absolute top-1 right-2 w-2 h-2 md:top-2 md:right-2 md:w-2.5 md:h-2.5 bg-brand rounded-full border-2 border-black"></span>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* User Profile */}
+                  <div className="relative" ref={profileRef}>
+                    <button
+                      onClick={() => setIsProfileOpen(!isProfileOpen)}
+                      className="flex items-center focus:outline-none"
+                    >
+                      {userImage ? (
+                        <img
+                          src={userImage}
+                          alt={userName || 'User'}
+                          className="w-9 h-9 rounded-full object-cover border border-border"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-semibold border border-border">
+                          {userName?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                      )}
+                    </button>
+
+                    {/* Dropdown Panel */}
+                    {isProfileOpen && (
+                      <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-surface ring-1 ring-black ring-opacity-5 z-50 overflow-hidden border border-border">
+                        <div className="py-1">
+                          <div className="px-4 py-2 border-b border-border mb-1">
+                            <p className="text-sm font-medium text-white truncate">{userName || 'User'}</p>
                           </div>
                           <Link
-                            href="/admin/events"
+                            href="/profile"
                             onClick={() => setIsProfileOpen(false)}
                             className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                           >
-                            Moderation
+                            Profile
                           </Link>
-                          {userRole === 'SUPER_ADMIN' && (
+                          <Link
+                            href="/dashboard"
+                            onClick={() => setIsProfileOpen(false)}
+                            className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                          >
+                            Dashboard
+                          </Link>
+                          <Link
+                            href="/settings"
+                            onClick={() => setIsProfileOpen(false)}
+                            className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                          >
+                            Settings
+                          </Link>
+
+                          {/* Admin Links */}
+                          {(userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') && (
                             <>
+                              <div className="border-t border-border mt-1 mb-1"></div>
+                              <div className="px-4 py-1 text-xs font-semibold text-text-muted uppercase tracking-wider">
+                                Admin
+                              </div>
                               <Link
-                                href="/admin/universities"
+                                href="/admin/events"
                                 onClick={() => setIsProfileOpen(false)}
                                 className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                               >
-                                Universities
+                                Moderation
                               </Link>
-                              <Link
-                                href="/admin"
-                                onClick={() => setIsProfileOpen(false)}
-                                className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
-                              >
-                                User Management
-                              </Link>
+                              {userRole === 'SUPER_ADMIN' && (
+                                <>
+                                  <Link
+                                    href="/admin/universities"
+                                    onClick={() => setIsProfileOpen(false)}
+                                    className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                                  >
+                                    Universities
+                                  </Link>
+                                  <Link
+                                    href="/admin"
+                                    onClick={() => setIsProfileOpen(false)}
+                                    className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
+                                  >
+                                    User Management
+                                  </Link>
+                                </>
+                              )}
                             </>
                           )}
-                        </>
-                      )}
 
-                      <div className="border-t border-border mt-1">
-                        <button
-                          onClick={() => signOut({ redirectTo: '/login' })}
-                          className="block w-full text-left px-4 py-2 text-sm text-accent hover:bg-white/5 transition-colors"
-                        >
-                          Sign Out
-                        </button>
+                          <div className="border-t border-border mt-1">
+                            <button
+                              onClick={() => signOut({ redirectTo: '/login' })}
+                              className="block w-full text-left px-4 py-2 text-sm text-accent hover:bg-white/5 transition-colors"
+                            >
+                              Sign Out
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Link href="/login" className="text-sm font-medium text-text-primary hover:text-white transition-colors">
+                    Sign In
+                  </Link>
+                  <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium rounded-xl bg-primary hover:bg-primary-hover text-white transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:-translate-y-0.5">
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

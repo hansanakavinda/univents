@@ -26,7 +26,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     const session = await getSession()
     const isAuthenticated = !!session
     const userId = session?.user?.id
-    const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? 4 : 2, skip: 0, userId })
+    const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? 6 : 3, skip: 0, userId })
     const universities = await getAllUniversities()
 
     return (
@@ -40,8 +40,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                         </div>
 
                         {!session && (
-                            <Link 
-                                href="/login" 
+                            <Link
+                                href="/login"
                                 className="inline-flex items-center px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] whitespace-nowrap hover:-translate-y-0.5"
                             >
                                 Sign In
