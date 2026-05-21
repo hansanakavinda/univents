@@ -223,8 +223,9 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                     <CardContent className="p-0 flex flex-col h-full">
                                         {/* Event Image (Top) or Placeholder */}
                                         <Link href={`/events/${event.id}`}>
-                                            <div className="w-full overflow-hidden shrink-0 relative group bg-surface">
-                                                {event.imagePath ? (
+
+                                            {event.imagePath && (
+                                                <div className="w-full overflow-hidden shrink-0 relative group bg-surface">
                                                     <Image
                                                         src={event.imagePath}
                                                         alt={`${event.title} at ${event.university.name}`}
@@ -233,31 +234,9 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                         height={800}
                                                         priority={index < 4}
                                                     />
-                                                ) : (
-                                                    <div className={`w-full h-48 md:h-56 bg-gradient-to-br ${[
-                                                        'from-primary to-brand',
-                                                        'from-violet-600 to-indigo-600',
-                                                        'from-fuchsia-600 to-purple-600',
-                                                        'from-rose-500 to-orange-500',
-                                                        'from-blue-600 to-cyan-600',
-                                                        'from-emerald-500 to-teal-600',
-                                                    ][event.id.charCodeAt(event.id.length - 1) % 6]
-                                                        } flex flex-col items-center justify-center relative overflow-hidden`}>
-                                                        {/* Abstract background pattern for texture */}
-                                                        <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8cGF0aCBkPSJNMCAwTDggOFpNOCAwTDAgOFoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] group-hover:scale-110 transition-transform duration-700"></div>
+                                                </div>
+                                            )}
 
-                                                        {/* Floating Inner Content */}
-                                                        <div className="w-16 h-16 rounded-2xl bg-black/20 backdrop-blur-md flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 text-white z-10 group-hover:-translate-y-1 group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-300">
-                                                            <svg className="w-8 h-8 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                            </svg>
-                                                        </div>
-                                                        <span className="mt-4 text-white font-bold tracking-widest text-xs uppercase z-10 group-hover:-translate-y-0.5 transition-transform duration-300 drop-shadow-md">
-                                                            {event.university.shortName}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
                                         </Link>
 
                                         <div className="p-4 md:p-5 flex flex-col grow">
