@@ -39,3 +39,18 @@ export const POST = asyncCatcher(async (request: Request) => {
 
   return NextResponse.json({ success: true })
 }, 'Push subscribe')
+
+export const DELETE = asyncCatcher(async (request: Request) => {
+  const url = new URL(request.url)
+  const endpoint = url.searchParams.get('endpoint')
+
+  if (!endpoint) {
+    return NextResponse.json({ error: 'Endpoint is required' }, { status: 400 })
+  }
+
+  await prisma.pushSubscription.deleteMany({
+    where: { endpoint },
+  })
+
+  return NextResponse.json({ success: true })
+}, 'Push unsubscribe')

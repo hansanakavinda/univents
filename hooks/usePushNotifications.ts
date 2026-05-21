@@ -108,7 +108,36 @@ export function usePushNotifications() {
     }
   }, [])
 
-  return { status, subscribe }
+  // ----------------------------------------------------------------
+  // unsubscribe() — called when the user disables notifications
+  // ----------------------------------------------------------------
+  const unsubscribe = useCallback(async () => {
+    if (typeof window === 'undefined') return
+    if (!('serviceWorker' in navigator)) return
+
+    setStatus('loading')
+    try {
+      const registration = await navigator.serviceWorker.ready
+      const subscription = await registration.pushManager.getSubscription()
+      
+      if (subscription) {
+        // Remove from DB
+        await fetch(`/api/push/subscribe?endpoint=${encodeURIComponent(subscription.endpoint)}`, {
+          method: 'DELETE',
+        })
+        
+        // Unsubscribe locally
+        await subscription.unsubscribe()
+      }
+      
+      setStatus('idle')
+    } catch (err) {
+      console.error('[usePushNotifications] Unsubscription failed:', err)
+      setStatus('subscribed') // revert on failure
+    }
+  }, [])
+
+  return { status, subscribe, unsubscribe }
 }
 
 // ----------------------------------------------------------------

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { prisma } from '@/lib/prisma'
-import { getAllUniversities } from '@/data-access/universities'
+
 import { RecentEvents } from './RecentEvents'
 
 export default async function DashboardPage() {
@@ -29,7 +29,7 @@ export default async function DashboardPage() {
     take: 5,
   })
 
-  const universities = await getAllUniversities()
+
 
   const totalEvents = await prisma.event.count({
     where: { authorId: session.user.id },
@@ -119,7 +119,6 @@ export default async function DashboardPage() {
           <CardContent>
             <RecentEvents
               events={JSON.parse(JSON.stringify(userEvents))}
-              universities={universities}
             />
           </CardContent>
         </Card>
