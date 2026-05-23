@@ -11,6 +11,7 @@ import Image from 'next/image'
 import type { Event } from '@/types/event'
 import { formatDate, formatTime, formatDateToLong } from '@/lib/utils'
 import Link from 'next/link'
+import { EVENTS_PER_PAGE_AUTHENTICATED } from '@/lib/constants'
 
 interface University {
     id: string
@@ -30,7 +31,7 @@ type SortBy = 'recent' | 'happening'
 export function EventsList({ initialEvents, currentUserId, universities, isAuthenticated }: EventsListProps) {
     const [events, setEvents] = useState<Event[]>(initialEvents)
     const [isLoading, setIsLoading] = useState(false)
-    const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= 6)
+    const [hasMore, setHasMore] = useState(isAuthenticated && initialEvents.length >= EVENTS_PER_PAGE_AUTHENTICATED)
     const [lastScrollY, setLastScrollY] = useState(0)
     const loadingRef = useRef(false)
 
@@ -54,7 +55,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
     const buildFetchUrl = useCallback((skip: number) => {
         const params = new URLSearchParams({
-            take: '6',
+            take: String(EVENTS_PER_PAGE_AUTHENTICATED),
             skip: String(skip),
         })
         if (selectedUniId) params.set('uniId', selectedUniId)
@@ -76,7 +77,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
                 if (data.events) {
                     setEvents(data.events)
-                    setHasMore(data.events.length >= 4)
+                    setHasMore(data.events.length >= EVENTS_PER_PAGE_AUTHENTICATED)
                 }
             } catch (error) {
                 console.error('Failed to fetch filtered events:', error)
@@ -101,7 +102,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             if (data.events && data.events.length > 0) {
                 setEvents(prev => [...prev, ...data.events])
-                setHasMore(data.events.length >= 6)
+                setHasMore(data.events.length >= EVENTS_PER_PAGE_AUTHENTICATED)
             } else {
                 setHasMore(false)
             }
@@ -231,7 +232,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                         className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                                                         width={1080}
                                                         height={1280}
-                                                        priority={index < 4}
+                                                        priority={index < EVENTS_PER_PAGE_AUTHENTICATED}
                                                     />
                                                 </div>
                                             </Link>
