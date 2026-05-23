@@ -26,10 +26,10 @@ export function EditEventClient({ universities, event }: { universities: Univers
     }
 
     return (
-        <EventForm 
-            universities={universities} 
+        <EventForm
+            universities={universities}
             eventData={eventData}
-            onSuccess={() => router.push(`/events/${event.id}`)}
+            onSuccess={() => router.push(`/events/`)}
             onCancel={() => router.back()}
         />
     )

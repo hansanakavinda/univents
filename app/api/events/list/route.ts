@@ -2,6 +2,7 @@ import { asyncCatcher } from '@/lib/api/api-utils'
 import { getApprovedEventsPaginated } from '@/data-access/events'
 import { NextResponse } from 'next/server'
 import getSession from '@/lib/getSession'
+import { EVENTS_PER_PAGE_AUTHENTICATED } from '@/lib/constants'
 
 export const GET = asyncCatcher(async (request: Request) => {
     const session = await getSession()
@@ -11,7 +12,7 @@ export const GET = asyncCatcher(async (request: Request) => {
     }
 
     const { searchParams } = new URL(request.url)
-    const take = parseInt(searchParams.get('take') ?? '4')
+    const take = parseInt(searchParams.get('take') ?? String(EVENTS_PER_PAGE_AUTHENTICATED))
     const skip = parseInt(searchParams.get('skip') ?? '0')
     const uniId = searchParams.get('uniId') || undefined
     const sortBy = (searchParams.get('sortBy') as 'recent' | 'happening') || undefined

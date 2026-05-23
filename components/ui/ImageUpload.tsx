@@ -101,7 +101,7 @@ export function ImageUpload({ value, onChange, onDiscard, disabled, label = 'Eve
                         alt="Preview"
                         width={500}
                         height={500}
-                        className="w-full h-48 object-cover"
+                        className="w-full h-48 object-contain bg-surface"
                     />
                     {isUploading && (
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">

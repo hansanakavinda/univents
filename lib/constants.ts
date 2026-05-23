@@ -1,0 +1,2 @@
+export const EVENTS_PER_PAGE_AUTHENTICATED = 6;
+export const EVENTS_PER_PAGE_GUEST = 3;

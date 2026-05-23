@@ -3,6 +3,7 @@ import { getApprovedEventsPaginated } from '@/data-access/events'
 import { getAllUniversities } from '@/data-access/universities'
 import { EventsList } from './EventsList'
 import getSession from '@/lib/getSession'
+import { EVENTS_PER_PAGE_AUTHENTICATED, EVENTS_PER_PAGE_GUEST } from '@/lib/constants'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -26,7 +27,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     const session = await getSession()
     const isAuthenticated = !!session
     const userId = session?.user?.id
-    const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? 6 : 3, skip: 0, userId })
+    const initialEvents = await getApprovedEventsPaginated({ take: isAuthenticated ? EVENTS_PER_PAGE_AUTHENTICATED : EVENTS_PER_PAGE_GUEST, skip: 0, userId })
     const universities = await getAllUniversities()
 
     return (
