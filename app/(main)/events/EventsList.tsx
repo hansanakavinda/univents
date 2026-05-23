@@ -214,30 +214,28 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
             {/* Events List */}
             {!isFiltering && events.length > 0 && (
-                <div className="columns-1 md:columns-2 lg:columns-3 gap-6 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-start">
                     {events.map((event, index) => (
-                        <div key={event.id} className="break-inside-avoid mb-6">
-                            <EventCard hover className="w-full flex flex-col relative overflow-hidden">
+                        <div key={event.id} className="w-full">
+                            <EventCard hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${expandedEvents.has(event.id) ? 'h-auto' : 'h-[750px]'}`}>
                                 {/* SEO: <article> identifies each event as a self-contained piece of content */}
                                 <article className="flex flex-col h-full">
                                     <CardContent className="p-0 flex flex-col h-full">
-                                        {/* Event Image (Top) or Placeholder */}
-                                        <Link href={`/events/${event.id}`}>
-
-                                            {event.imagePath && (
-                                                <div className="w-full overflow-hidden shrink-0 relative group bg-surface">
+                                        {/* Event Image (Top) */}
+                                        {event.imagePath && (
+                                            <Link href={`/events/${event.id}`}>
+                                                <div className="w-full max-h-[400px] overflow-hidden shrink-0 relative group bg-surface border-b border-border/50 flex items-center justify-center">
                                                     <Image
                                                         src={event.imagePath}
                                                         alt={`${event.title} at ${event.university.name}`}
-                                                        className="w-full object-cover max-h-[400px] group-hover:scale-105 transition-transform duration-500"
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                         width={800}
                                                         height={800}
                                                         priority={index < 4}
                                                     />
                                                 </div>
-                                            )}
-
-                                        </Link>
+                                            </Link>
+                                        )}
 
                                         <div className="p-4 md:p-5 flex flex-col grow">
                                             <Link href={`/events/${event.id}`}>
@@ -288,11 +286,11 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                 </div>
                                             </Link>
 
-                                            <div className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? (event.imagePath ? 'line-clamp-3' : 'line-clamp-[12]') : ''}`}>
+                                            <div className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? (event.imagePath ? 'line-clamp-3' : 'line-clamp-[22]') : ''}`}>
                                                 <LinkifyText>{event.content}</LinkifyText>
                                             </div>
 
-                                            {event.content.split('\n').length > (event.imagePath ? 3 : 12) || event.content.length > (event.imagePath ? 150 : 500) ? (
+                                            {event.content.split('\n').length > (event.imagePath ? 3 : 22) || event.content.length > (event.imagePath ? 150 : 1000) ? (
                                                 <button
                                                     onClick={() => toggleExpand(event.id)}
                                                     className="text-accent text-xs font-medium hover:underline mb-2 mt-1 cursor-pointer"
@@ -320,9 +318,9 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
                     {/* Filler / Ghost Cards for sparse grids */}
                     {events.length < 3 && Array.from({ length: 3 - events.length }).map((_, i) => (
-                        <div key={`ghost-${i}`} className="break-inside-avoid mb-6 h-full min-h-[350px]">
+                        <div key={`ghost-${i}`} className="w-full h-full min-h-[750px]">
                             <Link href="/events/create" className="block h-full group">
-                                <div className="h-full min-h-[350px] rounded-2xl border-2 border-dashed border-white/10 bg-surface/30 hover:bg-surface/50 backdrop-blur-sm p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-primary/50 group-hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] relative overflow-hidden">
+                                <div className="h-full rounded-2xl border-2 border-dashed border-white/10 bg-surface/30 hover:bg-surface/50 backdrop-blur-sm p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-primary/50 group-hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                                     <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 ring-1 ring-primary/20 group-hover:ring-primary/40">
