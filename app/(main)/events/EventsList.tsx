@@ -217,18 +217,18 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-start">
                     {events.map((event, index) => (
                         <div key={event.id} className="w-full">
-                            <EventCard hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${expandedEvents.has(event.id) ? 'h-auto' : 'h-[750px]'}`}>
+                            <EventCard hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${expandedEvents.has(event.id) ? 'h-auto min-h-[1000px]' : 'h-[1000px]'}`}>
                                 {/* SEO: <article> identifies each event as a self-contained piece of content */}
-                                <article className="flex flex-col h-full">
-                                    <CardContent className="p-0 flex flex-col h-full">
+                                <article className="flex flex-col h-full min-h-0">
+                                    <CardContent className="p-0 flex flex-col h-full min-h-0">
                                         {/* Event Image (Top) */}
                                         {event.imagePath && (
                                             <Link href={`/events/${event.id}`}>
-                                                <div className="w-full h-[400px] overflow-hidden shrink-0 relative group flex items-center justify-center">
+                                                <div className="w-full overflow-hidden shrink-0 relative group flex items-center justify-center">
                                                     <Image
                                                         src={event.imagePath}
                                                         alt={`${event.title} at ${event.university.name}`}
-                                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                                                         width={1080}
                                                         height={1280}
                                                         priority={index < 4}
@@ -237,7 +237,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                             </Link>
                                         )}
 
-                                        <div className="p-4 md:p-5 flex flex-col grow">
+                                        <div className="p-4 md:p-5 flex flex-col grow min-h-0">
                                             <Link href={`/events/${event.id}`}>
                                                 <div className="mb-2">
                                                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
@@ -286,14 +286,17 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                                 </div>
                                             </Link>
 
-                                            <div className={`text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? (event.imagePath ? 'line-clamp-3' : 'line-clamp-[22]') : ''}`}>
+                                            <div
+                                                className={`relative flex-1 min-h-0 text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!expandedEvents.has(event.id) ? 'overflow-hidden' : ''}`}
+                                                style={!expandedEvents.has(event.id) ? { maskImage: 'linear-gradient(to top, transparent, black 2rem)', WebkitMaskImage: 'linear-gradient(to top, transparent, black 2rem)' } : undefined}
+                                            >
                                                 <LinkifyText>{event.content}</LinkifyText>
                                             </div>
 
-                                            {event.content.split('\n').length > (event.imagePath ? 3 : 22) || event.content.length > (event.imagePath ? 150 : 1000) ? (
+                                            {event.content.split('\n').length > 6 || event.content.length > 300 ? (
                                                 <button
                                                     onClick={() => toggleExpand(event.id)}
-                                                    className="text-accent text-xs font-medium hover:underline mb-2 mt-1 cursor-pointer"
+                                                    className="text-accent text-xs font-medium hover:underline mb-2 mt-2 cursor-pointer self-start"
                                                 >
                                                     {expandedEvents.has(event.id) ? 'See less' : 'See more'}
                                                 </button>
@@ -318,7 +321,7 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
 
                     {/* Filler / Ghost Cards for sparse grids */}
                     {events.length < 3 && Array.from({ length: 3 - events.length }).map((_, i) => (
-                        <div key={`ghost-${i}`} className="w-full h-full min-h-[750px]">
+                        <div key={`ghost-${i}`} className="w-full h-full min-h-[850px]">
                             <Link href="/events/create" className="block h-full group">
                                 <div className="h-full rounded-2xl border-2 border-dashed border-white/10 bg-surface/30 hover:bg-surface/50 backdrop-blur-sm p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-primary/50 group-hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
