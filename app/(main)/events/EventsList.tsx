@@ -224,13 +224,13 @@ export function EventsList({ initialEvents, currentUserId, universities, isAuthe
                                         {/* Event Image (Top) */}
                                         {event.imagePath && (
                                             <Link href={`/events/${event.id}`}>
-                                                <div className="w-full max-h-[400px] overflow-hidden shrink-0 relative group bg-surface border-b border-border/50 flex items-center justify-center">
+                                                <div className="w-full h-[400px] overflow-hidden shrink-0 relative group flex items-center justify-center">
                                                     <Image
                                                         src={event.imagePath}
                                                         alt={`${event.title} at ${event.university.name}`}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                        width={800}
-                                                        height={800}
+                                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                                        width={1080}
+                                                        height={1280}
                                                         priority={index < 4}
                                                     />
                                                 </div>
