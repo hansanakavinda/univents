@@ -1,11 +1,9 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { prisma } from '@/lib/prisma'
-
-import { RecentEvents } from './RecentEvents'
+import { getUserEvents, getUserEventStats } from '@/data-access/events'
+import { getUserGigs, getUserGigStats } from '@/data-access/gigs'
+import { DashboardTabs } from '@/components/user/DashboardTabs'
 
 export default async function DashboardPage() {
   const session = await getSession()
@@ -14,46 +12,20 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  // Fetch user stats
-  const userEvents = await prisma.event.findMany({
-    where: { authorId: session.user.id },
-    include: {
-      university: {
-        select: {
-          name: true,
-          shortName: true,
-        },
-      },
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-  })
+  const userId = session.user.id!
 
+  // Direct data-access queries on server
+  const userEvents = await getUserEvents(userId, { take: 5 })
+  const eventStats = await getUserEventStats(userId)
 
-
-  const totalEvents = await prisma.event.count({
-    where: { authorId: session.user.id },
-  })
-
-  const approvedEvents = await prisma.event.count({
-    where: {
-      authorId: session.user.id,
-      isApproved: true,
-    },
-  })
-
-  const pendingEvents = await prisma.event.count({
-    where: {
-      authorId: session.user.id,
-      isApproved: false,
-    },
-  })
+  const userGigs = await getUserGigs(userId, { take: 5 })
+  const gigStats = await getUserGigStats(userId)
 
   return (
-    <>
-      <div className="p-4 md:p-8">
-        {/* Header */}
-        <div className="mb-8">
+    <div className="p-4 md:p-8">
+      {/* Header */}
+      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div>
           <h1 className="text-4xl font-bold text-white mb-2">
             Welcome back, {session.user.name}!
           </h1>
@@ -61,9 +33,7 @@ export default async function DashboardPage() {
             Here&apos;s what&apos;s happening with your account today.
           </p>
         </div>
-
-        {/* Role Badge */}
-        <div className="mb-6">
+        <div className="md:mt-0 mt-2 self-start md:self-center">
           <Badge
             variant={
               session.user.role === 'SUPER_ADMIN'
@@ -76,53 +46,18 @@ export default async function DashboardPage() {
             {session.user.role.replace('_', ' ')}
           </Badge>
         </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardDescription>Total Events</CardDescription>
-              <CardTitle className="text-4xl text-accent">{totalEvents}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-text-muted">All your submitted events</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardDescription>Approved</CardDescription>
-              <CardTitle className="text-4xl text-green-400">{approvedEvents}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-text-muted">Visible to the public</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardDescription>Pending Approval</CardDescription>
-              <CardTitle className="text-4xl text-yellow-400">{pendingEvents}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-text-muted">Awaiting moderation</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Events */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Recent Events</CardTitle>
-            <CardDescription>Your latest submissions and their status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RecentEvents
-              events={JSON.parse(JSON.stringify(userEvents))}
-            />
-          </CardContent>
-        </Card>
       </div>
-    </>
+
+      <DashboardTabs
+        userEvents={JSON.parse(JSON.stringify(userEvents))}
+        totalEvents={eventStats.totalEvents}
+        approvedEvents={eventStats.approvedEvents}
+        pendingEvents={eventStats.pendingEvents}
+        userGigs={JSON.parse(JSON.stringify(userGigs))}
+        totalGigs={gigStats.totalGigs}
+        approvedGigs={gigStats.approvedGigs}
+        pendingGigs={gigStats.pendingGigs}
+      />
+    </div>
   )
 }

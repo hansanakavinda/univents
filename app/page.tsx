@@ -128,7 +128,7 @@ export default async function LandingPage() {
                             <div className="relative z-10">
                                 <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Ready to join the movement?</h2>
                                 <p className="text-lg text-text-muted mb-10 max-w-xl mx-auto">Create an account today and become part of the fastest-growing student network in the country.</p>
-                                <Link href="/register" className="inline-flex items-center justify-center px-10 py-5 text-lg font-bold rounded-xl bg-white text-black hover:bg-gray-100 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 hover:scale-105 active:scale-95">
+                                <Link href="/auth/signup" className="inline-flex items-center justify-center px-10 py-5 text-lg font-bold rounded-xl bg-white text-black hover:bg-gray-100 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 hover:scale-105 active:scale-95">
                                     Create Free Account
                                 </Link>
                             </div>

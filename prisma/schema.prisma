@@ -27,6 +27,7 @@ model University {
 
   users      User[]
   events     Event[]
+  gigs       Gig[]
 }
 
 model User {
@@ -48,6 +49,7 @@ model User {
   likes         EventLike[]
   accounts      Account[]
   sessions      Session[]
+  gigs          Gig[]
 
   @@index([email])
 }
@@ -144,4 +146,37 @@ model PushSubscription {
   auth      String
   userId    String?
   createdAt DateTime @default(now())
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  gigs      Gig[]
+}
+
+model Gig {
+  id          String     @id @default(cuid())
+  title       String
+  description String     @db.Text
+  imagePath   String?
+  priceType   String     // "FIXED" | "RANGE" | "NEGOTIABLE"
+  minPrice    Float?
+  maxPrice    Float?
+  contactNo   String
+  category    Category   @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  isApproved  Boolean    @default(false)
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  uniId       String
+  university  University @relation(fields: [uniId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([authorId])
+  @@index([uniId])
+  @@index([categoryId])
+  @@index([isApproved])
 }
