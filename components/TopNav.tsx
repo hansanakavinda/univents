@@ -79,21 +79,6 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
                 <>
-                  {/* Create Event Button Container */}
-                  <div className="w-10 md:w-[142px] flex justify-end">
-                    {pathname === '/events' && (
-                      <Link
-                        href="/events/create"
-                        className="group inline-flex items-center p-2 md:px-4 md:py-2 bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary text-white text-sm font-semibold rounded-xl transition-all duration-300 whitespace-nowrap shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] border border-white/10 hover:-translate-y-0.5"
-                      >
-                        <svg className="w-5 h-5 md:mr-2 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span className="hidden md:inline">Create Event</span>
-                      </Link>
-                    )}
-                  </div>
-
                   {/* Notification Bell */}
                   <div className="relative flex items-center">
                     <button
@@ -177,7 +162,7 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
                                 Admin
                               </div>
                               <Link
-                                href="/admin/events"
+                                href="/admin/moderation"
                                 onClick={() => setIsProfileOpen(false)}
                                 className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                               >
@@ -186,14 +171,14 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
                               {userRole === 'SUPER_ADMIN' && (
                                 <>
                                   <Link
-                                    href="/admin/universities"
+                                    href="/admin"
                                     onClick={() => setIsProfileOpen(false)}
                                     className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                                   >
-                                    Universities
+                                    Admin Dashboard
                                   </Link>
                                   <Link
-                                    href="/admin"
+                                    href="/admin/users"
                                     onClick={() => setIsProfileOpen(false)}
                                     className="block px-4 py-2 text-sm text-text-primary hover:bg-white/5 hover:text-white transition-colors"
                                   >
@@ -220,7 +205,7 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
               ) : (
                 <div className="flex items-center gap-4">
                   <Link href="/login" className="text-sm font-medium text-text-primary hover:text-white transition-colors">
-                    Sign In
+                    Log In
                   </Link>
                   <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium rounded-xl bg-primary hover:bg-primary-hover text-white transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:-translate-y-0.5">
                     Sign Up
