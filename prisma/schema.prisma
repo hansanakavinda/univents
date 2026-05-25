@@ -28,6 +28,7 @@ model University {
   users      User[]
   events     Event[]
   gigs       Gig[]
+  products   Product[]
 }
 
 model User {
@@ -50,6 +51,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   gigs          Gig[]
+  products      Product[]
 
   @@index([email])
 }
@@ -174,6 +176,38 @@ model Gig {
   university  University @relation(fields: [uniId], references: [id], onDelete: Cascade)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  @@index([authorId])
+  @@index([uniId])
+  @@index([categoryId])
+  @@index([isApproved])
+}
+
+model ProductCategory {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  title       String
+  description String          @db.Text
+  imagePath   String?
+  price       Float?          // Required if priceType is FIXED
+  priceType   String          // "FIXED" | "NEGOTIABLE"
+  contactNo   String
+  category    ProductCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  isApproved  Boolean         @default(false)
+  authorId    String
+  author      User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  uniId       String
+  university  University      @relation(fields: [uniId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@index([authorId])
   @@index([uniId])

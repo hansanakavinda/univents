@@ -8,6 +8,8 @@ import { EventModerationActions } from '../events/EventModerationActions'
 import { RecentlyApprovedEvents } from '../events/RecentlyApprovedEvents'
 import { GigModerationActions } from './GigModerationActions'
 import { RecentlyApprovedGigs } from './RecentlyApprovedGigs'
+import { ProductModerationActions } from './ProductModerationActions'
+import { RecentlyApprovedProducts } from './RecentlyApprovedProducts'
 
 interface Event {
     id: string
@@ -47,6 +49,27 @@ interface Gig {
     }
 }
 
+interface Product {
+    id: string
+    title: string
+    description: string
+    priceType: string
+    price: number | null
+    contactNo: string
+    category: {
+        name: string
+    }
+    createdAt: Date | string
+    updatedAt: Date | string
+    author: {
+        name: string | null
+        email: string
+    }
+    university: {
+        shortName: string
+    }
+}
+
 interface ModerationTabsProps {
     pendingEvents: Event[]
     recentApprovedEvents: Event[]
@@ -54,6 +77,9 @@ interface ModerationTabsProps {
     pendingGigs: Gig[]
     recentApprovedGigs: Gig[]
     gigStats: { pending: number; approved: number; total: number }
+    pendingProducts: Product[]
+    recentApprovedProducts: Product[]
+    productStats: { pending: number; approved: number; total: number }
 }
 
 export function ModerationTabs({
@@ -63,13 +89,21 @@ export function ModerationTabs({
     pendingGigs,
     recentApprovedGigs,
     gigStats,
+    pendingProducts,
+    recentApprovedProducts,
+    productStats,
 }: ModerationTabsProps) {
-    const [activeTab, setActiveTab] = useState<'events' | 'gigs'>('events')
+    const [activeTab, setActiveTab] = useState<'events' | 'gigs' | 'products'>('events')
 
     const formatPrice = (gig: Gig) => {
         if (gig.priceType === 'NEGOTIABLE') return 'Negotiable'
         if (gig.priceType === 'FIXED') return `LKR ${gig.minPrice?.toLocaleString()}`
         return `LKR ${gig.minPrice?.toLocaleString()} - ${gig.maxPrice?.toLocaleString()}`
+    }
+
+    const formatProductPrice = (product: Product) => {
+        if (product.priceType === 'NEGOTIABLE') return 'Negotiable'
+        return `LKR ${product.price?.toLocaleString()}`
     }
 
     return (
@@ -95,6 +129,16 @@ export function ModerationTabs({
                     }`}
                 >
                     💼 Gigs Moderation ({pendingGigs.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab('products')}
+                    className={`py-3 px-6 text-sm font-medium transition-colors border-b-2 -mb-[2px] ${
+                        activeTab === 'products'
+                            ? 'border-primary text-white'
+                            : 'border-transparent text-text-muted hover:text-white'
+                    }`}
+                >
+                    🛍️ Products Moderation ({pendingProducts.length})
                 </button>
             </div>
 
@@ -177,7 +221,7 @@ export function ModerationTabs({
                     {/* Recently Approved Events */}
                     <RecentlyApprovedEvents events={recentApprovedEvents} />
                 </div>
-            ) : (
+            ) : activeTab === 'gigs' ? (
                 <div className="space-y-6 animate-in">
                     {/* Gig Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -239,6 +283,13 @@ export function ModerationTabs({
                                                         <span>Contact: {gig.contactNo}</span>
                                                         <span className="hidden sm:inline">•</span>
                                                         <span className="text-accent font-semibold">{formatPrice(gig)}</span>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <span>
+                                                            {new Date(gig.createdAt).toLocaleString('en-US', {
+                                                                dateStyle: 'medium',
+                                                                timeStyle: 'short',
+                                                            })}
+                                                        </span>
                                                     </div>
 
                                                     <LinkifyText className="text-text-primary whitespace-pre-wrap">
@@ -256,6 +307,93 @@ export function ModerationTabs({
 
                     {/* Recently Approved Gigs */}
                     <RecentlyApprovedGigs gigs={recentApprovedGigs} />
+                </div>
+            ) : (
+                <div className="space-y-6 animate-in">
+                    {/* Product Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Pending Review</CardDescription>
+                                <CardTitle className="text-4xl text-yellow-400">{productStats.pending}</CardTitle>
+                            </CardHeader>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Approved</CardDescription>
+                                <CardTitle className="text-4xl text-green-400">{productStats.approved}</CardTitle>
+                            </CardHeader>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Total Items</CardDescription>
+                                <CardTitle className="text-4xl text-accent">{productStats.total}</CardTitle>
+                            </CardHeader>
+                        </Card>
+                    </div>
+
+                    {/* Pending Products List */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Pending Approval</CardTitle>
+                            <CardDescription>Shop items awaiting moderation</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {pendingProducts.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-text-dim">No items pending approval</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {pendingProducts.map((product) => (
+                                        <div
+                                            key={product.id}
+                                            className="p-6 rounded-xl bg-surface border border-border border-l-4 border-l-yellow-500"
+                                        >
+                                            <div className="flex items-start justify-between mb-4">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between mb-1">
+                                                        <h3 className="text-xl font-semibold text-white">
+                                                            {product.title}
+                                                        </h3>
+                                                        <Badge variant="default" className="bg-primary/20 text-accent font-semibold">
+                                                            {product.category.name}
+                                                        </Badge>
+                                                    </div>
+                                                    <div className="flex items-center flex-wrap gap-2 text-sm text-text-muted mb-3">
+                                                        <span>By {product.author.name || 'Unknown'}</span>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <span>{product.author.email}</span>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <Badge variant="default">{product.university.shortName}</Badge>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <span>Contact: {product.contactNo}</span>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <span className="text-accent font-semibold">{formatProductPrice(product)}</span>
+                                                        <span className="hidden sm:inline">•</span>
+                                                        <span>
+                                                            {new Date(product.createdAt).toLocaleString('en-US', {
+                                                                dateStyle: 'medium',
+                                                                timeStyle: 'short',
+                                                            })}
+                                                        </span>
+                                                    </div>
+
+                                                    <LinkifyText className="text-text-primary whitespace-pre-wrap">
+                                                        {product.description}
+                                                    </LinkifyText>
+                                                </div>
+                                            </div>
+                                            <ProductModerationActions productId={product.id} />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Recently Approved Products */}
+                    <RecentlyApprovedProducts products={recentApprovedProducts} />
                 </div>
             )}
         </div>
