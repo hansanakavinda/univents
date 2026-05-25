@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getAllUniversities } from '@/data-access/universities'
 import { getAllCategories } from '@/data-access/categories'
 import { getAllProductCategories } from '@/data-access/product-categories'
+import { getAllHustleCategories } from '@/data-access/hustle-categories'
 import { AdminDashboardTabs } from '@/components/admin/AdminDashboardTabs'
 
 export default async function AdminDashboardPage() {
@@ -15,6 +16,7 @@ export default async function AdminDashboardPage() {
     const universities = await getAllUniversities()
     const categories = await getAllCategories()
     const productCategories = await getAllProductCategories()
+    const hustleCategories = await getAllHustleCategories()
 
     return (
         <div className="p-4 md:p-8">
@@ -27,6 +29,7 @@ export default async function AdminDashboardPage() {
                 universities={JSON.parse(JSON.stringify(universities))}
                 categories={JSON.parse(JSON.stringify(categories))}
                 productCategories={JSON.parse(JSON.stringify(productCategories))}
+                hustleCategories={JSON.parse(JSON.stringify(hustleCategories))}
             />
         </div>
     )

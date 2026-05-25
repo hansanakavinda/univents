@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getPendingEvents, getRecentApprovedEvents, getEventStats } from '@/data-access/events'
 import { getPendingGigs, getRecentApprovedGigs, getGigStats } from '@/data-access/gigs'
 import { getPendingProducts, getRecentApprovedProducts, getProductStats } from '@/data-access/products'
+import { getPendingHustles, getRecentApprovedHustles, getHustleStats } from '@/data-access/hustles'
 import { ModerationTabs } from './ModerationTabs'
 
 export default async function AdminModerationPage() {
@@ -35,6 +36,10 @@ export default async function AdminModerationPage() {
     const recentApprovedProducts = await getRecentApprovedProducts({ uniId })
     const productStats = await getProductStats({ uniId })
 
+    const pendingHustles = await getPendingHustles()
+    const recentApprovedHustles = await getRecentApprovedHustles()
+    const hustleStats = await getHustleStats()
+
     return (
         <div className="p-4 md:p-8">
             <header className="mb-8">
@@ -52,6 +57,9 @@ export default async function AdminModerationPage() {
                 pendingProducts={JSON.parse(JSON.stringify(pendingProducts))}
                 recentApprovedProducts={JSON.parse(JSON.stringify(recentApprovedProducts))}
                 productStats={productStats}
+                pendingHustles={JSON.parse(JSON.stringify(pendingHustles))}
+                recentApprovedHustles={JSON.parse(JSON.stringify(recentApprovedHustles))}
+                hustleStats={hustleStats}
             />
         </div>
     )

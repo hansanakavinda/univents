@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge'
 import { getUserEvents, getUserEventStats } from '@/data-access/events'
 import { getUserGigs, getUserGigStats } from '@/data-access/gigs'
 import { getUserProducts, getUserProductStats } from '@/data-access/products'
+import { getUserHustles, getUserHustleStats } from '@/data-access/hustles'
 import { DashboardTabs } from '@/components/user/DashboardTabs'
 
 export default async function DashboardPage() {
@@ -24,6 +25,9 @@ export default async function DashboardPage() {
 
   const userProducts = await getUserProducts(userId, { take: 5 })
   const productStats = await getUserProductStats(userId)
+
+  const userHustles = await getUserHustles(userId, { take: 5 })
+  const hustleStats = await getUserHustleStats(userId)
 
   return (
     <div className="p-4 md:p-8">
@@ -65,6 +69,10 @@ export default async function DashboardPage() {
         totalProducts={productStats.totalProducts}
         approvedProducts={productStats.approvedProducts}
         pendingProducts={productStats.pendingProducts}
+        userHustles={JSON.parse(JSON.stringify(userHustles))}
+        totalHustles={hustleStats.totalHustles}
+        approvedHustles={hustleStats.approvedHustles}
+        pendingHustles={hustleStats.pendingHustles}
       />
     </div>
   )
