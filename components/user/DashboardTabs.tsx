@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { RecentEvents } from '@/app/(main)/dashboard/RecentEvents'
 import { RecentGigs } from '@/app/(main)/dashboard/RecentGigs'
 import { RecentProducts } from '@/app/(main)/dashboard/RecentProducts'
+import { RecentHustles } from '@/app/(main)/dashboard/RecentHustles'
 
 interface UserEvent {
     id: string
@@ -45,6 +46,16 @@ interface UserProduct {
     createdAt: Date | string
 }
 
+interface UserHustle {
+    id: string
+    title: string
+    description: string
+    hustleType: string
+    workMode: string
+    isApproved: boolean
+    createdAt: Date | string
+}
+
 interface DashboardTabsProps {
     userEvents: UserEvent[]
     totalEvents: number
@@ -58,6 +69,10 @@ interface DashboardTabsProps {
     totalProducts: number
     approvedProducts: number
     pendingProducts: number
+    userHustles: UserHustle[]
+    totalHustles: number
+    approvedHustles: number
+    pendingHustles: number
 }
 
 export function DashboardTabs({
@@ -73,8 +88,12 @@ export function DashboardTabs({
     totalProducts,
     approvedProducts,
     pendingProducts,
+    userHustles,
+    totalHustles,
+    approvedHustles,
+    pendingHustles,
 }: DashboardTabsProps) {
-    const [activeTab, setActiveTab] = useState<'events' | 'gigs' | 'products'>('events')
+    const [activeTab, setActiveTab] = useState<'events' | 'gigs' | 'products' | 'hustles'>('events')
 
     return (
         <div className="space-y-6">
@@ -109,6 +128,16 @@ export function DashboardTabs({
                     }`}
                 >
                     🛍️ My Products ({totalProducts})
+                </button>
+                <button
+                    onClick={() => setActiveTab('hustles')}
+                    className={`py-3 px-6 text-sm font-medium transition-colors border-b-2 -mb-[2px] ${
+                        activeTab === 'hustles'
+                            ? 'border-primary text-white'
+                            : 'border-transparent text-text-muted hover:text-white'
+                    }`}
+                >
+                    ⚡ My Hustles ({totalHustles})
                 </button>
             </div>
 
@@ -205,7 +234,7 @@ export function DashboardTabs({
                         </CardContent>
                     </Card>
                 </div>
-            ) : (
+            ) : activeTab === 'products' ? (
                 <div className="space-y-6 animate-in">
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -248,6 +277,52 @@ export function DashboardTabs({
                         </CardHeader>
                         <CardContent>
                             <RecentProducts products={userProducts} />
+                        </CardContent>
+                    </Card>
+                </div>
+            ) : (
+                <div className="space-y-6 animate-in">
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Total Hustles</CardDescription>
+                                <CardTitle className="text-4xl text-accent">{totalHustles}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-text-muted">All your listed opportunities</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Approved</CardDescription>
+                                <CardTitle className="text-4xl text-green-400">{approvedHustles}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-text-muted">Visible to the public</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardDescription>Pending Approval</CardDescription>
+                                <CardTitle className="text-4xl text-yellow-400">{pendingHustles}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-text-muted">Awaiting moderation</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Recent Hustles List */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Your Recent Hustles</CardTitle>
+                            <CardDescription>Your latest listed opportunities and their status</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <RecentHustles hustles={userHustles} />
                         </CardContent>
                     </Card>
                 </div>

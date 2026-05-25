@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/Badge'
 import { UniversityActions, AddUniversityButton } from '@/app/(main)/admin/universities/UniversityActions'
 import { CategoryManager } from './CategoryManager'
 import { ProductCategoryManager } from './ProductCategoryManager'
+import { HustleCategoryManager } from './HustleCategoryManager'
 
 interface University {
     id: string
@@ -34,14 +35,23 @@ interface ProductCategory {
     }
 }
 
+interface HustleCategory {
+    id: string
+    name: string
+    _count: {
+        hustles: number
+    }
+}
+
 interface AdminDashboardTabsProps {
     universities: University[]
     categories: Category[]
     productCategories: ProductCategory[]
+    hustleCategories: HustleCategory[]
 }
 
-export function AdminDashboardTabs({ universities, categories, productCategories }: AdminDashboardTabsProps) {
-    const [activeTab, setActiveTab] = useState<'universities' | 'categories' | 'productCategories'>('universities')
+export function AdminDashboardTabs({ universities, categories, productCategories, hustleCategories }: AdminDashboardTabsProps) {
+    const [activeTab, setActiveTab] = useState<'universities' | 'categories' | 'productCategories' | 'hustleCategories'>('universities')
 
     return (
         <div className="space-y-6">
@@ -76,6 +86,16 @@ export function AdminDashboardTabs({ universities, categories, productCategories
                     }`}
                 >
                     🛍️ Product Categories
+                </button>
+                <button
+                    onClick={() => setActiveTab('hustleCategories')}
+                    className={`py-3 px-6 text-sm font-medium transition-colors border-b-2 -mb-[2px] ${
+                        activeTab === 'hustleCategories'
+                            ? 'border-primary text-white'
+                            : 'border-transparent text-text-muted hover:text-white'
+                    }`}
+                >
+                    ⚡ Hustle Categories
                 </button>
             </div>
 
@@ -165,6 +185,12 @@ export function AdminDashboardTabs({ universities, categories, productCategories
             {activeTab === 'productCategories' && (
                 <div className="animate-in">
                     <ProductCategoryManager categories={productCategories} />
+                </div>
+            )}
+
+            {activeTab === 'hustleCategories' && (
+                <div className="animate-in">
+                    <HustleCategoryManager categories={hustleCategories} />
                 </div>
             )}
         </div>

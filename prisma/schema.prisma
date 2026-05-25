@@ -52,6 +52,7 @@ model User {
   sessions      Session[]
   gigs          Gig[]
   products      Product[]
+  hustles       Hustle[]
 
   @@index([email])
 }
@@ -211,6 +212,38 @@ model Product {
 
   @@index([authorId])
   @@index([uniId])
+  @@index([categoryId])
+  @@index([isApproved])
+}
+
+model HustleCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hustles   Hustle[]
+}
+
+model Hustle {
+  id          String         @id @default(cuid())
+  title       String
+  description String         @db.Text
+  hustleType  String         // "INTERNSHIP" | "FREELANCE" | "PART_TIME" | "ONE_TIME"
+  workMode    String         // "REMOTE" | "ON_SITE" | "HYBRID"
+  priceType   String?        // "FIXED" | "RANGE" (optional/nullable)
+  minPrice    Float?
+  maxPrice    Float?
+  contactNo   String?        // Optional contact number, email, or external URL
+  category    HustleCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  isApproved  Boolean        @default(false)
+  authorId    String
+  author      User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  imagePath   String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([authorId])
   @@index([categoryId])
   @@index([isApproved])
 }
