@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/Badge'
 import { UniversityActions, AddUniversityButton } from '@/app/(main)/admin/universities/UniversityActions'
 import { CategoryManager } from './CategoryManager'
+import { ProductCategoryManager } from './ProductCategoryManager'
 
 interface University {
     id: string
@@ -25,13 +26,22 @@ interface Category {
     }
 }
 
+interface ProductCategory {
+    id: string
+    name: string
+    _count: {
+        products: number
+    }
+}
+
 interface AdminDashboardTabsProps {
     universities: University[]
     categories: Category[]
+    productCategories: ProductCategory[]
 }
 
-export function AdminDashboardTabs({ universities, categories }: AdminDashboardTabsProps) {
-    const [activeTab, setActiveTab] = useState<'universities' | 'categories'>('universities')
+export function AdminDashboardTabs({ universities, categories, productCategories }: AdminDashboardTabsProps) {
+    const [activeTab, setActiveTab] = useState<'universities' | 'categories' | 'productCategories'>('universities')
 
     return (
         <div className="space-y-6">
@@ -55,7 +65,17 @@ export function AdminDashboardTabs({ universities, categories }: AdminDashboardT
                             : 'border-transparent text-text-muted hover:text-white'
                     }`}
                 >
-                    🏷️ Categories
+                    🏷️ Gigs Categories
+                </button>
+                <button
+                    onClick={() => setActiveTab('productCategories')}
+                    className={`py-3 px-6 text-sm font-medium transition-colors border-b-2 -mb-[2px] ${
+                        activeTab === 'productCategories'
+                            ? 'border-primary text-white'
+                            : 'border-transparent text-text-muted hover:text-white'
+                    }`}
+                >
+                    🛍️ Product Categories
                 </button>
             </div>
 
@@ -139,6 +159,12 @@ export function AdminDashboardTabs({ universities, categories }: AdminDashboardT
             {activeTab === 'categories' && (
                 <div className="animate-in">
                     <CategoryManager categories={categories} />
+                </div>
+            )}
+
+            {activeTab === 'productCategories' && (
+                <div className="animate-in">
+                    <ProductCategoryManager categories={productCategories} />
                 </div>
             )}
         </div>

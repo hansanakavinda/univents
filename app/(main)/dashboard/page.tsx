@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Badge } from '@/components/ui/Badge'
 import { getUserEvents, getUserEventStats } from '@/data-access/events'
 import { getUserGigs, getUserGigStats } from '@/data-access/gigs'
+import { getUserProducts, getUserProductStats } from '@/data-access/products'
 import { DashboardTabs } from '@/components/user/DashboardTabs'
 
 export default async function DashboardPage() {
@@ -20,6 +21,9 @@ export default async function DashboardPage() {
 
   const userGigs = await getUserGigs(userId, { take: 5 })
   const gigStats = await getUserGigStats(userId)
+
+  const userProducts = await getUserProducts(userId, { take: 5 })
+  const productStats = await getUserProductStats(userId)
 
   return (
     <div className="p-4 md:p-8">
@@ -57,6 +61,10 @@ export default async function DashboardPage() {
         totalGigs={gigStats.totalGigs}
         approvedGigs={gigStats.approvedGigs}
         pendingGigs={gigStats.pendingGigs}
+        userProducts={JSON.parse(JSON.stringify(userProducts))}
+        totalProducts={productStats.totalProducts}
+        approvedProducts={productStats.approvedProducts}
+        pendingProducts={productStats.pendingProducts}
       />
     </div>
   )
