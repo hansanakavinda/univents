@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { LinkifyText } from '@/components/ui/LinkifyText'
+import { Calendar, MapPin, Clock, Edit3 } from 'lucide-react'
 
 interface UserEvent {
     id: string
@@ -42,53 +43,79 @@ export function RecentEvents({ events }: RecentEventsProps) {
     }
 
     return (
-        <>
-            <div className="space-y-4">
-                {events.map((event) => (
+        <div className="space-y-4">
+            {events.map((event) => (
+                <div
+                    key={event.id}
+                    className="relative flex flex-col p-4 rounded-xl bg-surface hover:bg-surface-hover/80 hover:border-primary/20 transition-all duration-300 border border-border/40 shadow-sm"
+                >
+                    {/* Status Dot */}
                     <div
-                        key={event.id}
-                        className="flex items-start justify-between p-4 rounded-xl bg-surface hover:bg-surface-hover transition-colors gap-3"
-                    >
-                        <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-white mb-1">{event.title}</h4>
-                            <LinkifyText className="text-sm text-text-muted line-clamp-2">
-                                {event.content}
-                            </LinkifyText>
-                            <div className="flex items-center space-x-2 text-xs text-text-dim mt-2">
+                        className={`absolute top-4 right-4 w-2.5 h-2.5 rounded-full ${
+                            event.isApproved
+                                ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'
+                                : 'bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]'
+                        }`}
+                        title={event.isApproved ? 'Approved' : 'Pending Approval'}
+                    />
+
+                    {/* Content Section */}
+                    <div className="flex-1 min-w-0 mb-3 pr-6">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                            <h4 className="font-semibold text-white text-base leading-snug tracking-tight">
+                                {event.title}
+                            </h4>
+                            {event.university && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-accent border border-primary/20 uppercase tracking-wider shrink-0">
+                                    🏫 {event.university.shortName}
+                                </span>
+                            )}
+                        </div>
+                        <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-3 leading-relaxed">
+                            {event.content}
+                        </LinkifyText>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-text-dim">
+                            <span className="flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />
                                 <span>
-                                    📅 {new Date(event.createdAt).toLocaleDateString('en-US', {
+                                    Created {new Date(event.createdAt).toLocaleDateString('en-US', {
                                         year: 'numeric',
                                         month: 'long',
                                         day: 'numeric',
                                     })}
                                 </span>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                            <Link
-                                href={`/events/${event.id}/edit`}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-accent border border-accent/40 bg-accent/10 hover:bg-accent/20 hover:border-accent/60 transition-all duration-200"
-                                title="Edit event"
-                                aria-label={`Edit ${event.title}`}
-                            >
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                    />
-                                </svg>
-                                Edit
-                            </Link>
-                            <Badge variant={event.isApproved ? 'success' : 'warning'} className="py-1.5">
-                                {event.isApproved ? 'Approved' : 'Pending'}
-                            </Badge>
+                            </span>
+                            {event.venue && (
+                                <span className="flex items-center gap-1.5">
+                                    <MapPin className="w-3.5 h-3.5 text-accent/70 shrink-0" />
+                                    <span className="truncate max-w-[200px]" title={event.venue}>
+                                        {event.venue}
+                                    </span>
+                                </span>
+                            )}
+                            {event.eventTime && (
+                                <span className="flex items-center gap-1.5">
+                                    <Clock className="w-3.5 h-3.5 text-accent/70 shrink-0" />
+                                    <span>{event.eventTime}</span>
+                                </span>
+                            )}
                         </div>
                     </div>
-                ))}
-            </div>
 
-        </>
+                    {/* Footer Section */}
+                    <div className="flex items-center justify-end gap-2 pt-3 border-t border-border/30">
+                        <Link
+                            href={`/events/${event.id}/edit`}
+                            className="inline-flex items-center justify-center p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-accent border border-accent/30 bg-accent/5 hover:bg-accent/15 hover:border-accent/50 transition-all duration-200 cursor-pointer shrink-0"
+                            title="Edit event"
+                            aria-label={`Edit ${event.title}`}
+                        >
+                            <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-accent/80 group-hover:text-accent" />
+                            <span className="hidden sm:inline ml-1">Edit</span>
+                        </Link>
+                    </div>
+                </div>
+            ))}
+        </div>
     )
 }

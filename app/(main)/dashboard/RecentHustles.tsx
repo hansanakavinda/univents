@@ -7,6 +7,8 @@ import { ApiClient } from '@/lib/api/api-client'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/Toast'
 import { useState } from 'react'
+import { Calendar, Edit3, Trash2 } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 interface UserHustle {
     id: string
@@ -25,24 +27,23 @@ interface RecentHustlesProps {
 export function RecentHustles({ hustles }: RecentHustlesProps) {
     const router = useRouter()
     const toast = useToast()
-    const [isDeleting, setIsDeleting] = useState<string | null>(null)
+    const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null)
+    const [isDeleting, setIsDeleting] = useState(false)
 
-    const handleDelete = async (hustleId: string, title: string) => {
-        if (!confirm(`Are you sure you want to delete hustle listing "${title}"?`)) {
-            return
-        }
-
-        setIsDeleting(hustleId)
+    const handleConfirmDelete = async () => {
+        if (!deleteTarget) return
+        setIsDeleting(true)
         try {
-            const result = await ApiClient.post('/api/hustles/delete', { hustleId })
+            const result = await ApiClient.post('/api/hustles/delete', { hustleId: deleteTarget.id })
             if (result.ok) {
                 router.refresh()
                 toast.success('Hustle deleted successfully')
+                setDeleteTarget(null)
             } else {
                 toast.error(result.error || 'Failed to delete hustle')
             }
         } finally {
-            setIsDeleting(null)
+            setIsDeleting(false)
         }
     }
 
@@ -65,49 +66,84 @@ export function RecentHustles({ hustles }: RecentHustlesProps) {
             {hustles.map((hustle) => (
                 <div
                     key={hustle.id}
-                    className="flex items-start justify-between p-4 rounded-xl bg-surface hover:bg-surface-hover transition-colors gap-3 border border-border/40"
+                    className="relative flex flex-col p-4 rounded-xl bg-surface hover:bg-surface-hover/80 hover:border-primary/20 transition-all duration-300 border border-border/40 shadow-sm"
                 >
-                    <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-                            <h4 className="font-semibold text-white truncate mr-2">{hustle.title}</h4>
-                            <Badge variant="info" className="text-[9px] py-0.5 uppercase">{hustle.hustleType.replace('_', ' ')}</Badge>
-                            <Badge variant="success" className="text-[9px] py-0.5 uppercase">{hustle.workMode.replace('_', ' ')}</Badge>
+                    {/* Status Dot */}
+                    <div
+                        className={`absolute top-4 right-4 w-2.5 h-2.5 rounded-full ${
+                            hustle.isApproved
+                                ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'
+                                : 'bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]'
+                        }`}
+                        title={hustle.isApproved ? 'Approved' : 'Pending Approval'}
+                    />
+
+                    {/* Content Section */}
+                    <div className="flex-1 min-w-0 mb-3 pr-6">
+                        <div className="flex flex-wrap items-start gap-2 mb-2">
+                            <h4 className="font-semibold text-white text-base leading-snug tracking-tight">
+                                {hustle.title}
+                            </h4>
+                            <div className="flex flex-wrap gap-1.5 mt-0.5">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-blue-900/30 text-blue-300 border border-blue-800/40 uppercase tracking-wide shrink-0">
+                                    {hustle.hustleType.replace('_', ' ')}
+                                </span>
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-green-900/30 text-green-300 border border-green-800/40 uppercase tracking-wide shrink-0">
+                                    {hustle.workMode.replace('_', ' ')}
+                                </span>
+                            </div>
                         </div>
-                        <LinkifyText className="text-sm text-text-muted line-clamp-2">
+                        <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-3 leading-relaxed">
                             {hustle.description}
                         </LinkifyText>
-                        <div className="flex items-center space-x-2 text-xs text-text-dim mt-2">
-                            <span>
-                                📅 {new Date(hustle.createdAt).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-text-dim">
+                            <span className="flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+                                <span>
+                                    Created {new Date(hustle.createdAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })}
+                                </span>
                             </span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+
+                    {/* Footer Section */}
+                    <div className="flex items-center justify-end gap-2 pt-3 border-t border-border/30">
                         <Link
                             href={`/hustles/edit/${hustle.id}`}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-accent border border-accent/40 bg-accent/10 hover:bg-accent/20 hover:border-accent/60 transition-all duration-200"
+                            className="inline-flex items-center justify-center p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-accent border border-accent/30 bg-accent/5 hover:bg-accent/15 hover:border-accent/50 transition-all duration-200 cursor-pointer shrink-0"
                             title="Edit hustle"
                         >
-                            ✏️ Edit
+                            <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                            <span className="hidden sm:inline ml-1">Edit</span>
                         </Link>
                         <button
-                            onClick={() => handleDelete(hustle.id, hustle.title)}
-                            disabled={isDeleting === hustle.id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 border border-red-500/40 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/60 transition-all duration-200 disabled:opacity-50"
+                            onClick={() => setDeleteTarget({ id: hustle.id, title: hustle.title })}
+                            disabled={isDeleting}
+                            className="inline-flex items-center justify-center p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-red-400 border border-red-500/30 bg-red-500/5 hover:bg-red-500/15 hover:border-red-500/50 transition-all duration-200 cursor-pointer disabled:opacity-50 shrink-0"
                             title="Delete hustle"
                         >
-                            🗑️ Delete
+                            <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                            <span className="hidden sm:inline ml-1">Delete</span>
                         </button>
-                        <Badge variant={hustle.isApproved ? 'success' : 'warning'} className="py-1.5">
-                            {hustle.isApproved ? 'Approved' : 'Pending'}
-                        </Badge>
                     </div>
                 </div>
             ))}
+
+            <ConfirmDialog
+                isOpen={deleteTarget !== null}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Hustle Listing"
+                description={`Are you sure you want to delete hustle listing "${deleteTarget?.title}"? This action cannot be undone.`}
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                variant="danger"
+                isLoading={isDeleting}
+            />
         </div>
     )
 }
