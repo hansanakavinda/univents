@@ -63,13 +63,13 @@ export function ProfileForm({ initialData, universities }: ProfileFormProps) {
     return (
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
 
-            <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
-                <div className="flex flex-col items-center space-y-4">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-surface border border-border flex items-center justify-center">
+            <div className="flex flex-col items-center sm:items-start gap-4 sm:gap-6 -mt-10 sm:-mt-12 mb-4 relative z-10">
+                <div className="flex flex-col items-center">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-[#18181b] border-4 border-[#0e0e11] shadow-xl flex items-center justify-center">
                         {initialData.image ? (
                             <img src={initialData.image} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-2xl sm:text-3xl text-text-muted font-bold">{name ? name.charAt(0).toUpperCase() : 'U'}</span>
+                            <span className="text-2xl sm:text-3xl text-purple-300 font-bold">{name ? name.charAt(0).toUpperCase() : 'U'}</span>
                         )}
                     </div>
                 </div>
@@ -81,7 +81,7 @@ export function ProfileForm({ initialData, universities }: ProfileFormProps) {
                             type="email"
                             value={initialData.email}
                             disabled
-                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-black border border-border text-sm sm:text-base text-text-muted opacity-50 cursor-not-allowed"
+                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-[#111120] border border-border/40 text-sm sm:text-base text-text-muted opacity-50 cursor-not-allowed"
                         />
                     </div>
 
@@ -92,7 +92,7 @@ export function ProfileForm({ initialData, universities }: ProfileFormProps) {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-black border border-border text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-surface border border-border text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
                         />
                     </div>
 
@@ -111,7 +111,7 @@ export function ProfileForm({ initialData, universities }: ProfileFormProps) {
                 </div>
             </div>
 
-            <div className="pt-4 flex flex-col sm:flex-row sm:justify-end border-t border-border mt-4 sm:mt-6">
+            <div className="pt-4 flex flex-col sm:flex-row sm:justify-end border-t border-white/5 mt-4 sm:mt-6">
                 <button
                     type="submit"
                     disabled={isSaving}
