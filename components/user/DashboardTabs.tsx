@@ -76,6 +76,100 @@ interface DashboardTabsProps {
     pendingHustles: number
 }
 
+interface DashboardSectionPanelProps {
+    totalLabel: string
+    totalValue: number
+    approvedValue: number
+    pendingValue: number
+    listTitle: string
+    children: React.ReactNode
+}
+
+function DashboardSectionPanel({
+    totalLabel,
+    totalValue,
+    approvedValue,
+    pendingValue,
+    listTitle,
+    children,
+}: DashboardSectionPanelProps) {
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start animate-in">
+            {/* Stats Card */}
+            <div className="lg:col-span-1 order-1 lg:order-2">
+                <div className="p-4 transition-all duration-300">
+                    <div className="flex flex-col gap-3">
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 hover:bg-purple-500/10 hover:border-purple-500/25 transition-all duration-200">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_6px_rgba(167,139,250,0.5)]" />
+                                <span className="text-xs font-semibold text-purple-200/90 tracking-wide">{totalLabel}</span>
+                            </div>
+                            <span className="text-sm font-extrabold text-purple-400">{totalValue}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 hover:border-emerald-500/25 transition-all duration-200">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
+                                <span className="text-xs font-semibold text-emerald-200/90 tracking-wide">Approved</span>
+                            </div>
+                            <span className="text-sm font-extrabold text-emerald-400">{approvedValue}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 hover:bg-amber-500/10 hover:border-amber-500/25 transition-all duration-200">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.5)]" />
+                                <span className="text-xs font-semibold text-amber-200/90 tracking-wide">Pending</span>
+                            </div>
+                            <span className="text-sm font-extrabold text-amber-400">{pendingValue}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Recent Items List */}
+            <div className="lg:col-span-3 order-2 lg:order-1  p-4 sm:p-6 ">
+                <div className="mb-4">
+                    <h3 className="text-base font-bold text-white">{listTitle}</h3>
+                </div>
+                <div>
+                    {children}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+interface DashboardTabButtonProps {
+    tabId: 'events' | 'gigs' | 'products' | 'hustles'
+    activeTab: 'events' | 'gigs' | 'products' | 'hustles'
+    onClick: () => void
+    label: string
+    Icon: React.ComponentType<{ className?: string }>
+}
+
+function DashboardTabButton({
+    tabId,
+    activeTab,
+    onClick,
+    label,
+    Icon,
+}: DashboardTabButtonProps) {
+    const isActive = activeTab === tabId
+    return (
+        <button
+            onClick={onClick}
+            className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl flex-1 transition-all duration-300 cursor-pointer shrink-0 sm:flex-row sm:gap-2 sm:py-2.5 sm:px-5 sm:text-sm sm:font-semibold ${
+                isActive
+                    ? 'bg-primary/25 border border-primary/45 text-white shadow-[0_0_15px_rgba(124,58,237,0.15)]'
+                    : 'border border-transparent text-text-muted hover:text-white hover:bg-white/5'
+            }`}
+        >
+            <Icon className={`w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0 shrink-0 transition-colors ${
+                isActive ? 'text-accent' : 'text-text-muted'
+            }`} />
+            <span className="text-[10px] sm:text-sm">{label}</span>
+        </button>
+    )
+}
+
 export function DashboardTabs({
     userEvents,
     totalEvents,
@@ -99,250 +193,78 @@ export function DashboardTabs({
     return (
         <div className="space-y-6">
             {/* Tab Selector */}
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:border-b sm:border-border/40 sm:gap-1 pb-4 sm:pb-0">
-                <button
+            <div className="flex items-center justify-around p-1.5 gap-1.5 max-w-2xl transition-all duration-300">
+                <DashboardTabButton
+                    tabId="events"
+                    activeTab={activeTab}
                     onClick={() => setActiveTab('events')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
-                        activeTab === 'events'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
-                    }`}
-                >
-                    <Calendar className="w-4 h-4 shrink-0" />
-                    <span>Events</span>
-                </button>
-                <button
+                    label="Events"
+                    Icon={Calendar}
+                />
+                <DashboardTabButton
+                    tabId="hustles"
+                    activeTab={activeTab}
                     onClick={() => setActiveTab('hustles')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
-                        activeTab === 'hustles'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
-                    }`}
-                >
-                    <Zap className="w-4 h-4 shrink-0" />
-                    <span>Hustles</span>
-                </button>
-                <button
+                    label="Hustles"
+                    Icon={Zap}
+                />
+                <DashboardTabButton
+                    tabId="gigs"
+                    activeTab={activeTab}
                     onClick={() => setActiveTab('gigs')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
-                        activeTab === 'gigs'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
-                    }`}
-                >
-                    <Briefcase className="w-4 h-4 shrink-0" />
-                    <span>Gigs</span>
-                </button>
-                <button
+                    label="Gigs"
+                    Icon={Briefcase}
+                />
+                <DashboardTabButton
+                    tabId="products"
+                    activeTab={activeTab}
                     onClick={() => setActiveTab('products')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
-                        activeTab === 'products'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
-                    }`}
-                >
-                    <ShoppingBag className="w-4 h-4 shrink-0" />
-                    <span>Shop</span>
-                </button>
+                    label="Shop"
+                    Icon={ShoppingBag}
+                />
             </div>
 
             {/* Tab Contents */}
             {activeTab === 'events' ? (
-                <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Events</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">All your submitted events</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Recent Events List */}
-                    <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Events</CardTitle>
-                            <CardDescription>Your latest submissions and their status</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <RecentEvents events={userEvents} />
-                        </CardContent>
-                    </Card>
-                </div>
+                <DashboardSectionPanel
+                    totalLabel="Total Events"
+                    totalValue={totalEvents}
+                    approvedValue={approvedEvents}
+                    pendingValue={pendingEvents}
+                    listTitle="Your Recent Events"
+                >
+                    <RecentEvents events={userEvents} />
+                </DashboardSectionPanel>
             ) : activeTab === 'hustles' ? (
-                <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Hustles</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">All your listed opportunities</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Recent Hustles List */}
-                    <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Hustles</CardTitle>
-                            <CardDescription>Your latest listed opportunities and their status</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <RecentHustles hustles={userHustles} />
-                        </CardContent>
-                    </Card>
-                </div>
+                <DashboardSectionPanel
+                    totalLabel="Total Hustles"
+                    totalValue={totalHustles}
+                    approvedValue={approvedHustles}
+                    pendingValue={pendingHustles}
+                    listTitle="Your Recent Hustles"
+                >
+                    <RecentHustles hustles={userHustles} />
+                </DashboardSectionPanel>
             ) : activeTab === 'gigs' ? (
-                <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Gigs</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">All your submitted gigs</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Recent Gigs List */}
-                    <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Gigs</CardTitle>
-                            <CardDescription>Your latest submissions and their status</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <RecentGigs gigs={userGigs} />
-                        </CardContent>
-                    </Card>
-                </div>
+                <DashboardSectionPanel
+                    totalLabel="Total Gigs"
+                    totalValue={totalGigs}
+                    approvedValue={approvedGigs}
+                    pendingValue={pendingGigs}
+                    listTitle="Your Recent Gigs"
+                >
+                    <RecentGigs gigs={userGigs} />
+                </DashboardSectionPanel>
             ) : (
-                <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Products</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">All your listed items</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Recent Products List */}
-                    <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Listed Items</CardTitle>
-                            <CardDescription>Your latest items and their moderation status</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <RecentProducts products={userProducts} />
-                        </CardContent>
-                    </Card>
-                </div>
+                <DashboardSectionPanel
+                    totalLabel="Total Products"
+                    totalValue={totalProducts}
+                    approvedValue={approvedProducts}
+                    pendingValue={pendingProducts}
+                    listTitle="Your Recent Listed Items"
+                >
+                    <RecentProducts products={userProducts} />
+                </DashboardSectionPanel>
             )}
         </div>
     )

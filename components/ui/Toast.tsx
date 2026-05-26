@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -102,10 +103,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Toast container — fixed top-right */}
+      {/* Toast container — fixed top-right on desktop, top-center full-width on mobile */}
       <div
         aria-live="polite"
-        className="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"
+        className="fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:top-6 z-[9999] flex flex-col gap-3 pointer-events-none"
         style={{ maxWidth: 420 }}
       >
         {toasts.map((t) => (
@@ -129,35 +130,31 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
 const VARIANT_STYLES: Record<
   ToastVariant,
-  { bg: string; border: string; icon: string; iconBg: string; progressColor: string }
+  { border: string; icon: ReactNode; progressColor: string; glowColor: string }
 > = {
   success: {
-    bg: 'bg-card',
-    border: 'border-green-800/30',
-    icon: '✓',
-    iconBg: 'bg-green-600',
-    progressColor: '#16a34a',
+    border: 'border-emerald-500/20 shadow-[0_4px_20px_rgba(16,185,129,0.15)]',
+    icon: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />,
+    progressColor: '#10b981',
+    glowColor: 'rgba(16, 185, 129, 0.4)',
   },
   error: {
-    bg: 'bg-card',
-    border: 'border-red-800/30',
-    icon: '✕',
-    iconBg: 'bg-red-600',
-    progressColor: '#dc2626',
+    border: 'border-red-500/20 shadow-[0_4px_20px_rgba(239,68,68,0.15)]',
+    icon: <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />,
+    progressColor: '#ef4444',
+    glowColor: 'rgba(239, 68, 68, 0.4)',
   },
   warning: {
-    bg: 'bg-card',
-    border: 'border-amber-800/30',
-    icon: '⚠',
-    iconBg: 'bg-amber-500',
+    border: 'border-amber-500/20 shadow-[0_4px_20px_rgba(245,158,11,0.15)]',
+    icon: <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />,
     progressColor: '#f59e0b',
+    glowColor: 'rgba(245, 158, 11, 0.4)',
   },
   info: {
-    bg: 'bg-card',
-    border: 'border-blue-800/30',
-    icon: 'ℹ',
-    iconBg: 'bg-blue-500',
-    progressColor: '#3b82f6',
+    border: 'border-primary/30 shadow-[0_4px_20px_rgba(124,58,237,0.15)]',
+    icon: <Info className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />,
+    progressColor: '#7c3aed',
+    glowColor: 'rgba(124, 58, 237, 0.4)',
   },
 }
 
@@ -206,46 +203,39 @@ function ToastCard({ toast, onClose, onPause, onResume, onExpire }: ToastCardPro
   return (
     <div
       className={`
-        pointer-events-auto flex items-start gap-3 rounded-xl border
-        ${style.bg} ${style.border}
-        px-4 py-3 shadow-lg
+        pointer-events-auto flex w-full sm:w-auto items-start gap-3.5 rounded-xl border
+        bg-black/80 backdrop-blur-xl ${style.border}
+        pl-4 pr-3.5 py-3.5 overflow-hidden
         ${toast.exiting ? 'toast-slide-out' : 'toast-slide-in'}
+        transition-all duration-300 hover:bg-black/90
       `}
-      style={{ minWidth: 320 }}
+      style={{ minWidth: 'min(320px, 100%)' }}
       onMouseEnter={onPause}
       onMouseLeave={onResume}
       role="alert"
     >
       {/* Icon */}
-      <span
-        className={`
-          flex h-7 w-7 shrink-0 items-center justify-center rounded-full
-          text-white text-sm font-bold ${style.iconBg}
-        `}
-      >
-        {style.icon}
-      </span>
+      {style.icon}
 
       {/* Message */}
-      <p className="flex-1 pt-0.5 text-sm text-foreground leading-snug">{toast.message}</p>
+      <p className="flex-1 pt-0.5 text-sm text-foreground leading-snug font-medium">{toast.message}</p>
 
       {/* Close button */}
       <button
         type="button"
         onClick={onClose}
-        className="shrink-0 rounded-lg p-1 text-text-dim hover:text-white hover:bg-border transition-colors"
+        className="shrink-0 rounded-lg p-1 text-text-muted hover:text-white hover:bg-white/10 transition-colors"
         aria-label="Close notification"
       >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <X className="h-4 w-4" />
       </button>
 
       {/* Progress bar */}
       <div
-        className="absolute bottom-0 left-0 h-[3px] rounded-b-xl"
+        className="absolute bottom-0 left-0 h-[3px]"
         style={{
           background: style.progressColor,
+          boxShadow: `0 0 8px ${style.glowColor}`,
           animation: `toast-progress ${TOAST_DURATION}ms linear forwards`,
           animationPlayState: toast.paused ? 'paused' : 'running',
           width: '100%',

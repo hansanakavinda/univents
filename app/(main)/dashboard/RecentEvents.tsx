@@ -47,7 +47,7 @@ export function RecentEvents({ events }: RecentEventsProps) {
             {events.map((event) => (
                 <div
                     key={event.id}
-                    className="relative flex flex-col p-4 rounded-xl bg-surface hover:bg-surface-hover/80 hover:border-primary/20 transition-all duration-300 border border-border/40 shadow-sm"
+                    className="relative flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(124,58,237,0.06)] hover:scale-[1.005] transition-all duration-300"
                 >
                     {/* Status Dot */}
                     <div
@@ -61,8 +61,8 @@ export function RecentEvents({ events }: RecentEventsProps) {
 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 mb-3 pr-6">
-                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <h4 className="font-semibold text-white text-base leading-snug tracking-tight">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-white text-sm leading-snug tracking-tight">
                                 {event.title}
                             </h4>
                             {event.university && (
@@ -71,9 +71,6 @@ export function RecentEvents({ events }: RecentEventsProps) {
                                 </span>
                             )}
                         </div>
-                        <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-3 leading-relaxed">
-                            {event.content}
-                        </LinkifyText>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-text-dim">
                             <span className="flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />
@@ -106,7 +103,7 @@ export function RecentEvents({ events }: RecentEventsProps) {
                     <div className="flex items-center justify-end gap-2 pt-3 border-t border-border/30">
                         <Link
                             href={`/events/${event.id}/edit`}
-                            className="inline-flex items-center justify-center p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold text-accent border border-accent/30 bg-accent/5 hover:bg-accent/15 hover:border-accent/50 transition-all duration-200 cursor-pointer shrink-0"
+                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-accent border border-accent/20 bg-accent/5 hover:bg-accent/10 hover:border-accent/40 transition-all duration-200 cursor-pointer shrink-0"
                             title="Edit event"
                             aria-label={`Edit ${event.title}`}
                         >

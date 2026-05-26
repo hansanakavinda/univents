@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { EventCard } from '@/components/ui/Card'
+import { EventCard, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Dropdown } from '@/components/ui/Dropdown'
@@ -247,79 +247,85 @@ export function ProductsList({
                 <div className="space-y-8">
                     {/* Products Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {products.map((product) => {
+                        {products.map((product, index) => {
                             const isExpanded = expandedProducts.has(product.id)
 
                             return (
-                                <EventCard key={product.id} hover className="p-2 md:p-6 overflow-hidden flex flex-col justify-between hover:border-primary/40 transition-all duration-300 shadow-md">
-                                    <div className="p-6 space-y-4">
-                                        {/* Cover Image */}
-                                        {product.imagePath ? (
-                                            <div className="relative w-full h-44 rounded-xl overflow-hidden bg-surface">
-                                                <Image
-                                                    src={product.imagePath}
-                                                    alt={product.title}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="w-full h-44 rounded-xl bg-gradient-to-br from-primary/10 to-brand/10 border border-primary/20 flex flex-col items-center justify-center text-primary space-y-2">
-                                                <svg className="w-10 h-10 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                </svg>
-                                                <span className="text-xs font-semibold uppercase tracking-wider text-accent/80">{product.category.name}</span>
-                                            </div>
-                                        )}
-
-                                        {/* Header */}
-                                        <div>
-                                            <div className="flex items-center justify-between gap-2 mb-1.5">
-                                                <Badge variant="default" className="bg-primary/20 text-accent border border-primary/30 text-[10px]">
-                                                    {product.category.name}
-                                                </Badge>
-                                                <span className="text-sm font-semibold text-green-400">{formatPrice(product)}</span>
-                                            </div>
-                                            <h3 className="text-xl font-bold text-white leading-snug">{product.title}</h3>
-                                        </div>
-
-                                        {/* Author & Uni info */}
-                                        <div className="flex items-center space-x-3 text-xs text-text-muted bg-surface/50 p-2.5 rounded-xl border border-border/20">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-bold text-[10px]">
-                                                {product.author.name?.charAt(0).toUpperCase() || 'U'}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-semibold text-white truncate">{product.author.name || 'Student'}</p>
-                                                <p className="text-text-dim truncate">{product.university.name} ({product.university.shortName})</p>
-                                            </div>
-                                        </div>
-
-                                        {/* Description */}
-                                        <div className="space-y-1">
-                                            <LinkifyText className={`text-sm text-text-primary whitespace-pre-wrap ${!isExpanded && 'line-clamp-3'}`}>
-                                                {product.description}
-                                            </LinkifyText>
-                                            {product.description.length > 150 && (
-                                                <button
-                                                    onClick={() => toggleExpand(product.id)}
-                                                    className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-                                                >
-                                                    {isExpanded ? 'Show less ▲' : 'Read full description ▼'}
-                                                </button>
+                                <EventCard key={product.id} hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${isExpanded ? 'h-auto min-h-[600px]' : 'h-[600px]'}`}>
+                                    <article className="flex flex-col h-full min-h-0">
+                                        <CardContent className="p-0 flex flex-col h-full min-h-0">
+                                            {/* Cover Image */}
+                                            {product.imagePath ? (
+                                                <div className="w-full h-48 overflow-hidden shrink-0 relative group flex items-center justify-center bg-surface">
+                                                    <Image
+                                                        src={product.imagePath}
+                                                        alt={product.title}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        priority={index < 4}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="w-full h-48 overflow-hidden shrink-0 relative bg-gradient-to-br from-primary/10 to-brand/10 border-b border-primary/20 flex flex-col items-center justify-center text-primary space-y-2">
+                                                    <svg className="w-10 h-10 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                    </svg>
+                                                    <span className="text-xs font-semibold uppercase tracking-wider text-accent/80">{product.category.name}</span>
+                                                </div>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    {/* Action footer */}
-                                    <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-border/40 gap-3">
-                                        <Button
-                                            variant="primary"
-                                            onClick={() => setContactProduct(product)}
-                                            className="flex-1 text-sm rounded-xl py-2.5 font-semibold"
-                                        >
-                                            🤝 Contact Seller
-                                        </Button>
-                                    </div>
+                                            <div className="p-4 md:p-5 flex flex-col grow min-h-0">
+                                                {/* Header */}
+                                                <div className="mb-2">
+                                                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                                                        <Badge variant="default" className="bg-primary/20 text-accent border border-primary/30 text-[10px]">
+                                                            {product.category.name}
+                                                        </Badge>
+                                                        <span className="text-sm font-semibold text-green-400">{formatPrice(product)}</span>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-white leading-snug line-clamp-2">{product.title}</h3>
+                                                </div>
+
+                                                {/* Author & Uni info */}
+                                                <div className="flex items-center space-x-3 text-xs text-text-muted bg-surface/50 p-2.5 rounded-xl border border-border/20 mb-3">
+                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-bold text-[10px]">
+                                                        {product.author.name?.charAt(0).toUpperCase() || 'U'}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-semibold text-white truncate">{product.author.name || 'Student'}</p>
+                                                        <p className="text-text-dim truncate">{product.university.name} ({product.university.shortName})</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Description */}
+                                                <div
+                                                    className={`relative flex-1 min-h-0 text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!isExpanded ? 'overflow-hidden' : ''}`}
+                                                    style={!isExpanded ? { maskImage: 'linear-gradient(to top, transparent, black 2rem)', WebkitMaskImage: 'linear-gradient(to top, transparent, black 2rem)' } : undefined}
+                                                >
+                                                    <LinkifyText>{product.description}</LinkifyText>
+                                                </div>
+                                                {product.description.split('\n').length > 4 || product.description.length > 150 ? (
+                                                    <button
+                                                        onClick={() => toggleExpand(product.id)}
+                                                        className="text-accent text-xs font-medium hover:underline mb-2 mt-2 cursor-pointer self-start"
+                                                    >
+                                                        {isExpanded ? 'See less' : 'See more'}
+                                                    </button>
+                                                ) : <div className="mb-2" />}
+                                            </div>
+
+                                            {/* Action footer */}
+                                            <div className="px-5 pb-5 pt-3 border-t border-border flex items-center justify-between mt-auto">
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => setContactProduct(product)}
+                                                    className="flex-1 text-sm rounded-xl py-2.5 font-semibold"
+                                                >
+                                                    🤝 Contact Seller
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </article>
                                 </EventCard>
                             )
                         })}
