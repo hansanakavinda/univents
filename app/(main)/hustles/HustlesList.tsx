@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { EventCard } from '@/components/ui/Card'
+import { EventCard, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Dropdown } from '@/components/ui/Dropdown'
@@ -263,85 +263,91 @@ export function HustlesList({
                 <div className="space-y-8">
                     {/* Hustles Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {hustles.map((hustle) => {
+                        {hustles.map((hustle, index) => {
                             const isExpanded = expandedHustles.has(hustle.id)
 
                             return (
-                                <EventCard key={hustle.id} hover className="p-2 md:p-6 overflow-hidden flex flex-col justify-between hover:border-primary/40 transition-all duration-300 shadow-md">
-                                    <div className="p-6 space-y-4">
-                                        {/* Cover Image */}
-                                        {hustle.imagePath ? (
-                                            <div className="relative w-full h-44 rounded-xl overflow-hidden bg-surface">
-                                                <Image
-                                                    src={hustle.imagePath}
-                                                    alt={hustle.title}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="w-full h-44 rounded-xl bg-gradient-to-br from-primary/10 to-brand/10 border border-primary/20 flex flex-col items-center justify-center text-primary space-y-2">
-                                                <svg className="w-10 h-10 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
-                                                <span className="text-xs font-semibold uppercase tracking-wider text-accent/80">{hustle.category.name}</span>
-                                            </div>
-                                        )}
-
-                                        {/* Header */}
-                                        <div>
-                                            <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                                                <Badge variant="default" className="bg-primary/20 text-accent border border-primary/30 text-[10px]">
-                                                    {hustle.category.name}
-                                                </Badge>
-                                                <Badge variant="info" className="text-[10px] uppercase font-bold">
-                                                    {formatBadgeText(hustle.hustleType)}
-                                                </Badge>
-                                                <Badge variant="success" className="text-[10px] uppercase font-bold">
-                                                    {formatBadgeText(hustle.workMode)}
-                                                </Badge>
-                                            </div>
-                                            <h3 className="text-xl font-bold text-white leading-snug">{hustle.title}</h3>
-                                            <p className="text-xs text-green-400 font-semibold mt-1">💰 {formatCompensation(hustle)}</p>
-                                        </div>
-
-                                        {/* Author info */}
-                                        <div className="flex items-center space-x-3 text-xs text-text-muted bg-surface/50 p-2.5 rounded-xl border border-border/20">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-bold text-[10px]">
-                                                {hustle.author.name?.charAt(0).toUpperCase() || 'U'}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-semibold text-white truncate">{hustle.author.name || 'Student'}</p>
-                                                <p className="text-text-dim truncate">{hustle.author.email}</p>
-                                            </div>
-                                        </div>
-
-                                        {/* Description */}
-                                        <div className="space-y-1">
-                                            <LinkifyText className={`text-sm text-text-primary whitespace-pre-wrap ${!isExpanded && 'line-clamp-3'}`}>
-                                                {hustle.description}
-                                            </LinkifyText>
-                                            {hustle.description.length > 150 && (
-                                                <button
-                                                    onClick={() => toggleExpand(hustle.id)}
-                                                    className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-                                                >
-                                                    {isExpanded ? 'Show less ▲' : 'Read full description ▼'}
-                                                </button>
+                                <EventCard key={hustle.id} hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${isExpanded ? 'h-auto min-h-[600px]' : 'h-[600px]'}`}>
+                                    <article className="flex flex-col h-full min-h-0">
+                                        <CardContent className="p-0 flex flex-col h-full min-h-0">
+                                            {/* Cover Image */}
+                                            {hustle.imagePath ? (
+                                                <div className="w-full h-48 overflow-hidden shrink-0 relative group flex items-center justify-center bg-surface">
+                                                    <Image
+                                                        src={hustle.imagePath}
+                                                        alt={hustle.title}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        priority={index < 4}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="w-full h-48 overflow-hidden shrink-0 relative bg-gradient-to-br from-primary/10 to-brand/10 border-b border-primary/20 flex flex-col items-center justify-center text-primary space-y-2">
+                                                    <svg className="w-10 h-10 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <span className="text-xs font-semibold uppercase tracking-wider text-accent/80">{hustle.category.name}</span>
+                                                </div>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    {/* Action footer */}
-                                    <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-border/40 gap-3">
-                                        <Button
-                                            variant="primary"
-                                            onClick={() => setContactHustle(hustle)}
-                                            className="flex-1 text-sm rounded-xl py-2.5 font-semibold"
-                                        >
-                                            🤝 Contact / Apply
-                                        </Button>
-                                    </div>
+                                            <div className="p-4 md:p-5 flex flex-col grow min-h-0">
+                                                {/* Header */}
+                                                <div className="mb-2">
+                                                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                                                        <Badge variant="default" className="bg-primary/20 text-accent border border-primary/30 text-[10px]">
+                                                            {hustle.category.name}
+                                                        </Badge>
+                                                        <Badge variant="info" className="text-[10px] uppercase font-bold">
+                                                            {formatBadgeText(hustle.hustleType)}
+                                                        </Badge>
+                                                        <Badge variant="success" className="text-[10px] uppercase font-bold">
+                                                            {formatBadgeText(hustle.workMode)}
+                                                        </Badge>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-white leading-snug line-clamp-2">{hustle.title}</h3>
+                                                    <p className="text-xs text-green-400 font-semibold mt-1">💰 {formatCompensation(hustle)}</p>
+                                                </div>
+
+                                                {/* Author info */}
+                                                <div className="flex items-center space-x-3 text-xs text-text-muted bg-surface/50 p-2.5 rounded-xl border border-border/20 mb-3">
+                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-brand flex items-center justify-center text-white font-bold text-[10px]">
+                                                        {hustle.author.name?.charAt(0).toUpperCase() || 'U'}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-semibold text-white truncate">{hustle.author.name || 'Student'}</p>
+                                                        <p className="text-text-dim truncate">{hustle.author.email}</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Description */}
+                                                <div
+                                                    className={`relative flex-1 min-h-0 text-text-primary whitespace-pre-wrap leading-relaxed mb-1 text-sm ${!isExpanded ? 'overflow-hidden' : ''}`}
+                                                    style={!isExpanded ? { maskImage: 'linear-gradient(to top, transparent, black 2rem)', WebkitMaskImage: 'linear-gradient(to top, transparent, black 2rem)' } : undefined}
+                                                >
+                                                    <LinkifyText>{hustle.description}</LinkifyText>
+                                                </div>
+                                                {hustle.description.split('\n').length > 4 || hustle.description.length > 150 ? (
+                                                    <button
+                                                        onClick={() => toggleExpand(hustle.id)}
+                                                        className="text-accent text-xs font-medium hover:underline mb-2 mt-2 cursor-pointer self-start"
+                                                    >
+                                                        {isExpanded ? 'See less' : 'See more'}
+                                                    </button>
+                                                ) : <div className="mb-2" />}
+                                            </div>
+
+                                            {/* Action footer */}
+                                            <div className="px-5 pb-5 pt-3 border-t border-border flex items-center justify-between mt-auto">
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => setContactHustle(hustle)}
+                                                    className="flex-1 text-sm rounded-xl py-2.5 font-semibold"
+                                                >
+                                                    🤝 Contact / Apply
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </article>
                                 </EventCard>
                             )
                         })}
