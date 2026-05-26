@@ -1,6 +1,5 @@
 import getSession from '@/lib/getSession'
 import { redirect } from 'next/navigation'
-import { Badge } from '@/components/ui/Badge'
 import { getUserEvents, getUserEventStats } from '@/data-access/events'
 import { getUserGigs, getUserGigStats } from '@/data-access/gigs'
 import { getUserProducts, getUserProductStats } from '@/data-access/products'
@@ -31,31 +30,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Welcome back, {session.user.name}!
-          </h1>
-          <p className="text-text-muted">
-            Here&apos;s what&apos;s happening with your account today.
-          </p>
-        </div>
-        <div className="md:mt-0 mt-2 self-start md:self-center">
-          <Badge
-            variant={
-              session.user.role === 'SUPER_ADMIN'
-                ? 'danger'
-                : session.user.role === 'ADMIN'
-                  ? 'info'
-                  : 'default'
-            }
-          >
-            {session.user.role.replace('_', ' ')}
-          </Badge>
-        </div>
-      </div>
-
       <DashboardTabs
         userEvents={JSON.parse(JSON.stringify(userEvents))}
         totalEvents={eventStats.totalEvents}

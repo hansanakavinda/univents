@@ -33,12 +33,12 @@ export default async function ProfilePage() {
         <>
             <div className="p-4 md:p-8">
                 <div className="max-w-2xl mx-auto">
-                    <div className="mb-8">
-                        <h1 className="text-4xl font-bold text-white mb-2">Your Profile</h1>
-                        <p className="text-text-muted">Manage your personal information</p>
+                    <div className="mb-6 md:mb-8">
+                        <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Your Profile</h1>
+                        <p className="text-sm md:text-base text-text-muted">Manage your personal information</p>
                     </div>
 
-                    <div className="bg-surface border border-border rounded-xl p-6">
+                    <div className="bg-surface border border-border rounded-xl p-4 sm:p-6">
                         <ProfileForm
                             initialData={{
                                 name: user.name || '',

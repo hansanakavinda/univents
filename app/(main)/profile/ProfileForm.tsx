@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/Toast'
+import { Dropdown } from '@/components/ui/Dropdown'
 
 interface ProfileFormProps {
     initialData: {
@@ -60,62 +61,61 @@ export function ProfileForm({ initialData, universities }: ProfileFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
 
-            <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6">
+            <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
                 <div className="flex flex-col items-center space-y-4">
-                    <div className="w-24 h-24 rounded-full overflow-hidden bg-surface border border-border flex items-center justify-center">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-surface border border-border flex items-center justify-center">
                         {initialData.image ? (
                             <img src={initialData.image} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-3xl text-text-muted font-bold">{name ? name.charAt(0).toUpperCase() : 'U'}</span>
+                            <span className="text-2xl sm:text-3xl text-text-muted font-bold">{name ? name.charAt(0).toUpperCase() : 'U'}</span>
                         )}
                     </div>
                 </div>
 
                 <div className="flex-1 space-y-4 w-full">
                     <div>
-                        <label className="block text-sm font-medium text-text-muted mb-1">Email</label>
+                        <label className="block text-xs sm:text-sm font-medium text-text-muted mb-1.5">Email</label>
                         <input
                             type="email"
                             value={initialData.email}
                             disabled
-                            className="w-full px-4 py-2 rounded-xl bg-black border border-border text-text-muted opacity-50 cursor-not-allowed"
+                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-black border border-border text-sm sm:text-base text-text-muted opacity-50 cursor-not-allowed"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-text-muted mb-1">Name</label>
+                        <label className="block text-xs sm:text-sm font-medium text-text-muted mb-1.5">Name</label>
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="w-full px-4 py-2 rounded-xl bg-black border border-border text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-black border border-border text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-text-muted mb-1">University</label>
-                        <select
+                        <label className="block text-xs sm:text-sm font-medium text-text-muted mb-1.5">University</label>
+                        <Dropdown
                             value={uniId}
-                            onChange={(e) => setUniId(e.target.value)}
-                            className="w-full px-4 py-2 rounded-xl bg-black border border-border text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="">None / Other</option>
-                            {universities.map((uni) => (
-                                <option key={uni.id} value={uni.id}>{uni.name} ({uni.shortName})</option>
-                            ))}
-                        </select>
+                            onChange={(val) => setUniId(val)}
+                            options={universities.map((uni) => ({
+                                value: uni.id,
+                                label: `${uni.name} (${uni.shortName})`
+                            }))}
+                            placeholder="None / Other"
+                        />
                     </div>
                 </div>
             </div>
 
-            <div className="pt-4 flex justify-end border-t border-border mt-6">
+            <div className="pt-4 flex flex-col sm:flex-row sm:justify-end border-t border-border mt-4 sm:mt-6">
                 <button
                     type="submit"
                     disabled={isSaving}
-                    className="px-6 py-2 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-colors disabled:opacity-50 mt-4"
+                    className="w-full sm:w-auto px-6 py-2.5 sm:py-2 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-colors disabled:opacity-50 text-sm sm:text-base"
                 >
                     {isSaving ? 'Saving...' : 'Save Changes'}
                 </button>

@@ -61,8 +61,8 @@ export function RecentEvents({ events }: RecentEventsProps) {
 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 mb-3 pr-6">
-                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <h4 className="font-semibold text-white text-base leading-snug tracking-tight">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-white text-sm leading-snug tracking-tight">
                                 {event.title}
                             </h4>
                             {event.university && (
@@ -71,9 +71,6 @@ export function RecentEvents({ events }: RecentEventsProps) {
                                 </span>
                             )}
                         </div>
-                        <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-3 leading-relaxed">
-                            {event.content}
-                        </LinkifyText>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-text-dim">
                             <span className="flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />

@@ -99,97 +99,88 @@ export function DashboardTabs({
     return (
         <div className="space-y-6">
             {/* Tab Selector */}
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:border-b sm:border-border/40 sm:gap-1 pb-4 sm:pb-0">
+            <div className="flex items-center justify-around bg-black/45 backdrop-blur-md border border-border/40 rounded-2xl p-1.5 gap-1 sm:flex sm:bg-transparent sm:border-0 sm:border-b sm:border-border/40 sm:rounded-none sm:p-0 sm:gap-1 sm:pb-0">
                 <button
                     onClick={() => setActiveTab('events')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
+                    className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl flex-1 transition-all duration-200 cursor-pointer shrink-0 sm:flex-row sm:justify-start sm:py-3 sm:px-6 sm:text-sm sm:font-medium sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
                         activeTab === 'events'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
+                            ? 'bg-white/5 text-white font-semibold sm:bg-transparent sm:border-primary'
+                            : 'text-text-muted hover:text-white sm:bg-transparent sm:border-transparent'
                     }`}
                 >
-                    <Calendar className="w-4 h-4 shrink-0" />
-                    <span>Events</span>
+                    <Calendar className={`w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0 shrink-0 transition-colors ${
+                        activeTab === 'events' ? 'text-brand sm:text-white' : 'text-text-muted'
+                    }`} />
+                    <span className="text-[10px] sm:text-sm">Events</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('hustles')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
+                    className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl flex-1 transition-all duration-200 cursor-pointer shrink-0 sm:flex-row sm:justify-start sm:py-3 sm:px-6 sm:text-sm sm:font-medium sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
                         activeTab === 'hustles'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
+                            ? 'bg-white/5 text-white font-semibold sm:bg-transparent sm:border-primary'
+                            : 'text-text-muted hover:text-white sm:bg-transparent sm:border-transparent'
                     }`}
                 >
-                    <Zap className="w-4 h-4 shrink-0" />
-                    <span>Hustles</span>
+                    <Zap className={`w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0 shrink-0 transition-colors ${
+                        activeTab === 'hustles' ? 'text-brand sm:text-white' : 'text-text-muted'
+                    }`} />
+                    <span className="text-[10px] sm:text-sm">Hustles</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('gigs')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
+                    className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl flex-1 transition-all duration-200 cursor-pointer shrink-0 sm:flex-row sm:justify-start sm:py-3 sm:px-6 sm:text-sm sm:font-medium sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
                         activeTab === 'gigs'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
+                            ? 'bg-white/5 text-white font-semibold sm:bg-transparent sm:border-primary'
+                            : 'text-text-muted hover:text-white sm:bg-transparent sm:border-transparent'
                     }`}
                 >
-                    <Briefcase className="w-4 h-4 shrink-0" />
-                    <span>Gigs</span>
+                    <Briefcase className={`w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0 shrink-0 transition-colors ${
+                        activeTab === 'gigs' ? 'text-brand sm:text-white' : 'text-text-muted'
+                    }`} />
+                    <span className="text-[10px] sm:text-sm">Gigs</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('products')}
-                    className={`flex items-center justify-center sm:justify-start gap-2 py-3 px-4 sm:px-6 text-sm font-medium transition-all duration-200 cursor-pointer shrink-0 rounded-xl sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
+                    className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl flex-1 transition-all duration-200 cursor-pointer shrink-0 sm:flex-row sm:justify-start sm:py-3 sm:px-6 sm:text-sm sm:font-medium sm:rounded-none sm:rounded-t-xl sm:border-b-2 sm:-mb-[2px] ${
                         activeTab === 'products'
-                            ? 'bg-primary sm:bg-transparent text-white font-semibold sm:border-primary shadow-md shadow-primary/10 sm:shadow-none'
-                            : 'bg-surface/30 border border-border/30 sm:bg-transparent sm:border-transparent text-text-muted hover:text-white sm:border-b-2'
+                            ? 'bg-white/5 text-white font-semibold sm:bg-transparent sm:border-primary'
+                            : 'text-text-muted hover:text-white sm:bg-transparent sm:border-transparent'
                     }`}
                 >
-                    <ShoppingBag className="w-4 h-4 shrink-0" />
-                    <span>Shop</span>
+                    <ShoppingBag className={`w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0 shrink-0 transition-colors ${
+                        activeTab === 'products' ? 'text-brand sm:text-white' : 'text-text-muted'
+                    }`} />
+                    <span className="text-[10px] sm:text-sm">Shop</span>
                 </button>
             </div>
 
             {/* Tab Contents */}
             {activeTab === 'events' ? (
                 <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Events</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">All your submitted events</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingEvents}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
+                    {/* Stats Card */}
+                    <div className="max-w-[280px]">
+                        <Card hover className="p-4">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-purple-400/90">Total Events</span>
+                                    <span className="text-purple-400 text-sm font-extrabold">{totalEvents}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-emerald-500/90">Approved</span>
+                                    <span className="text-emerald-400 text-sm font-extrabold">{approvedEvents}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-amber-500/90">Pending</span>
+                                    <span className="text-amber-400 text-sm font-extrabold">{pendingEvents}</span>
+                                </div>
                             </div>
                         </Card>
                     </div>
 
                     {/* Recent Events List */}
                     <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Events</CardTitle>
-                            <CardDescription>Your latest submissions and their status</CardDescription>
+                        <CardHeader className="mb-2">
+                            <CardTitle className="text-base font-bold text-white">Your Recent Events</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <RecentEvents events={userEvents} />
@@ -198,47 +189,30 @@ export function DashboardTabs({
                 </div>
             ) : activeTab === 'hustles' ? (
                 <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Hustles</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">All your listed opportunities</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingHustles}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
+                    {/* Stats Card */}
+                    <div className="max-w-[280px]">
+                        <Card hover className="p-4">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-purple-400/90">Total Hustles</span>
+                                    <span className="text-purple-400 text-sm font-extrabold">{totalHustles}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-emerald-500/90">Approved</span>
+                                    <span className="text-emerald-400 text-sm font-extrabold">{approvedHustles}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-amber-500/90">Pending</span>
+                                    <span className="text-amber-400 text-sm font-extrabold">{pendingHustles}</span>
+                                </div>
                             </div>
                         </Card>
                     </div>
 
                     {/* Recent Hustles List */}
                     <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Hustles</CardTitle>
-                            <CardDescription>Your latest listed opportunities and their status</CardDescription>
+                        <CardHeader className="mb-2">
+                            <CardTitle className="text-base font-bold text-white">Your Recent Hustles</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <RecentHustles hustles={userHustles} />
@@ -247,47 +221,30 @@ export function DashboardTabs({
                 </div>
             ) : activeTab === 'gigs' ? (
                 <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Gigs</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">All your submitted gigs</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingGigs}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
+                    {/* Stats Card */}
+                    <div className="max-w-[280px]">
+                        <Card hover className="p-4">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-purple-400/90">Total Gigs</span>
+                                    <span className="text-purple-400 text-sm font-extrabold">{totalGigs}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-emerald-500/90">Approved</span>
+                                    <span className="text-emerald-400 text-sm font-extrabold">{approvedGigs}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-amber-500/90">Pending</span>
+                                    <span className="text-amber-400 text-sm font-extrabold">{pendingGigs}</span>
+                                </div>
                             </div>
                         </Card>
                     </div>
 
                     {/* Recent Gigs List */}
                     <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Gigs</CardTitle>
-                            <CardDescription>Your latest submissions and their status</CardDescription>
+                        <CardHeader className="mb-2">
+                            <CardTitle className="text-base font-bold text-white">Your Recent Gigs</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <RecentGigs gigs={userGigs} />
@@ -296,47 +253,30 @@ export function DashboardTabs({
                 </div>
             ) : (
                 <div className="space-y-6 animate-in">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Total Products</span>
-                                <Layers className="h-4 w-4 text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-white tracking-tight">{totalProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">All your listed items</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Approved</span>
-                                <CheckCircle2 className="h-4 w-4 text-emerald-400/80 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">{approvedProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">Visible to the public</p>
-                            </div>
-                        </Card>
-
-                        <Card hover className="relative overflow-hidden group p-4 sm:p-6">
-                            <div className="flex items-center justify-between pb-2 mb-2">
-                                <span className="text-sm font-medium text-text-muted group-hover:text-white transition-colors">Pending Approval</span>
-                                <Clock className="h-4 w-4 text-amber-400/80 group-hover:text-amber-400 group-hover:scale-110 transition-all duration-300" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{pendingProducts}</div>
-                                <p className="text-xs text-text-dim mt-1">Awaiting moderation</p>
+                    {/* Stats Card */}
+                    <div className="max-w-[280px]">
+                        <Card hover className="p-4">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-purple-400/90">Total Products</span>
+                                    <span className="text-purple-400 text-sm font-extrabold">{totalProducts}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-emerald-500/90">Approved</span>
+                                    <span className="text-emerald-400 text-sm font-extrabold">{approvedProducts}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-4 text-xs font-semibold">
+                                    <span className="text-amber-500/90">Pending</span>
+                                    <span className="text-amber-400 text-sm font-extrabold">{pendingProducts}</span>
+                                </div>
                             </div>
                         </Card>
                     </div>
 
                     {/* Recent Products List */}
                     <Card className="p-4 sm:p-6">
-                        <CardHeader className="mb-4">
-                            <CardTitle className="text-lg sm:text-xl">Your Recent Listed Items</CardTitle>
-                            <CardDescription>Your latest items and their moderation status</CardDescription>
+                        <CardHeader className="mb-2">
+                            <CardTitle className="text-base font-bold text-white">Your Recent Listed Items</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <RecentProducts products={userProducts} />

@@ -85,12 +85,9 @@ export function RecentProducts({ products }: RecentProductsProps) {
 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 mb-3 pr-6">
-                        <h4 className="font-semibold text-white text-base leading-snug tracking-tight mb-1">
+                        <h4 className="font-semibold text-white text-sm leading-snug tracking-tight mb-2">
                             {product.title}
                         </h4>
-                        <LinkifyText className="text-sm text-text-muted line-clamp-2 mb-3 leading-relaxed">
-                            {product.description}
-                        </LinkifyText>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-text-dim">
                             <span className="flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />
