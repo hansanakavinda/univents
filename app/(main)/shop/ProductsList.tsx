@@ -251,17 +251,18 @@ export function ProductsList({
                             const isExpanded = expandedProducts.has(product.id)
 
                             return (
-                                <EventCard key={product.id} hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${isExpanded ? 'h-auto min-h-[600px]' : 'h-[600px]'}`}>
+                                <EventCard key={product.id} hover className={`w-full flex flex-col relative overflow-hidden transition-all duration-300 ${isExpanded ? 'h-auto min-h-[700px]' : 'h-[700px]'}`}>
                                     <article className="flex flex-col h-full min-h-0">
                                         <CardContent className="p-0 flex flex-col h-full min-h-0">
                                             {/* Cover Image */}
                                             {product.imagePath ? (
-                                                <div className="w-full h-48 overflow-hidden shrink-0 relative group flex items-center justify-center bg-surface">
+                                                <div className="w-full overflow-hidden shrink-0 relative group flex items-center justify-center bg-surface">
                                                     <Image
                                                         src={product.imagePath}
                                                         alt={product.title}
-                                                        fill
-                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        width={1080}
+                                                        height={1280}
+                                                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                                                         priority={index < 4}
                                                     />
                                                 </div>
