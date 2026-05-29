@@ -74,20 +74,26 @@ export function UniversityActions({ university }: UniversityActionsProps) {
 
     return (
         <>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
                 <Button
                     variant="ghost"
+                    size="sm"
+                    className="text-xs py-1 px-1.5 sm:px-2.5"
                     onClick={() => setIsEditOpen(true)}
                     disabled={isLoading}
+                    title="Edit University"
                 >
-                    ✏️ Edit
+                    ✏️<span className="hidden sm:inline ml-1">Edit</span>
                 </Button>
                 <Button
                     variant="danger"
+                    size="sm"
+                    className="text-xs py-1 px-1.5 sm:px-2.5"
                     onClick={handleDelete}
                     disabled={isLoading}
+                    title="Delete University"
                 >
-                    🗑️ Delete
+                    🗑️<span className="hidden sm:inline ml-1">Delete</span>
                 </Button>
             </div>
 
@@ -181,8 +187,8 @@ export function AddUniversityButton() {
 
     return (
         <>
-            <Button variant="primary" onClick={() => setIsOpen(true)}>
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Button variant="primary" size="sm" className="text-xs py-1.5 px-3" onClick={() => setIsOpen(true)}>
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 Add University
