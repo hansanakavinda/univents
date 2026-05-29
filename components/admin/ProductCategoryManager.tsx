@@ -103,16 +103,16 @@ export function ProductCategoryManager({ categories }: ProductCategoryManagerPro
 
     return (
         <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
                 <div>
-                    <CardTitle>All Product Categories</CardTitle>
-                    <CardDescription>Manage shop product categories</CardDescription>
+                    <CardTitle className="text-base font-semibold">All Product Categories</CardTitle>
+                    <CardDescription className="text-xs">Manage shop product categories</CardDescription>
                 </div>
-                <Button variant="primary" onClick={() => {
+                <Button variant="primary" size="sm" onClick={() => {
                     setName('')
                     setIsAddOpen(true)
-                }}>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                }} className="text-xs py-1.5 px-3 w-full sm:w-auto shrink-0">
+                    <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Add Category
@@ -128,38 +128,40 @@ export function ProductCategoryManager({ categories }: ProductCategoryManagerPro
                         {categories.map((category) => (
                             <div
                                 key={category.id}
-                                className="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-hover transition-colors border border-border/40"
+                                className="flex items-center justify-between p-2.5 sm:p-4 gap-2 rounded-xl bg-surface hover:bg-surface-hover transition-colors border border-border/40"
                             >
-                                <div className="flex-1">
-                                    <div className="flex items-center space-x-3 mb-1">
-                                        <h4 className="font-semibold text-white">{category.name}</h4>
-                                        <Badge variant="default" className="text-xs bg-primary/20 text-accent border border-primary/30">
+                                <div className="flex-1 min-w-0 pr-1">
+                                    <div className="flex items-center space-x-2 mb-0.5 min-w-0">
+                                        <h4 className="text-xs sm:text-sm font-semibold text-white truncate min-w-0">{category.name}</h4>
+                                        <Badge variant="default" className="text-[9px] sm:text-[10px] py-0 px-1.5 bg-primary/20 text-accent border border-primary/30 shrink-0">
                                             {category._count.products} item(s)
                                         </Badge>
                                     </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
+                                <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
                                     <Button
                                         variant="ghost"
                                         size="sm"
+                                        className="text-xs py-1 px-1.5 sm:px-2.5"
                                         onClick={() => {
                                             setActiveCategory(category)
                                             setName(category.name)
                                             setIsEditOpen(true)
                                         }}
                                         disabled={isLoading}
+                                        title="Edit Category"
                                     >
-                                        ✏️ Edit
+                                        ✏️<span className="hidden sm:inline ml-1">Edit</span>
                                     </Button>
                                     <Button
                                         variant={category._count.products > 0 ? "ghost" : "danger"}
                                         size="sm"
+                                        className={`text-xs py-1 px-1.5 sm:px-2.5 ${category._count.products > 0 ? "opacity-30 cursor-not-allowed" : ""}`}
                                         onClick={() => handleDelete(category)}
                                         disabled={isLoading}
-                                        className={category._count.products > 0 ? "opacity-30 cursor-not-allowed" : ""}
-                                        title={category._count.products > 0 ? "Cannot delete category containing active items" : "Delete category"}
+                                        title="Delete Category"
                                     >
-                                        🗑️ Delete
+                                        🗑️<span className="hidden sm:inline ml-1">Delete</span>
                                     </Button>
                                 </div>
                             </div>

@@ -53,7 +53,7 @@ export class ApiClient {
     return this.request<T>(endpoint, { method: 'PUT', data, headers })
   }
 
-  static delete<T = any>(endpoint: string, headers?: Record<string, string>) {
-    return this.request<T>(endpoint, { method: 'DELETE', headers })
+  static delete<T = any>(endpoint: string, data?: Record<string, any>, headers?: Record<string, string>) {
+    return this.request<T>(endpoint, { method: 'DELETE', data, headers })
   }
 }
