@@ -58,9 +58,11 @@ export function HustleModerationActions({ hustleId }: HustleModerationActionsPro
     }
 
     return (
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
             <Button
                 variant="secondary"
+                size="sm"
+                className="text-xs py-1 px-2.5"
                 onClick={handleApprove}
                 disabled={isLoading}
             >
@@ -68,6 +70,8 @@ export function HustleModerationActions({ hustleId }: HustleModerationActionsPro
             </Button>
             <Button
                 variant="danger"
+                size="sm"
+                className="text-xs py-1 px-2.5"
                 onClick={handleReject}
                 disabled={isLoading}
             >
