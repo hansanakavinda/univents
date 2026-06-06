@@ -316,7 +316,6 @@ export function HustlesList({
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="font-semibold text-white truncate">{hustle.author.name || 'Student'}</p>
-                                                        <p className="text-text-dim truncate">{hustle.author.email}</p>
                                                     </div>
                                                 </div>
 

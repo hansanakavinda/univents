@@ -17,7 +17,6 @@ interface ApprovedEvent {
     updatedAt: string | Date
     author: {
         name: string | null
-        email: string
     }
     university: {
         name: string

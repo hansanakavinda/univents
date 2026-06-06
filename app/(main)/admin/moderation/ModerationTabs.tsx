@@ -22,7 +22,7 @@ interface Event {
     updatedAt: Date | string
     author: {
         name: string | null
-        email: string
+        email?: string
     }
     university: {
         name: string
@@ -45,7 +45,7 @@ interface Gig {
     updatedAt: Date | string
     author: {
         name: string | null
-        email: string
+        email?: string
     }
     university: {
         shortName: string
@@ -66,7 +66,7 @@ interface Product {
     updatedAt: Date | string
     author: {
         name: string | null
-        email: string
+        email?: string
     }
     university: {
         shortName: string
@@ -90,7 +90,7 @@ interface Hustle {
     updatedAt: Date | string
     author: {
         name: string | null
-        email: string
+        email?: string
     }
 }
 

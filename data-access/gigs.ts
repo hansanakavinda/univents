@@ -145,8 +145,6 @@ export const getGigById = async (id: string) => {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {
@@ -177,7 +175,6 @@ export const getPendingGigs = async (options?: { uniId?: string }) => {
                 select: {
                     name: true,
                     email: true,
-                    role: true,
                 },
             },
             university: {
@@ -208,7 +205,6 @@ export const getRecentApprovedGigs = async (options?: { uniId?: string; take?: n
             author: {
                 select: {
                     name: true,
-                    email: true,
                 },
             },
             university: {
@@ -274,8 +270,6 @@ export const getApprovedGigsPaginated = async (options?: {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {

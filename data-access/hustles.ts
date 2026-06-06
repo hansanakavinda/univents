@@ -151,8 +151,6 @@ export const getHustleById = async (id: string) => {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             category: {
@@ -175,7 +173,6 @@ export const getPendingHustles = async () => {
                 select: {
                     name: true,
                     email: true,
-                    role: true,
                 },
             },
             category: {
@@ -198,7 +195,6 @@ export const getRecentApprovedHustles = async (options?: { take?: number }) => {
             author: {
                 select: {
                     name: true,
-                    email: true,
                 },
             },
             category: {
@@ -263,8 +259,6 @@ export const getApprovedHustlesPaginated = async (options?: {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             category: {

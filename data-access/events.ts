@@ -181,7 +181,6 @@ export const getPendingEvents = async (options?: { uniId?: string }) => {
                 select: {
                     name: true,
                     email: true,
-                    role: true,
                 },
             },
             university: {
@@ -207,7 +206,6 @@ export const getRecentApprovedEvents = async (options?: { uniId?: string; take?:
             author: {
                 select: {
                     name: true,
-                    email: true,
                 },
             },
             university: {
@@ -241,8 +239,6 @@ export const getApprovedEvents = async () => {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {
@@ -300,8 +296,6 @@ export const getApprovedEventsPaginated = async (options?: { take?: number; skip
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {
@@ -394,7 +388,6 @@ export const getEventById = async (id: string) => {
             author: {
                 select: {
                     name: true,
-                    email: true,
                 },
             },
             university: {

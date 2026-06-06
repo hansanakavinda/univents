@@ -22,7 +22,6 @@ interface ApprovedProduct {
     updatedAt: Date | string
     author: {
         name: string | null
-        email: string
     }
     university: {
         shortName: string

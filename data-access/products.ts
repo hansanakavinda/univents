@@ -139,8 +139,6 @@ export const getProductById = async (id: string) => {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {
@@ -171,7 +169,6 @@ export const getPendingProducts = async (options?: { uniId?: string }) => {
                 select: {
                     name: true,
                     email: true,
-                    role: true,
                 },
             },
             university: {
@@ -202,7 +199,6 @@ export const getRecentApprovedProducts = async (options?: { uniId?: string; take
             author: {
                 select: {
                     name: true,
-                    email: true,
                 },
             },
             university: {
@@ -268,8 +264,6 @@ export const getApprovedProductsPaginated = async (options?: {
             author: {
                 select: {
                     name: true,
-                    email: true,
-                    role: true,
                 },
             },
             university: {
