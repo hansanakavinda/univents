@@ -12,6 +12,10 @@ class DeactivatedAccountError extends CredentialsSignin {
   code = "AccountDeactivated"
 }
 
+class EmailNotVerifiedError extends CredentialsSignin {
+  code = "EmailNotVerified"
+}
+
 export const authConfig: NextAuthConfig = {
   trustHost: true,
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -74,16 +78,29 @@ export const authConfig: NextAuthConfig = {
             where: { email: credentials.email as string },
           })
 
-          if (!user || !user.password) {
+          if (!user) {
+            console.log(`[auth][authorize] Failure: No user found with email: ${credentials.email}`)
+            return null
+          }
+
+          if (!user.password) {
+            console.log(`[auth][authorize] Failure: User has no password (OAuth account?): ${credentials.email}`)
             return null
           }
 
           if (!user.isActive) {
+            console.log(`[auth][authorize] Failure: Account is deactivated: ${credentials.email}`)
             throw new DeactivatedAccountError()
           }
 
           if (user.authProvider !== "MANUAL") {
+            console.log(`[auth][authorize] Failure: User registered via ${user.authProvider}, not MANUAL: ${credentials.email}`)
             return null
+          }
+
+          if (!user.emailVerified) {
+            console.log(`[auth][authorize] Failure: User email is not verified: ${credentials.email}`)
+            throw new EmailNotVerifiedError()
           }
 
           const isPasswordValid = await compare(
@@ -92,6 +109,7 @@ export const authConfig: NextAuthConfig = {
           )
 
           if (!isPasswordValid) {
+            console.log(`[auth][authorize] Failure: Password mismatch for: ${credentials.email}`)
             return null
           }
 
@@ -107,10 +125,13 @@ export const authConfig: NextAuthConfig = {
           }
         }
         catch (err) {
+          console.error("[auth][authorize] Exception occurred during authorization:", err)
           // Re-throw RateLimitError so NextAuth surfaces it on the error page
           if (err instanceof RateLimitError) throw err
           // Re-throw DeactivatedAccountError for deactivated-account UX
           if (err instanceof DeactivatedAccountError) throw err
+          // Re-throw EmailNotVerifiedError for email-verification UX
+          if (err instanceof EmailNotVerifiedError) throw err
           return null
         }
 
@@ -138,7 +159,7 @@ export const authConfig: NextAuthConfig = {
             `OAuth sign-in BLOCKED: email ${user.email} is registered as a MANUAL account. ` +
             `OAuth provider cannot claim this account.`
           )
-          return false
+          return `/login?error=ManualAccountExists`
         }
 
         // SECURITY: Block sign-in if the existing OAuth account has been deactivated
@@ -146,7 +167,7 @@ export const authConfig: NextAuthConfig = {
           console.warn(
             `OAuth sign-in BLOCKED: account ${user.email} has been deactivated.`
           )
-          return false
+          return `/login?error=AccountDeactivated`
         }
 
         // Update existing OAuth user profile data

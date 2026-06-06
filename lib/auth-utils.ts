@@ -5,12 +5,15 @@ import { randomUUID } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 import { PasswordResetEmail } from '@/components/auth/PasswordResetEmail'
+import { EmailVerificationEmail } from '@/components/auth/EmailVerificationEmail'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const senderEmail = process.env.EMAIL_SENDER
 
 const SALT_ROUNDS = 10
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000 // 1 hour
+const VERIFICATION_TOKEN_EXPIRY_MS = 60 * 60 * 1000 // 1 hour
+
 
 // ---------------------------------------------------------------------------
 // Password Hashing
@@ -72,3 +75,47 @@ export async function sendResetEmail(
     react: PasswordResetEmail({ resetLink }),
   })
 }
+
+// ---------------------------------------------------------------------------
+// Verification Token Generation
+// ---------------------------------------------------------------------------
+
+export async function generateVerificationToken(email: string): Promise<string> {
+  const token = randomUUID()
+  const expires = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRY_MS)
+
+  // Remove any existing verification token for this email
+  await prisma.verificationToken.deleteMany({
+    where: { identifier: email },
+  })
+
+  await prisma.verificationToken.create({
+    data: {
+      identifier: email,
+      token,
+      expires,
+    },
+  })
+
+  return token
+}
+
+// ---------------------------------------------------------------------------
+// Verification Email Dispatch
+// ---------------------------------------------------------------------------
+
+export async function sendVerificationEmail(
+  email: string,
+  token: string
+): Promise<void> {
+  const baseUrl = process.env.NEXTAUTH_URL
+  const verificationLink = `${baseUrl}/auth/verify-email?token=${token}`
+
+  await resend.emails.send({
+    from: `Univents Team <${senderEmail}>`,
+    to: email,
+    subject: 'Verify your Univents email address',
+    react: EmailVerificationEmail({ verificationLink }),
+  })
+}
+

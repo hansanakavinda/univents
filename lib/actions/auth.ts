@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { hashPassword } from '@/lib/auth-utils'
+import { hashPassword, generateVerificationToken, sendVerificationEmail } from '@/lib/auth-utils'
 import { generateResetToken, sendResetEmail } from '@/lib/auth-utils'
 import { signUpSchema, forgotPasswordSchema, resetPasswordSchema } from '@/lib/validators/auth'
 
@@ -37,7 +37,7 @@ export async function signUpAction(rawData: {
     // 2. Check if email already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
-      select: { id: true, authProvider: true },
+      select: { id: true, authProvider: true, emailVerified: true },
     })
 
     if (existingUser) {
@@ -47,7 +47,29 @@ export async function signUpAction(rawData: {
           message: 'This email is registered with Google. Please sign in with Google instead.',
         }
       }
-      return { success: false, message: 'An account with this email already exists.' }
+      
+      // If the account exists and is already verified
+      if (existingUser.emailVerified) {
+        return { success: false, message: 'An account with this email already exists.' }
+      }
+
+      // If the account is NOT verified, overwrite & resend (User's choice A1)
+      const hashedPassword = await hashPassword(password)
+      await prisma.user.update({
+        where: { id: existingUser.id },
+        data: {
+          name,
+          password: hashedPassword,
+        },
+      })
+
+      const token = await generateVerificationToken(email)
+      await sendVerificationEmail(email, token)
+
+      return {
+        success: true,
+        message: 'A new verification link has been sent to your email. Please check your inbox.',
+      }
     }
 
     // 3. Hash password and create user
@@ -61,15 +83,23 @@ export async function signUpAction(rawData: {
         authProvider: 'MANUAL',
         role: 'USER',
         isActive: true,
+        emailVerified: null, // ensure it defaults to null
       },
     })
 
-    return { success: true, message: 'Account created successfully! You can now sign in.' }
+    const token = await generateVerificationToken(email)
+    await sendVerificationEmail(email, token)
+
+    return {
+      success: true,
+      message: 'Account created! Please check your email for a verification link to complete registration.',
+    }
   } catch (error) {
     console.error('[signUpAction] Error:', error)
     return { success: false, message: 'Something went wrong. Please try again.' }
   }
 }
+
 
 // ---------------------------------------------------------------------------
 // Request Password Reset
@@ -169,3 +199,86 @@ export async function resetPasswordAction(rawData: {
     return { success: false, message: 'Something went wrong. Please try again.' }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Verify Email
+// ---------------------------------------------------------------------------
+
+export async function verifyEmailAction(token: string): Promise<ActionResult> {
+  try {
+    const verificationToken = await prisma.verificationToken.findUnique({
+      where: { token },
+    })
+
+    if (!verificationToken) {
+      return { success: false, message: 'Invalid or expired verification link.' }
+    }
+
+    if (new Date() > verificationToken.expires) {
+      // Clean up expired token
+      await prisma.verificationToken.delete({
+        where: { token },
+      })
+      return {
+        success: false,
+        message: 'This verification link has expired. Please request a new one.',
+      }
+    }
+
+    // Update user to verified
+    await prisma.user.update({
+      where: { email: verificationToken.identifier },
+      data: { emailVerified: new Date() },
+    })
+
+    // Delete token (single-use)
+    await prisma.verificationToken.delete({
+      where: { token },
+    })
+
+    return { success: true, message: 'Email verified successfully! You can now sign in.' }
+  } catch (error) {
+    console.error('[verifyEmailAction] Error:', error)
+    return { success: false, message: 'Something went wrong. Please try again.' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Resend Verification Link
+// ---------------------------------------------------------------------------
+
+export async function resendVerificationAction(email: string): Promise<ActionResult> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, emailVerified: true, authProvider: true },
+    })
+
+    if (!user) {
+      return { success: false, message: 'No account found with this email.' }
+    }
+
+    if (user.authProvider !== 'MANUAL') {
+      return {
+        success: false,
+        message: 'This email is registered with Google. Please sign in using Google.',
+      }
+    }
+
+    if (user.emailVerified) {
+      return { success: true, message: 'This email is already verified. You can sign in.' }
+    }
+
+    const token = await generateVerificationToken(email)
+    await sendVerificationEmail(email, token)
+
+    return {
+      success: true,
+      message: 'Verification link resent! Please check your email inbox.',
+    }
+  } catch (error) {
+    console.error('[resendVerificationAction] Error:', error)
+    return { success: false, message: 'Something went wrong. Please try again.' }
+  }
+}
+

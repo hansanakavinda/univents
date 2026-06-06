@@ -17,3 +17,8 @@ declare module "next-auth" {
 export type Role = "SUPER_ADMIN" | "ADMIN" | "USER"
 export type AuthProvider = "MANUAL" | "GOOGLE"
 
+export interface EmailVerificationEmailProps {
+  verificationLink: string
+}
+
+
