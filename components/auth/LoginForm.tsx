@@ -103,6 +103,8 @@ export function LoginForm() {
                 return 'Too many login attempts. Please wait a few minutes and try again.'
             case 'OAuthAccountNotLinked':
                 return 'This email is already registered with a different provider.'
+            case 'ManualAccountExists':
+                return 'This email is registered with a password. Please sign in using your email and password instead of Google.'
             case 'Callback':
                 return 'Authentication failed. Please try again.'
             case 'AccessDenied':
