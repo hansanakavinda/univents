@@ -18,8 +18,8 @@ export type Hustle = {
     authorId: string
     author: {
         name: string | null
-        email: string
-        role: string
+        email?: string
+        role?: string
     }
     imagePath: string | null
 }

@@ -16,8 +16,8 @@ export type Product = {
     authorId: string
     author: {
         name: string | null
-        email: string
-        role: string
+        email?: string
+        role?: string
     }
     university: {
         id: string

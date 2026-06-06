@@ -13,8 +13,8 @@ export type Event = {
     isLikedByUser: boolean
     author: {
         name: string | null
-        email: string
-        role: string
+        email?: string
+        role?: string
     }
     university: {
         name: string
