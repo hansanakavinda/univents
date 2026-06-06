@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import Link from 'next/link'
+import { resendVerificationAction } from '@/lib/actions/auth'
 
 export function LoginForm() {
     const router = useRouter()
@@ -22,10 +23,23 @@ export function LoginForm() {
     const [confirmEmail, setConfirmEmail] = useState('')
     const [formError, setFormError] = useState('')
 
+    const [showResend, setShowResend] = useState(false)
+    const [resendMessage, setResendMessage] = useState('')
+    const [isResending, setIsResending] = useState(false)
+
+    // Check if redirect contains EmailNotVerified error
+    useEffect(() => {
+        if (error === 'EmailNotVerified') {
+            setShowResend(true)
+        }
+    }, [error])
+
     const handleCredentialsLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsEmailLoading(true)
         setFormError('')
+        setShowResend(false)
+        setResendMessage('')
 
         try {
             const result = await signIn('credentials', {
@@ -37,7 +51,11 @@ export function LoginForm() {
             })
 
             if (result?.error) {
-                setFormError(getErrorMessage(result.code ?? result.error) || result.error)
+                const errorCode = result.code ?? result.error
+                setFormError(getErrorMessage(errorCode) || result.error)
+                if (errorCode === 'EmailNotVerified') {
+                    setShowResend(true)
+                }
             } else if (result?.ok) {
                 router.push(callbackUrl)
             }
@@ -46,6 +64,23 @@ export function LoginForm() {
             setFormError('An unexpected error occurred. Please try again.')
         } finally {
             setIsEmailLoading(false)
+        }
+    }
+
+    const handleResendVerification = async () => {
+        if (!email) {
+            setResendMessage('Please enter your email address first.')
+            return
+        }
+        setIsResending(true)
+        setResendMessage('')
+        try {
+            const res = await resendVerificationAction(email)
+            setResendMessage(res.message)
+        } catch (err) {
+            setResendMessage('Failed to resend verification email. Please try again.')
+        } finally {
+            setIsResending(false)
         }
     }
 
@@ -62,6 +97,8 @@ export function LoginForm() {
                 return 'Invalid email or password.'
             case 'AccountDeactivated':
                 return 'Your account has been deactivated. Please contact support.'
+            case 'EmailNotVerified':
+                return 'Your email address is not verified. Please check your inbox for a verification link.'
             case 'RateLimited':
                 return 'Too many login attempts. Please wait a few minutes and try again.'
             case 'OAuthAccountNotLinked':
@@ -101,6 +138,23 @@ export function LoginForm() {
                         {(errorMessage || formError) && (
                             <div className="mb-4 p-3 rounded-xl bg-red-900/30 border border-red-800/30">
                                 <p className="text-sm text-red-400">{errorMessage || formError}</p>
+                                {showResend && (
+                                    <div className="mt-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleResendVerification}
+                                            disabled={isResending}
+                                            className="text-xs font-semibold text-accent hover:text-accent-hover underline transition-colors disabled:opacity-50"
+                                        >
+                                            {isResending ? 'Resending...' : 'Resend verification link'}
+                                        </button>
+                                        {resendMessage && (
+                                            <p className={`mt-2 text-xs ${resendMessage.includes('resent') || resendMessage.includes('verified') ? 'text-green-400' : 'text-red-400'}`}>
+                                                {resendMessage}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -218,4 +272,3 @@ export function LoginForm() {
         </div>
     )
 }
-

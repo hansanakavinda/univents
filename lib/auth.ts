@@ -12,6 +12,10 @@ class DeactivatedAccountError extends CredentialsSignin {
   code = "AccountDeactivated"
 }
 
+class EmailNotVerifiedError extends CredentialsSignin {
+  code = "EmailNotVerified"
+}
+
 export const authConfig: NextAuthConfig = {
   trustHost: true,
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -86,6 +90,10 @@ export const authConfig: NextAuthConfig = {
             return null
           }
 
+          if (!user.emailVerified) {
+            throw new EmailNotVerifiedError()
+          }
+
           const isPasswordValid = await compare(
             credentials.password as string,
             user.password
@@ -111,6 +119,8 @@ export const authConfig: NextAuthConfig = {
           if (err instanceof RateLimitError) throw err
           // Re-throw DeactivatedAccountError for deactivated-account UX
           if (err instanceof DeactivatedAccountError) throw err
+          // Re-throw EmailNotVerifiedError for email-verification UX
+          if (err instanceof EmailNotVerifiedError) throw err
           return null
         }
 
