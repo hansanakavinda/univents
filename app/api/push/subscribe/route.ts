@@ -23,10 +23,13 @@ const subscribeSchema = z.object({
 
 export const POST = asyncCatcher(async (request: Request) => {
   const { endpoint, keys } = await validateRequest(request, subscribeSchema)
+  console.log(`[push/subscribe] POST request received for endpoint: ${endpoint}`)
+  
   const session = await getSession()
   const userId = session?.user?.id ?? null
+  console.log(`[push/subscribe] Session check: userId = ${userId}, role = ${session?.user?.role ?? 'NONE'}`)
 
-  await prisma.pushSubscription.upsert({
+  const upserted = await prisma.pushSubscription.upsert({
     where: { endpoint },
     create: {
       endpoint,
@@ -41,6 +44,8 @@ export const POST = asyncCatcher(async (request: Request) => {
       userId,
     },
   })
+  
+  console.log(`[push/subscribe] DB Upsert complete for subscription ID: ${upserted.id}, userId = ${upserted.userId}`)
 
   return NextResponse.json({ success: true })
 }, 'Push subscribe')

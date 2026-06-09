@@ -143,6 +143,7 @@ export async function sendPushToAll(payload: PushPayload): Promise<void> {
  * This function is fire-and-forget safe: it never throws.
  */
 export async function sendPushToAdmins(payload: PushPayload): Promise<void> {
+  console.log('[webpush] sendPushToAdmins initiated with payload:', payload)
   try {
     ensureVapidInitialized()
   } catch (err) {
@@ -159,11 +160,15 @@ export async function sendPushToAdmins(payload: PushPayload): Promise<void> {
         role: { in: ['ADMIN', 'SUPER_ADMIN'] },
         isActive: true,
       },
-      select: { id: true },
+      select: { id: true, email: true },
     })
     const adminIds = admins.map((a) => a.id)
+    console.log(`[webpush] Active admins found: ${admins.length} (${admins.map(a => a.email).join(', ')})`)
 
-    if (adminIds.length === 0) return
+    if (adminIds.length === 0) {
+      console.log('[webpush] No active admins found in DB. Skipping push.')
+      return
+    }
 
     // 2. Find subscriptions associated with these user IDs
     subscriptions = await prisma.pushSubscription.findMany({
@@ -172,22 +177,35 @@ export async function sendPushToAdmins(payload: PushPayload): Promise<void> {
       },
       select: { endpoint: true, p256dh: true, auth: true },
     })
+    console.log(`[webpush] Retrieved ${subscriptions.length} push subscriptions matching active admins.`)
   } catch (err) {
     console.error('[webpush] Failed to fetch admin subscriptions from DB:', err)
     return
   }
 
-  if (subscriptions.length === 0) return
+  if (subscriptions.length === 0) {
+    console.log('[webpush] No subscriptions registered for active admins. Skipping push.')
+    return
+  }
 
+  console.log(`[webpush] Fan-out starting to ${subscriptions.length} subscription(s)...`)
   const results = await Promise.allSettled(
-    subscriptions.map((sub) => sendPushNotification(sub, payload))
+    subscriptions.map((sub) => {
+      console.log(`[webpush] Sending to endpoint: ${sub.endpoint.substring(0, 50)}...`)
+      return sendPushNotification(sub, payload)
+    })
   )
 
   // Collect expired endpoints to delete in one batch query
   const expiredEndpoints: string[] = []
   results.forEach((result, i) => {
-    if (result.status === 'fulfilled' && result.value.gone) {
-      expiredEndpoints.push(subscriptions[i].endpoint)
+    if (result.status === 'fulfilled') {
+      console.log(`[webpush] Result for ${subscriptions[i].endpoint.substring(0, 50)}... -> ok: ${result.value.ok}, gone: ${result.value.gone}`)
+      if (result.value.gone) {
+        expiredEndpoints.push(subscriptions[i].endpoint)
+      }
+    } else {
+      console.error(`[webpush] Promise rejected for ${subscriptions[i].endpoint.substring(0, 50)}... ->`, result.reason)
     }
   })
 

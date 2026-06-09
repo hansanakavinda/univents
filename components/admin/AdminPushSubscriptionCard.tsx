@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { useToast } from '@/components/ui/Toast'
 import { Button } from '@/components/ui/Button'
@@ -8,6 +9,7 @@ import { Bell, BellOff, ShieldAlert, Loader2 } from 'lucide-react'
 export function AdminPushSubscriptionCard() {
   const { status, subscribe, unsubscribe } = usePushNotifications()
   const toast = useToast()
+  const [isTesting, setIsTesting] = useState(false)
 
   const handleSubscribe = async () => {
     try {
@@ -26,6 +28,26 @@ export function AdminPushSubscriptionCard() {
     } catch (err) {
       console.error(err)
       toast.error('Failed to disable push notifications.')
+    }
+  }
+
+  const handleSendTest = async () => {
+    setIsTesting(true)
+    try {
+      const response = await fetch('/api/admin/push-test', {
+        method: 'POST',
+      })
+      const data = await response.json()
+      if (data.success) {
+        toast.success('Test notification sent!')
+      } else {
+        toast.error(data.message || 'Failed to send test notification.')
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('Error sending test notification.')
+    } finally {
+      setIsTesting(false)
     }
   }
 
@@ -49,15 +71,26 @@ export function AdminPushSubscriptionCard() {
 
   if (status === 'subscribed') {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleUnsubscribe}
-        className="gap-2 text-xs py-1 px-3 border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-200 shadow-[0_0_10px_rgba(16,185,129,0.05)]"
-      >
-        <Bell className="w-3.5 h-3.5 fill-current" />
-        <span>Alerts Active</span>
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={isTesting}
+          onClick={handleSendTest}
+          className="text-xs py-1 px-2.5 border-white/10 text-text-muted hover:bg-white/5 hover:text-white transition-all duration-200"
+        >
+          {isTesting ? 'Testing...' : 'Test'}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleUnsubscribe}
+          className="gap-2 text-xs py-1 px-3 border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-200 shadow-[0_0_10px_rgba(16,185,129,0.05)]"
+        >
+          <Bell className="w-3.5 h-3.5 fill-current" />
+          <span>Alerts Active</span>
+        </Button>
+      </div>
     )
   }
 
