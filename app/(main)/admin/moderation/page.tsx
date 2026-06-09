@@ -43,14 +43,15 @@ export default async function AdminModerationPage() {
 
     return (
         <div className="p-4 md:p-8">
-            <header className="mb-6">
-                <h1 className="text-2xl font-bold text-white mb-1">Content Moderation</h1>
-                <p className="text-text-muted text-xs">Review and approve pending events, gigs, and shop items</p>
+            <header className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-white mb-1">Content Moderation</h1>
+                    <p className="text-text-muted text-xs">Review and approve pending events, gigs, and shop items</p>
+                </div>
+                <div className="shrink-0">
+                    <AdminPushSubscriptionCard />
+                </div>
             </header>
-
-            <div className="mb-8">
-                <AdminPushSubscriptionCard />
-            </div>
 
             <ModerationTabs
                 pendingEvents={JSON.parse(JSON.stringify(pendingEvents))}

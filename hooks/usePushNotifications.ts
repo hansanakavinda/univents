@@ -44,6 +44,14 @@ export function usePushNotifications() {
         const existing = await registration.pushManager.getSubscription()
         if (existing) {
           setStatus('subscribed')
+          // Sync with the backend to ensure the userId association is up to date
+          fetch('/api/push/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(existing.toJSON()),
+          }).catch((err) => {
+            console.error('[usePushNotifications] Failed to sync existing subscription:', err)
+          })
         }
       })
       .catch((err) => {
