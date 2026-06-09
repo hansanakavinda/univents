@@ -6,6 +6,7 @@ import { getPendingGigs, getRecentApprovedGigs, getGigStats } from '@/data-acces
 import { getPendingProducts, getRecentApprovedProducts, getProductStats } from '@/data-access/products'
 import { getPendingHustles, getRecentApprovedHustles, getHustleStats } from '@/data-access/hustles'
 import { ModerationTabs } from './ModerationTabs'
+import { AdminPushSubscriptionCard } from '@/components/admin/AdminPushSubscriptionCard'
 
 export default async function AdminModerationPage() {
     const session = await getSession()
@@ -46,6 +47,10 @@ export default async function AdminModerationPage() {
                 <h1 className="text-2xl font-bold text-white mb-1">Content Moderation</h1>
                 <p className="text-text-muted text-xs">Review and approve pending events, gigs, and shop items</p>
             </header>
+
+            <div className="mb-8">
+                <AdminPushSubscriptionCard />
+            </div>
 
             <ModerationTabs
                 pendingEvents={JSON.parse(JSON.stringify(pendingEvents))}

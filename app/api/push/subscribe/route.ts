@@ -10,6 +10,7 @@
 import { NextResponse } from 'next/server'
 import { asyncCatcher, validateRequest } from '@/lib/api/api-utils'
 import { prisma } from '@/lib/prisma'
+import getSession from '@/lib/getSession'
 import { z } from 'zod'
 
 const subscribeSchema = z.object({
@@ -22,6 +23,8 @@ const subscribeSchema = z.object({
 
 export const POST = asyncCatcher(async (request: Request) => {
   const { endpoint, keys } = await validateRequest(request, subscribeSchema)
+  const session = await getSession()
+  const userId = session?.user?.id ?? null
 
   await prisma.pushSubscription.upsert({
     where: { endpoint },
@@ -29,11 +32,13 @@ export const POST = asyncCatcher(async (request: Request) => {
       endpoint,
       p256dh: keys.p256dh,
       auth: keys.auth,
+      userId,
     },
     update: {
       // Keys can rotate — always keep them current
       p256dh: keys.p256dh,
       auth: keys.auth,
+      userId,
     },
   })
 

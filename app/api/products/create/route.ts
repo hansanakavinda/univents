@@ -4,6 +4,7 @@ import { createProductSchema } from '@/lib/validators/products'
 import { createProduct } from '@/data-access/products'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
+import { sendPushToAdmins } from '@/lib/webpush'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -27,6 +28,15 @@ export const POST = asyncCatcher(async (request: Request) => {
         authorId: session.user.id,
         imagePath: imagePath || null,
     })
+
+    if (result.success && result.product) {
+        sendPushToAdmins({
+            title: 'New Product Submitted',
+            body: `"${result.product.title}" has been created and needs review.`,
+            url: '/admin/moderation',
+            icon: '/icon.png',
+        }).catch((err) => console.error('[push] Failed to notify admins of new product:', err))
+    }
 
     // Clean up discarded images from Cloudinary
     if (discardedImageIds?.length) {

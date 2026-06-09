@@ -135,3 +135,67 @@ export async function sendPushToAll(payload: PushPayload): Promise<void> {
     console.log(`[webpush] Removed ${expiredEndpoints.length} expired subscription(s).`)
   }
 }
+
+/**
+ * Fan out a push notification to every stored admin and superadmin subscription.
+ * Subscriptions that return HTTP 410 (Gone) are deleted from the DB automatically.
+ *
+ * This function is fire-and-forget safe: it never throws.
+ */
+export async function sendPushToAdmins(payload: PushPayload): Promise<void> {
+  try {
+    ensureVapidInitialized()
+  } catch (err) {
+    console.error('[webpush] VAPID not configured — skipping push:', err)
+    return
+  }
+
+  let subscriptions: { endpoint: string; p256dh: string; auth: string }[]
+
+  try {
+    // 1. Get all active admins and superadmins
+    const admins = await prisma.user.findMany({
+      where: {
+        role: { in: ['ADMIN', 'SUPER_ADMIN'] },
+        isActive: true,
+      },
+      select: { id: true },
+    })
+    const adminIds = admins.map((a) => a.id)
+
+    if (adminIds.length === 0) return
+
+    // 2. Find subscriptions associated with these user IDs
+    subscriptions = await prisma.pushSubscription.findMany({
+      where: {
+        userId: { in: adminIds },
+      },
+      select: { endpoint: true, p256dh: true, auth: true },
+    })
+  } catch (err) {
+    console.error('[webpush] Failed to fetch admin subscriptions from DB:', err)
+    return
+  }
+
+  if (subscriptions.length === 0) return
+
+  const results = await Promise.allSettled(
+    subscriptions.map((sub) => sendPushNotification(sub, payload))
+  )
+
+  // Collect expired endpoints to delete in one batch query
+  const expiredEndpoints: string[] = []
+  results.forEach((result, i) => {
+    if (result.status === 'fulfilled' && result.value.gone) {
+      expiredEndpoints.push(subscriptions[i].endpoint)
+    }
+  })
+
+  if (expiredEndpoints.length > 0) {
+    await prisma.pushSubscription
+      .deleteMany({ where: { endpoint: { in: expiredEndpoints } } })
+      .catch((err) => console.error('[webpush] Failed to clean expired subscriptions:', err))
+
+    console.log(`[webpush] Removed ${expiredEndpoints.length} expired admin subscription(s).`)
+  }
+}
