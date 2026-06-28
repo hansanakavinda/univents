@@ -4,7 +4,6 @@ import { createGigSchema } from '@/lib/validators/gigs'
 import { createGig } from '@/data-access/gigs'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
-import { sendPushToAdmins } from '@/lib/webpush'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -30,14 +29,7 @@ export const POST = asyncCatcher(async (request: Request) => {
         imagePath: imagePath || null,
     })
 
-    if (result.success && result.gig) {
-        sendPushToAdmins({
-            title: 'New Gig Submitted',
-            body: `"${result.gig.title}" has been created and needs review.`,
-            url: '/admin/moderation',
-            icon: '/icon.png',
-        }).catch((err) => console.error('[push] Failed to notify admins of new gig:', err))
-    }
+
 
     // Clean up discarded images from Cloudinary
     if (discardedImageIds?.length) {

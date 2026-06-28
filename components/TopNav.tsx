@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
-import { usePushNotifications } from '@/hooks/usePushNotifications'
-import { Calendar, Briefcase, Zap, ShoppingBag, Bell, BellRing } from 'lucide-react'
+import { Calendar, Briefcase, Zap, ShoppingBag } from 'lucide-react'
 
 interface TopNavProps {
   userName?: string
@@ -18,7 +17,6 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
   const pathname = usePathname()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
-  const { status: pushStatus, subscribe, unsubscribe } = usePushNotifications()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,33 +77,6 @@ export function TopNav({ userName, userImage, userRole, isLoggedIn = true }: Top
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
                 <>
-                  {/* Notification Bell */}
-                  <div className="relative flex items-center">
-                    <button
-                      onClick={() => {
-                        if (pushStatus === 'subscribed') {
-                          unsubscribe()
-                        } else if (pushStatus === 'idle' || pushStatus === 'denied') {
-                          subscribe()
-                        }
-                      }}
-                      disabled={pushStatus === 'loading' || pushStatus === 'unsupported'}
-                      className={`p-2 transition-colors rounded-full focus:outline-none ${pushStatus === 'subscribed' ? 'text-brand hover:text-brand/80' : 'text-text-muted hover:text-white hover:bg-surface'
-                        } ${pushStatus === 'loading' ? 'opacity-50 cursor-wait' : ''} ${pushStatus === 'unsupported' ? 'hidden' : ''
-                        }`}
-                      title={pushStatus === 'subscribed' ? 'Disable notifications' : 'Enable notifications'}
-                    >
-                      {pushStatus === 'subscribed' ? (
-                        <BellRing className="w-5 h-5 md:w-6 md:h-6" />
-                      ) : (
-                        <Bell className="w-5 h-5 md:w-6 md:h-6" />
-                      )}
-                      {pushStatus === 'subscribed' && (
-                        <span className="absolute top-1 right-2 w-2 h-2 md:top-2 md:right-2 md:w-2.5 md:h-2.5 bg-brand rounded-full border-2 border-black"></span>
-                      )}
-                    </button>
-                  </div>
-
                   {/* User Profile */}
                   <div className="relative" ref={profileRef}>
                     <button

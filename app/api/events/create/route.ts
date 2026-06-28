@@ -4,7 +4,6 @@ import { createEventSchema } from '@/lib/validators/events'
 import { createEvent } from '@/data-access/events'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
-import { sendPushToAdmins } from '@/lib/webpush'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -29,14 +28,7 @@ export const POST = asyncCatcher(async (request: Request) => {
         authorId: session.user.id,
     })
 
-    if (result.success && result.event) {
-        sendPushToAdmins({
-            title: 'New Event Submitted',
-            body: `"${result.event.title}" has been created and needs review.`,
-            url: '/admin/moderation',
-            icon: '/icon.png',
-        }).catch((err) => console.error('[push] Failed to notify admins of new event:', err))
-    }
+
 
     // Clean up discarded images from Cloudinary (fire-and-forget, with safety checks)
     if (discardedImageIds?.length) {
