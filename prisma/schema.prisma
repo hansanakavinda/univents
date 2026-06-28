@@ -142,15 +142,6 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
-model PushSubscription {
-  id        String   @id @default(cuid())
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
-  userId    String?
-  createdAt DateTime @default(now())
-}
-
 model Category {
   id        String   @id @default(cuid())
   name      String   @unique

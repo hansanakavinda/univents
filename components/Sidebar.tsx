@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { Role } from '@/types/auth'
-import { usePushNotifications } from '@/hooks/usePushNotifications'
 
 interface SidebarProps {
   userRole?: Role
@@ -72,7 +71,6 @@ export function Sidebar({ userRole, userName, userImage }: SidebarProps) {
   ]
 
   const [isOpen, setIsOpen] = useState(false)
-  const { status: pushStatus, subscribe } = usePushNotifications()
 
   const visibleMenuItems = menuItems.filter((item) =>
     !userRole || item.roles.includes(userRole)
@@ -153,54 +151,8 @@ export function Sidebar({ userRole, userName, userImage }: SidebarProps) {
           ))}
         </nav>
 
-        {/* User Info */}
         {userName && (
           <div className="p-4 border-t border-border space-y-2">
-            {/* Push Notification Subscribe Button */}
-            {pushStatus !== 'unsupported' && (
-              <button
-                id="push-subscribe-btn"
-                onClick={subscribe}
-                disabled={pushStatus === 'subscribed' || pushStatus === 'loading'}
-                title={
-                  pushStatus === 'denied'
-                    ? 'Notifications are blocked. Enable them in your browser settings.'
-                    : undefined
-                }
-                className={`
-                  w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl
-                  text-sm font-medium transition-colors duration-200
-                  ${
-                    pushStatus === 'subscribed'
-                      ? 'bg-green-500/15 text-green-400 cursor-default'
-                      : pushStatus === 'denied'
-                      ? 'bg-surface text-text-muted cursor-not-allowed'
-                      : pushStatus === 'loading'
-                      ? 'bg-surface text-text-muted cursor-wait'
-                      : 'bg-primary/10 text-primary hover:bg-primary/20'
-                  }
-                `}
-              >
-                <span>
-                  {pushStatus === 'subscribed'
-                    ? '✅'
-                    : pushStatus === 'denied'
-                    ? '🔕'
-                    : pushStatus === 'loading'
-                    ? '⏳'
-                    : '🔔'}
-                </span>
-                <span>
-                  {pushStatus === 'subscribed'
-                    ? 'Notifications On'
-                    : pushStatus === 'denied'
-                    ? 'Notifications Blocked'
-                    : pushStatus === 'loading'
-                    ? 'Enabling…'
-                    : 'Get Notified'}
-                </span>
-              </button>
-            )}
 
             <button
               onClick={() => signOut({ redirectTo: '/login' })}
