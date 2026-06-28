@@ -2,13 +2,13 @@ import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 import { PendingApprovalEmail } from '@/components/admin/PendingApprovalEmail'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const senderEmail = process.env.EMAIL_SENDER
 
 export async function notifyAdminsNewContent(
   itemType: 'Event' | 'Hustle' | 'Gig' | 'Product',
   itemTitle: string
 ): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     // 1. Fetch all active admins and super admins
     const admins = await prisma.user.findMany({
