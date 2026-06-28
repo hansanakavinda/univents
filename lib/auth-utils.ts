@@ -7,7 +7,6 @@ import { Resend } from 'resend'
 import { PasswordResetEmail } from '@/components/auth/PasswordResetEmail'
 import { EmailVerificationEmail } from '@/components/auth/EmailVerificationEmail'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const senderEmail = process.env.EMAIL_SENDER
 
 const SALT_ROUNDS = 10
@@ -65,6 +64,7 @@ export async function sendResetEmail(
   email: string,
   token: string
 ): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const baseUrl = process.env.NEXTAUTH_URL
   const resetLink = `${baseUrl}/auth/reset-password?token=${token}`
 
@@ -108,6 +108,7 @@ export async function sendVerificationEmail(
   email: string,
   token: string
 ): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const baseUrl = process.env.NEXTAUTH_URL
   const verificationLink = `${baseUrl}/auth/verify-email?token=${token}`
 
