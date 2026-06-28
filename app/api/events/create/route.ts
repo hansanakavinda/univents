@@ -4,6 +4,7 @@ import { createEventSchema } from '@/lib/validators/events'
 import { createEvent } from '@/data-access/events'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
+import { notifyAdminsNewContent } from '@/lib/email-notifications'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -27,6 +28,12 @@ export const POST = asyncCatcher(async (request: Request) => {
         uniId,
         authorId: session.user.id,
     })
+
+    if (result.success && result.event) {
+        notifyAdminsNewContent('Event', result.event.title).catch((err) =>
+            console.error('[email] Failed to notify admins of new event:', err)
+        )
+    }
 
 
 

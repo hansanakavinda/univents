@@ -4,6 +4,7 @@ import { createHustleSchema } from '@/lib/validators/hustles'
 import { createHustle } from '@/data-access/hustles'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
+import { notifyAdminsNewContent } from '@/lib/email-notifications'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -29,6 +30,12 @@ export const POST = asyncCatcher(async (request: Request) => {
         authorId: session.user.id,
         imagePath: imagePath || null,
     })
+
+    if (result.success && result.hustle) {
+        notifyAdminsNewContent('Hustle', result.hustle.title).catch((err) =>
+            console.error('[email] Failed to notify admins of new hustle:', err)
+        )
+    }
 
 
 

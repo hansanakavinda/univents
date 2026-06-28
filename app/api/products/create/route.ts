@@ -4,6 +4,7 @@ import { createProductSchema } from '@/lib/validators/products'
 import { createProduct } from '@/data-access/products'
 import { deleteImage } from '@/lib/cloudinary'
 import { prisma } from '@/lib/prisma'
+import { notifyAdminsNewContent } from '@/lib/email-notifications'
 import { NextResponse } from 'next/server'
 
 export const POST = asyncCatcher(async (request: Request) => {
@@ -27,6 +28,12 @@ export const POST = asyncCatcher(async (request: Request) => {
         authorId: session.user.id,
         imagePath: imagePath || null,
     })
+
+    if (result.success && result.product) {
+        notifyAdminsNewContent('Product', result.product.title).catch((err) =>
+            console.error('[email] Failed to notify admins of new product:', err)
+        )
+    }
 
 
 
